@@ -1352,6 +1352,7 @@ async function tryLogin() {
 // DATA
 // ════════════════════════════════════════════
 const SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbzmLBMBg_DZ3ZqVS0jlE-a0Gp3KulbU-RPHXT_jNUxex3N1EgBZSml_USD2KHpRlCX-/exec';
+const DATA_JSON_URL = 'https://raw.githubusercontent.com/Lemiwinks007/heyos-dashboard/main/data.json';
 
 let POSITIONS = [
   {ticker:'VFV.TO',nom:'Vanguard S&P 500 ETF',type:'ETF',tier:'T1',compte:'TFSA',qty:84,prixMoy:119.9246,dev:'CAD',ciblePrix:155},
@@ -1451,25 +1452,15 @@ function computePositions() {
 // ════════════════════════════════════════════
 // SHEETS FETCH
 // ════════════════════════════════════════════
-function fetchFromSheets() {
+async function fetchFromSheets() {
   const banner = document.getElementById('data-banner');
   const bannerText = document.getElementById('data-banner-text');
-  bannerText.textContent = '🔄 Connexion Google Sheets…';
+  bannerText.textContent = '🔄 Connexion données portfolio…';
   banner.classList.add('show');
-
-  const callbackName = 'heyos_cb_' + Date.now();
-  const script = document.createElement('script');
-
-  const timeout = setTimeout(() => {
-    delete window[callbackName];
-    try { document.body.removeChild(script); } catch(e) {}
-    bannerText.textContent = '⚠️ Sheets inaccessible — données locales · ' + POSITIONS.length + ' positions';
-  }, 10000);
-
-  window[callbackName] = function(data) {
-    clearTimeout(timeout);
-    delete window[callbackName];
-    try { document.body.removeChild(script); } catch(e) {}
+  try {
+    const r = await fetch(DATA_JSON_URL + '?t=' + Date.now());
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const data = await r.json();
     const VALID_TIERS = ['T1','T2','T3','T4'];
     if (data.positions && Array.isArray(data.positions)) {
       POSITIONS = data.positions.filter(p => {
@@ -1485,19 +1476,14 @@ function fetchFromSheets() {
     if (data.totalCAD) TOTAL_CAD = data.totalCAD;
     if (data.costBase) COST_BASE = data.costBase;
     computePositions();
-    bannerText.textContent = '✅ Live depuis Google Sheets · ' + POSITIONS.length + ' positions · $' + (TOTAL_CAD/1000).toFixed(1) + 'K CAD';
+    const dateStr = data.date || 'aujourd'hui';
+    bannerText.textContent = '✅ Live · ' + POSITIONS.length + ' positions · $' + (TOTAL_CAD/1000).toFixed(1) + 'K CAD · Mis à jour: ' + dateStr;
     renderMiniPositions();
     renderAccountHealthCards();
     drawChart('1Y');
-  };
-
-  script.src = SHEETS_API_URL + '?callback=' + callbackName;
-  script.onerror = () => {
-    clearTimeout(timeout);
-    delete window[callbackName];
-    bannerText.textContent = '⚠️ Sheets inaccessible — données locales · ' + POSITIONS.length + ' positions';
-  };
-  document.body.appendChild(script);
+  } catch(e) {
+    bannerText.textContent = '⚠️ Données locales · ' + POSITIONS.length + ' positions · Ouvrir Sheets pour synchroniser';
+  }
 }
 
 // ════════════════════════════════════════════
