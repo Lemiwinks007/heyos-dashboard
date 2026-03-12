@@ -1351,7 +1351,7 @@ async function tryLogin() {
 // ════════════════════════════════════════════
 // DATA
 // ════════════════════════════════════════════
-const SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbxpQONwYfG7fXQ77cwH7aIAgl7d0xDjroUGPqDsGKe1SFq-Cs5bzmtPDiEivJXP3co6UQ/exec';
+const SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbxtsRIaBpTWAT79HMg4tHDTCXuIJq41FeCtOt_pYl1lpg-9RUAvgfQ6wnUZ0Y2Bym1Y/exec';
 
 let POSITIONS = [
   {ticker:'VFV.TO',nom:'Vanguard S&P 500 ETF',type:'ETF',tier:'T1',compte:'TFSA',qty:84,prixMoy:119.9246,dev:'CAD',ciblePrix:155},
@@ -1457,7 +1457,8 @@ async function fetchFromSheets() {
   bannerText.textContent = '🔄 Connexion Google Sheets…';
   banner.classList.add('show');
   try {
-    const r = await fetch(SHEETS_API_URL + '?callback=none', {redirect: 'follow'});
+    const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(SHEETS_API_URL);
+    const r = await fetch(proxyUrl);
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const data = await r.json();
     const VALID_TIERS = ['T1','T2','T3','T4'];
@@ -1489,7 +1490,7 @@ async function fetchFromSheets() {
 // ════════════════════════════════════════════
 async function fetchLivePrices() {
   try {
-    const r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/USDCAD%3DX?interval=1m&range=1d'));
+    const r = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/USDCAD%3DX?interval=1m&range=1d'));
     const d = await r.json();
     const rate = d?.chart?.result?.[0]?.meta?.regularMarketPrice;
     if (rate) {
@@ -1502,7 +1503,7 @@ async function fetchLivePrices() {
   const keyTickers = ['AVGO','SMH','VFV-TO','GEV','GOOG','SCHD','META','AMZN','ENB-TO','MSFT','NVDA','TSLA'];
   for (const t of keyTickers) {
     try {
-      const r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(`https://query1.finance.yahoo.com/v8/finance/chart/${t}?interval=1d&range=2d`));
+      const r = await fetch('https://corsproxy.io/?' + encodeURIComponent(`https://query1.finance.yahoo.com/v8/finance/chart/${t}?interval=1d&range=2d`));
       const d = await r.json();
       const meta = d?.chart?.result?.[0]?.meta;
       const originalTicker = t.replace('-TO', '.TO');
