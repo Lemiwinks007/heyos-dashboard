@@ -1351,7 +1351,7 @@ async function tryLogin() {
 // ════════════════════════════════════════════
 // DATA
 // ════════════════════════════════════════════
-const SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbxtsRIaBpTWAT79HMg4tHDTCXuIJq41FeCtOt_pYl1lpg-9RUAvgfQ6wnUZ0Y2Bym1Y/exec';
+const SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbzmLBMBg_DZ3ZqVS0jlE-a0Gp3KulbU-RPHXT_jNUxex3N1EgBZSml_USD2KHpRlCX-/exec';
 
 let POSITIONS = [
   {ticker:'VFV.TO',nom:'Vanguard S&P 500 ETF',type:'ETF',tier:'T1',compte:'TFSA',qty:84,prixMoy:119.9246,dev:'CAD',ciblePrix:155},
@@ -1451,16 +1451,25 @@ function computePositions() {
 // ════════════════════════════════════════════
 // SHEETS FETCH
 // ════════════════════════════════════════════
-async function fetchFromSheets() {
+function fetchFromSheets() {
   const banner = document.getElementById('data-banner');
   const bannerText = document.getElementById('data-banner-text');
   bannerText.textContent = '🔄 Connexion Google Sheets…';
   banner.classList.add('show');
-  try {
-    const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(SHEETS_API_URL);
-    const r = await fetch(proxyUrl);
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const data = await r.json();
+
+  const callbackName = 'heyos_cb_' + Date.now();
+  const script = document.createElement('script');
+
+  const timeout = setTimeout(() => {
+    delete window[callbackName];
+    try { document.body.removeChild(script); } catch(e) {}
+    bannerText.textContent = '⚠️ Sheets inaccessible — données locales · ' + POSITIONS.length + ' positions';
+  }, 10000);
+
+  window[callbackName] = function(data) {
+    clearTimeout(timeout);
+    delete window[callbackName];
+    try { document.body.removeChild(script); } catch(e) {}
     const VALID_TIERS = ['T1','T2','T3','T4'];
     if (data.positions && Array.isArray(data.positions)) {
       POSITIONS = data.positions.filter(p => {
@@ -1480,9 +1489,15 @@ async function fetchFromSheets() {
     renderMiniPositions();
     renderAccountHealthCards();
     drawChart('1Y');
-  } catch(e) {
+  };
+
+  script.src = SHEETS_API_URL + '?callback=' + callbackName;
+  script.onerror = () => {
+    clearTimeout(timeout);
+    delete window[callbackName];
     bannerText.textContent = '⚠️ Sheets inaccessible — données locales · ' + POSITIONS.length + ' positions';
-  }
+  };
+  document.body.appendChild(script);
 }
 
 // ════════════════════════════════════════════
