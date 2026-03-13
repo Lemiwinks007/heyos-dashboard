@@ -3,1494 +3,553 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HeyOS v13</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>HeyOS v12</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f7f6f2;--surface:#fff;--border:#e8e5de;--text:#1a1a1a;--text2:#666;--text3:#aaa;--green:#16a34a;--red:#dc2626;--blue:#2563eb;--amber:#d97706;--accent:#22c55e;--r:12px;--rs:8px;--sh:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);--shm:0 4px 16px rgba(0,0,0,.08)}
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;-webkit-font-smoothing:antialiased}
-
-/* LOGIN */
-#login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999}
-.login-card{background:var(--surface);border:0.5px solid var(--border);border-radius:20px;padding:44px 40px;width:340px;text-align:center;box-shadow:var(--shm);animation:fadeUp .4s ease}
-.login-logo{font-size:28px;font-weight:600;letter-spacing:-.04em;margin-bottom:4px}
-.login-logo span{color:var(--accent)}
-.login-sub{font-size:11px;color:var(--text3);margin-bottom:32px;letter-spacing:.06em;text-transform:uppercase}
-.login-input{width:100%;padding:13px 16px;border:0.5px solid var(--border);border-radius:var(--rs);font-size:18px;background:#fafaf8;outline:none;text-align:center;letter-spacing:.4em;font-family:'DM Mono',monospace;transition:border-color .2s}
-.login-input:focus{border-color:#aaa}
-.login-btn{width:100%;margin-top:10px;padding:13px;background:var(--text);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity .2s}
-.login-btn:hover{opacity:.8}
-.login-err{color:var(--red);font-size:12px;margin-top:10px;min-height:18px}
-
-/* APP SHELL */
-#app{display:none;height:100vh;flex-direction:row}
-#app.on{display:flex}
-
-/* SIDEBAR */
-.sb{width:218px;min-width:218px;background:var(--surface);border-right:0.5px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;padding-bottom:24px}
-.sb::-webkit-scrollbar{width:2px}
-.sb::-webkit-scrollbar-thumb{background:#e8e5de}
-.sb-logo{padding:24px 20px 18px;border-bottom:0.5px solid var(--border)}
-.sb-logo-name{font-size:20px;font-weight:600;letter-spacing:-.04em}
-.sb-logo-name span{color:var(--accent)}
-.sb-logo-ver{font-size:10px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
-.sb-section{padding:16px 14px 6px;font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em}
-.sb-item{display:flex;align-items:center;gap:9px;padding:8px 14px;cursor:pointer;border-radius:var(--rs);margin:1px 8px;color:var(--text2);font-size:13px;font-weight:400;transition:all .15s;user-select:none}
-.sb-item:hover{background:#f5f3ee;color:var(--text)}
-.sb-item.active{background:#f0fdf4;color:var(--green);font-weight:500}
-.sb-item.active .sb-dot{background:var(--accent)}
-.sb-dot{width:6px;height:6px;border-radius:50%;background:var(--border);flex-shrink:0;transition:background .15s}
-.sb-item:hover .sb-dot{background:#ccc}
-.sb-footer{margin-top:auto;padding:16px 14px 0;border-top:0.5px solid var(--border)}
-.sb-footer-time{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
-
-/* MAIN */
-.main{flex:1;overflow-y:auto;background:var(--bg)}
-.main::-webkit-scrollbar{width:4px}
-.main::-webkit-scrollbar-thumb{background:#ddd;border-radius:4px}
-
-/* PAGE */
-.page{display:none;padding:32px 32px 48px;max-width:1200px;min-height:100%}
-.page.on{display:block;animation:fadeIn .2s ease}
-.page-header{margin-bottom:28px}
-.page-title{font-size:22px;font-weight:600;letter-spacing:-.03em}
-.page-sub{font-size:13px;color:var(--text2);margin-top:4px}
-.page-header-row{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px}
-
-/* GRIDS */
-.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-@media(max-width:900px){.grid-4{grid-template-columns:repeat(2,1fr)}.grid-3{grid-template-columns:repeat(2,1fr)}}
-
-/* CARDS */
-.card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);padding:18px;box-shadow:var(--sh)}
-.card-sm{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--sh)}
-.kpi-label{font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
-.kpi-val{font-size:22px;font-weight:600;letter-spacing:-.04em;font-family:'DM Mono',monospace}
-.kpi-val.lg{font-size:30px}
-.kpi-sub{font-size:11px;color:var(--text2);margin-top:4px}
-.kpi-badge{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:500;padding:2px 8px;border-radius:99px;margin-top:6px}
-.kpi-badge.g{background:#dcfce7;color:var(--green)}
-.kpi-badge.r{background:#fee2e2;color:var(--red)}
-.kpi-badge.a{background:#fef3c7;color:var(--amber)}
-.kpi-badge.b{background:#dbeafe;color:var(--blue)}
-.kpi-badge.p{background:#ede9fe;color:#6d28d9}
-
-/* TABLES */
-.tbl{width:100%;border-collapse:collapse;font-size:13px}
-.tbl th{text-align:left;padding:8px 12px;font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;border-bottom:0.5px solid var(--border)}
-.tbl td{padding:10px 12px;border-bottom:0.5px solid var(--border-light,#f5f3ee)}
-.tbl tr:last-child td{border-bottom:none}
-.tbl tr:hover td{background:#fafaf8}
-.tbl .num{font-family:'DM Mono',monospace;font-size:12px}
-.tbl .pos{color:var(--green)}
-.tbl .neg{color:var(--red)}
-.tbl .t1{font-size:10px;font-weight:600;background:#dcfce7;color:var(--green);padding:2px 7px;border-radius:99px}
-.tbl .t2{font-size:10px;font-weight:600;background:#dbeafe;color:var(--blue);padding:2px 7px;border-radius:99px}
-.tbl .t3{font-size:10px;font-weight:600;background:#f3f4f6;color:#6b7280;padding:2px 7px;border-radius:99px}
-.tbl .t4{font-size:10px;font-weight:600;background:#fef3c7;color:var(--amber);padding:2px 7px;border-radius:99px}
-
-/* SECTION HEADERS */
-.section-title{font-size:13px;font-weight:600;margin-bottom:14px;color:var(--text);letter-spacing:-.01em}
-.section-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.divider{height:0.5px;background:var(--border);margin:24px 0}
-
-/* BUTTONS */
-.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;border:0.5px solid var(--border);background:var(--surface);color:var(--text);transition:all .15s}
-.btn:hover{background:#f5f3ee}
-.btn.primary{background:var(--text);color:#fff;border-color:var(--text)}
-.btn.primary:hover{background:#333;border-color:#333}
-.btn.danger{background:#fee2e2;color:var(--red);border-color:#fca5a5}
-.btn.danger:hover{background:#fecaca}
-.btn.sm{padding:5px 10px;font-size:12px}
-
-/* STATUS BADGES */
-.status{display:inline-flex;align-items:center;font-size:11px;font-weight:500;padding:2px 8px;border-radius:99px}
-.status.ok{background:#dcfce7;color:var(--green)}
-.status.warn{background:#fef3c7;color:var(--amber)}
-.status.err{background:#fee2e2;color:var(--red)}
-.status.info{background:#dbeafe;color:var(--blue)}
-.status.done{background:#f3f4f6;color:#6b7280}
-.status.watch{background:#ede9fe;color:#6d28d9}
-
-/* URGENCE */
-.urgence-item{display:flex;align-items:center;gap:12px;padding:14px;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rs);margin-bottom:8px;transition:box-shadow .15s}
-.urgence-item:hover{box-shadow:var(--shm)}
-.urgence-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.urgence-label{font-size:13px;font-weight:500;flex:1}
-.urgence-time{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
-
-/* PROGRESS BARS */
-.progress-bg{background:#f0ede6;border-radius:99px;height:6px;overflow:hidden}
-.progress-fill{height:100%;border-radius:99px;transition:width .8s cubic-bezier(.4,0,.2,1)}
-
-/* EDITABLE LIST */
-.edit-list{list-style:none}
-.edit-item{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rs);margin-bottom:8px;transition:box-shadow .15s}
-.edit-item:hover{box-shadow:var(--shm)}
-.edit-item-content{flex:1}
-.edit-item-title{font-size:13px;font-weight:500}
-.edit-item-meta{font-size:11px;color:var(--text2);margin-top:2px}
-.edit-item-actions{display:flex;gap:6px;opacity:0;transition:opacity .15s}
-.edit-item:hover .edit-item-actions{opacity:1}
-
-/* ADD FORM */
-.add-form{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:20px}
-.add-form-title{font-size:13px;font-weight:600;margin-bottom:14px}
-.form-row{display:flex;gap:10px;flex-wrap:wrap}
-.form-group{display:flex;flex-direction:column;gap:5px;flex:1;min-width:120px}
-.form-label{font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.04em}
-.form-input{padding:8px 12px;border:0.5px solid var(--border);border-radius:var(--rs);font-size:13px;background:#fafaf8;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s}
-.form-input:focus{border-color:#aaa}
-.form-select{padding:8px 12px;border:0.5px solid var(--border);border-radius:var(--rs);font-size:13px;background:#fafaf8;font-family:'DM Sans',sans-serif;outline:none}
-
-/* VERDICT CARD */
-.verdict-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:10px}
-.verdict-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
-.verdict-title{font-size:13px;font-weight:600}
-.verdict-date{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
-.verdict-raisonnement{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px}
-.verdict-actions{display:flex;gap:8px}
-.verdict-delete{opacity:0;transition:opacity .15s}
-.verdict-card:hover .verdict-delete{opacity:1}
-
-/* DIVIDENDES */
-.div-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rs);padding:14px 16px;display:flex;align-items:center;gap:14px}
-.div-ticker{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;width:80px}
-.div-bar{flex:1}
-.div-meta{font-size:11px;color:var(--text2);width:120px;text-align:right}
-.div-yield{font-size:13px;font-weight:600;color:var(--green);width:50px;text-align:right;font-family:'DM Mono',monospace}
-
-/* PRs */
-.pr-row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:0.5px solid var(--border)}
-.pr-row:last-child{border-bottom:none}
-.pr-name{font-size:13px;font-weight:500;width:140px}
-.pr-val{font-family:'DM Mono',monospace;font-size:20px;font-weight:600;width:90px}
-.pr-unit{font-size:11px;color:var(--text3)}
-.pr-bar{flex:1}
-.pr-edit{opacity:0;transition:opacity .15s;margin-left:auto}
-.pr-row:hover .pr-edit{opacity:1}
-
-/* POSITIONS */
-.pos-chip{display:inline-flex;align-items:center;gap:4px;background:var(--surface);border:0.5px solid var(--border);border-radius:99px;padding:4px 10px;font-size:12px;cursor:pointer;transition:all .15s;white-space:nowrap}
-.pos-chip:hover{border-color:#aaa;box-shadow:var(--shm)}
-.pos-chips{display:flex;flex-wrap:wrap;gap:8px}
-
-/* PIE-LIKE */
-.alloc-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
-.alloc-label{font-size:12px;width:80px;color:var(--text2)}
-.alloc-bar-bg{flex:1;background:#f0ede6;border-radius:99px;height:8px;overflow:hidden}
-.alloc-bar-fill{height:100%;border-radius:99px}
-.alloc-pct{font-size:12px;font-family:'DM Mono',monospace;width:36px;text-align:right;color:var(--text)}
-
-/* TICKER ROW */
-.ticker-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid var(--border)}
-.ticker-row:last-child{border-bottom:none}
-.ticker-name{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;width:100px}
-.ticker-shares{font-size:12px;color:var(--text2)}
-.ticker-val{font-family:'DM Mono',monospace;font-size:13px;font-weight:500}
-.ticker-pl{font-size:11px;font-family:'DM Mono',monospace}
-
-/* MARCHÉ FERMÉ */
-.market-closed{background:#fef3c7;border:0.5px solid #fde68a;border-radius:var(--rs);padding:10px 14px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--amber);margin-bottom:16px}
-
-/* ANIMATIONS */
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-@keyframes slideIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
-.animate-num{transition:all .6s cubic-bezier(.4,0,.2,1)}
-
-/* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:100;display:none;align-items:center;justify-content:center}
-.modal-overlay.on{display:flex}
-.modal{background:var(--surface);border-radius:16px;padding:28px;width:420px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,.15)}
-.modal-title{font-size:16px;font-weight:600;margin-bottom:20px}
-.modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:24px}
-
-/* TOOLTIP */
-[data-tip]{position:relative}
-[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:4px 8px;border-radius:6px;font-size:11px;white-space:nowrap;z-index:10;pointer-events:none}
-
-/* FILTER TABS */
-.filter-tabs{display:flex;gap:4px;margin-bottom:18px}
-.ftab{padding:6px 14px;border-radius:99px;font-size:12px;font-weight:500;cursor:pointer;border:0.5px solid var(--border);background:var(--surface);color:var(--text2);transition:all .15s}
-.ftab.active{background:var(--text);color:#fff;border-color:var(--text)}
-.ftab:hover:not(.active){background:#f5f3ee}
-
-/* ALERT BANNER */
-.alert{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:var(--rs);margin-bottom:14px;font-size:13px}
-.alert.warn{background:#fef3c7;border:0.5px solid #fde68a;color:#92400e}
-.alert.err{background:#fee2e2;border:0.5px solid #fca5a5;color:#991b1b}
-.alert.ok{background:#dcfce7;border:0.5px solid #86efac;color:#166534}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:'Inter',sans-serif;background:#f5f4f0;color:#1a1a1a;font-size:14px;}
+#login-screen{position:fixed;inset:0;background:#f5f4f0;display:flex;align-items:center;justify-content:center;z-index:999;}
+.login-box{background:#fff;border:0.5px solid #e0ddd6;border-radius:16px;padding:40px;width:320px;text-align:center;}
+.login-logo{font-size:26px;font-weight:600;margin-bottom:8px;letter-spacing:-.03em;}
+.login-logo span{color:#22c55e;}
+.login-sub{font-size:12px;color:#999;margin-bottom:28px;}
+.login-input{width:100%;padding:11px 14px;border:0.5px solid #ddd;border-radius:8px;font-size:15px;background:#fafaf8;outline:none;text-align:center;letter-spacing:.2em;}
+.login-input:focus{border-color:#aaa;}
+.login-btn{width:100%;margin-top:12px;padding:11px;background:#1a1a1a;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;}
+.login-btn:hover{background:#333;}
+.login-err{color:#e24b4a;font-size:12px;margin-top:8px;min-height:18px;}
+#app{display:none;height:100vh;overflow:hidden;flex-direction:row;}
+#app.visible{display:flex;}
+.sidebar{width:215px;min-width:215px;background:#fff;border-right:0.5px solid #e0ddd6;display:flex;flex-direction:column;overflow-y:auto;padding-bottom:20px;}
+.sidebar::-webkit-scrollbar{width:3px;}.sidebar::-webkit-scrollbar-thumb{background:#eee;}
+.sidebar-logo{padding:22px 18px 18px;border-bottom:0.5px solid #e0ddd6;font-size:22px;font-weight:600;letter-spacing:-.04em;flex-shrink:0;}
+.sidebar-logo span{color:#22c55e;}
+.nav-section{padding:16px 18px 4px;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#bbb;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 18px;cursor:pointer;font-size:13px;color:#666;transition:background .1s,color .1s;}
+.nav-item:hover{background:#f5f4f0;color:#1a1a1a;}
+.nav-item.active{background:#f5f4f0;color:#1a1a1a;font-weight:500;}
+.nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.dot-green{background:#22c55e;}.dot-blue{background:#378ADD;}.dot-amber{background:#EF9F27;}
+.dot-purple{background:#7F77DD;}.dot-coral{background:#D85A30;}.dot-teal{background:#1D9E75;}.dot-gray{background:#ccc;}
+.nav-badge{margin-left:auto;background:#e24b4a;color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;font-weight:600;}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{height:46px;background:#fff;border-bottom:0.5px solid #e0ddd6;display:flex;align-items:center;padding:0 22px;gap:12px;flex-shrink:0;}
+.topbar-live{display:flex;align-items:center;gap:7px;font-size:12px;color:#555;}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:14px;}
+.topbar-info{font-size:12px;color:#aaa;}
+.btn-sm{padding:5px 12px;border:0.5px solid #ddd;border-radius:6px;font-size:12px;background:#fff;cursor:pointer;color:#555;font-family:'Inter',sans-serif;}
+.btn-sm:hover{background:#f5f4f0;}
+.content{flex:1;overflow-y:auto;padding:26px;}
+.content::-webkit-scrollbar{width:4px;}.content::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px;}
+.page{display:none;}.page.active{display:block;}
+.page-title{font-size:22px;font-weight:600;letter-spacing:-.04em;margin-bottom:4px;}
+.page-title span{color:#aaa;font-weight:400;}
+.page-sub{font-size:12px;color:#aaa;margin-bottom:22px;}
+.kpi-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:22px;}
+.kpi{background:#fff;border:0.5px solid #e0ddd6;border-radius:12px;padding:16px 18px;}
+.kpi-label{font-size:11px;color:#aaa;font-weight:500;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em;}
+.kpi-val{font-size:20px;font-weight:600;color:#1a1a1a;letter-spacing:-.03em;}
+.kpi-val.g{color:#16a34a;}.kpi-val.r{color:#e24b4a;}.kpi-val.b{color:#378ADD;}.kpi-val.am{color:#d97706;}
+.kpi-sub{font-size:11px;color:#aaa;margin-top:4px;}
+.life-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+.life-card{background:#fff;border:0.5px solid #e0ddd6;border-radius:12px;padding:20px;cursor:pointer;transition:border-color .15s,box-shadow .15s;}
+.life-card:hover{border-color:#ccc;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+.life-icon{font-size:22px;margin-bottom:10px;}
+.life-card-title{font-size:13px;font-weight:500;color:#1a1a1a;margin-bottom:6px;}
+.life-card-stat{font-size:21px;font-weight:600;letter-spacing:-.03em;margin-bottom:3px;}
+.life-card-sub{font-size:11px;color:#aaa;}
+.section-hdr{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#aaa;margin:22px 0 10px;}
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{text-align:left;font-size:11px;font-weight:500;color:#aaa;padding:6px 10px;border-bottom:0.5px solid #e0ddd6;text-transform:uppercase;letter-spacing:.04em;}
+.tbl td{padding:10px;border-bottom:0.5px solid #f0ede8;font-size:13px;color:#1a1a1a;vertical-align:middle;}
+.tbl tr:hover td{background:#fafaf8;}
+.tier-pill{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;}
+.t1{background:#dcfce7;color:#15803d;}.t2{background:#dbeafe;color:#1d4ed8;}
+.t3{background:#fef3c7;color:#92400e;}.t4{background:#f3f4f6;color:#4b5563;}
+.g{color:#16a34a;}.r{color:#e24b4a;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.card{background:#fff;border:0.5px solid #e0ddd6;border-radius:12px;padding:18px;}
+.card-title{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#aaa;margin-bottom:14px;}
+.prog-row{display:flex;justify-content:space-between;font-size:12px;color:#666;margin-bottom:5px;}
+.prog-bar{height:6px;background:#f0ede8;border-radius:3px;overflow:hidden;margin-bottom:14px;}
+.prog-fill{height:100%;border-radius:3px;transition:width .5s;}
+.data-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid #f5f2ed;font-size:13px;}
+.data-row:last-child{border-bottom:none;}
+.data-label{color:#666;}.data-val{font-weight:500;color:#1a1a1a;}
+.data-val.g{color:#16a34a;}.data-val.r{color:#e24b4a;}.data-val.warn{color:#e24b4a;}
+.action-item{background:#fff;border:0.5px solid #e0ddd6;border-radius:10px;padding:16px;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px;}
+.action-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.action-dot.red{background:#e24b4a;}.action-dot.amber{background:#EF9F27;}.action-dot.blue{background:#378ADD;}
+.action-title{font-size:13px;font-weight:500;color:#1a1a1a;margin-bottom:3px;}
+.action-sub{font-size:12px;color:#aaa;}
+.placeholder{background:#fafaf8;border:0.5px dashed #ddd;border-radius:12px;padding:48px;text-align:center;}
+.placeholder-title{font-size:14px;font-weight:500;margin-bottom:6px;color:#888;}
+.placeholder-sub{font-size:12px;color:#bbb;}
+.slider-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.slider-label{font-size:12px;color:#666;width:130px;flex-shrink:0;}
+.slider-row input[type=range]{flex:1;}
+.slider-val{font-size:13px;font-weight:500;color:#1a1a1a;width:80px;text-align:right;}
+.sim-results{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;}
+.sim-kpi{background:#f5f4f0;border-radius:8px;padding:12px;}
+.sim-kpi-label{font-size:11px;color:#aaa;margin-bottom:4px;}
+.sim-kpi-val{font-size:17px;font-weight:600;letter-spacing:-.02em;color:#1a1a1a;}
+.filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
 </style>
 </head>
 <body>
-
-<!-- LOGIN -->
 <div id="login-screen">
-  <div class="login-card">
+  <div class="login-box">
     <div class="login-logo">Hey<span>OS</span></div>
-    <div class="login-sub">Système de vie v13</div>
-    <input class="login-input" type="password" id="pin-input" placeholder="••••" maxlength="6" autocomplete="off">
-    <button class="login-btn" onclick="tryLogin()">Déverrouiller</button>
+    <div class="login-sub">Votre système de vie personnel</div>
+    <input class="login-input" type="password" id="pw-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')tryLogin()">
+    <button class="login-btn" onclick="tryLogin()">Accéder →</button>
     <div class="login-err" id="login-err"></div>
   </div>
 </div>
-
-<!-- APP -->
 <div id="app">
-
-  <!-- SIDEBAR -->
-  <div class="sb">
-    <div class="sb-logo">
-      <div class="sb-logo-name">Hey<span>OS</span></div>
-      <div class="sb-logo-ver">v13 · S29</div>
-    </div>
-
-    <div class="sb-section">Vie</div>
-    <div class="sb-item active" onclick="nav('aujourd-hui')"><div class="sb-dot"></div>Aujourd'hui</div>
-    <div class="sb-item" onclick="nav('objectifs')"><div class="sb-dot"></div>Objectifs</div>
-    <div class="sb-item" onclick="nav('verdicts')"><div class="sb-dot"></div>Verdicts J+30</div>
-
-    <div class="sb-section">Finances</div>
-    <div class="sb-item" onclick="nav('portfolio')"><div class="sb-dot"></div>Portfolio</div>
-    <div class="sb-item" onclick="nav('positions')"><div class="sb-dot"></div>Positions</div>
-    <div class="sb-item" onclick="nav('dividendes')"><div class="sb-dot"></div>Dividendes</div>
-    <div class="sb-item" onclick="nav('cotisations')"><div class="sb-dot"></div>Cotisations</div>
-
-    <div class="sb-section">Corps</div>
-    <div class="sb-item" onclick="nav('prs')"><div class="sb-dot"></div>Personal Records</div>
-    <div class="sb-item" onclick="nav('programme')"><div class="sb-dot"></div>Programme</div>
-
-    <div class="sb-section">Culture</div>
-    <div class="sb-item" onclick="nav('films')"><div class="sb-dot"></div>Films & Séries</div>
-    <div class="sb-item" onclick="nav('livres')"><div class="sb-dot"></div>Livres</div>
-    <div class="sb-item" onclick="nav('restos')"><div class="sb-dot"></div>Restaurants</div>
-
-    <div class="sb-section">Outils</div>
-    <div class="sb-item" onclick="nav('regles')"><div class="sb-dot"></div>30 Règles</div>
-
-    <div class="sb-footer">
-      <div class="sb-footer-time" id="sb-time">--:--</div>
-    </div>
-  </div>
-
-  <!-- MAIN -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">Hey<span>OS</span></div>
+    <div class="nav-section">Vie</div>
+    <div class="nav-item active" onclick="nav('today',this)"><div class="nav-dot dot-green"></div>Aujourd'hui</div>
+    <div class="nav-section">Finances</div>
+    <div class="nav-item" onclick="nav('portfolio',this)"><div class="nav-dot dot-green"></div>Portfolio</div>
+    <div class="nav-item" onclick="nav('positions',this)"><div class="nav-dot dot-green"></div>Positions</div>
+    <div class="nav-item" onclick="nav('analyse',this)"><div class="nav-dot dot-green"></div>Analyse</div>
+    <div class="nav-item" onclick="nav('budget',this)"><div class="nav-dot dot-green"></div>Budget & Cash Flow</div>
+    <div class="nav-item" onclick="nav('dividendes',this)"><div class="nav-dot dot-teal"></div>Dividendes</div>
+    <div class="nav-item" onclick="nav('fiscal',this)"><div class="nav-dot dot-green"></div>Fiscal & REER</div>
+    <div class="nav-item" onclick="nav('fi',this)"><div class="nav-dot dot-blue"></div>Projection FI</div>
+    <div class="nav-item" onclick="nav('maison',this)"><div class="nav-dot dot-amber"></div>Maison 2030</div>
+    <div class="nav-section">Corps & Santé</div>
+    <div class="nav-item" onclick="nav('sante',this)"><div class="nav-dot dot-coral"></div>Entraînement</div>
+    <div class="nav-item" onclick="nav('nutrition',this)"><div class="nav-dot dot-coral"></div>Nutrition</div>
+    <div class="nav-section">Culture</div>
+    <div class="nav-item" onclick="nav('films',this)"><div class="nav-dot dot-purple"></div>Films & Séries</div>
+    <div class="nav-item" onclick="nav('livres',this)"><div class="nav-dot dot-purple"></div>Livres</div>
+    <div class="nav-item" onclick="nav('restaurants',this)"><div class="nav-dot dot-teal"></div>Restaurants</div>
+    <div class="nav-item" onclick="nav('voyages',this)"><div class="nav-dot dot-blue"></div>Voyages</div>
+    <div class="nav-section">Outils</div>
+    <div class="nav-item" onclick="nav('actions',this)"><div class="nav-dot dot-gray"></div>Actions requises<span class="nav-badge">3</span></div>
+    <div class="nav-item" onclick="nav('verdicts',this)"><div class="nav-dot dot-gray"></div>Verdicts J+30</div>
+    <div class="nav-item" onclick="nav('crash',this)"><div class="nav-dot dot-gray"></div>Crash Simulator</div>
+  </nav>
   <div class="main">
-
-    <!-- ═══ AUJOURD'HUI ═══ -->
-    <div class="page on" id="page-aujourd-hui">
-      <div class="page-header">
-        <div class="page-header-row">
-          <div>
-            <div class="page-title">Bonjour Laurent 👋</div>
-            <div class="page-sub" id="today-date-sub">Vendredi 13 mars 2026</div>
-          </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <span class="status err">EQ Bank 🔴</span>
-            <span class="status err">Bénéficiaires 🔴</span>
-            <span class="status warn">BdC → 18 mars</span>
-          </div>
-        </div>
-      </div>
-
-      <div id="market-status-banner"></div>
-
-      <!-- KPIs -->
-      <div class="grid-4" style="margin-bottom:20px">
-        <div class="card-sm">
-          <div class="kpi-label">Portfolio Total</div>
-          <div class="kpi-val lg" id="kpi-total">—</div>
-          <div class="kpi-sub">CAD · live</div>
-        </div>
-        <div class="card-sm">
-          <div class="kpi-label">TFSA</div>
-          <div class="kpi-val" id="kpi-tfsa">—</div>
-          <div class="kpi-sub">ATH: $87,252 · 10 mars</div>
-        </div>
-        <div class="card-sm">
-          <div class="kpi-label">FHSA</div>
-          <div class="kpi-val" id="kpi-fhsa">—</div>
-          <div class="kpi-sub">Room: ~$9,700</div>
-        </div>
-        <div class="card-sm">
-          <div class="kpi-label">REER</div>
-          <div class="kpi-val" id="kpi-reer">—</div>
-          <div class="kpi-sub">SCHD focus</div>
-        </div>
-      </div>
-
-      <div class="grid-2" style="margin-bottom:20px">
-        <div class="card">
-          <div class="section-title">Open P&L</div>
-          <div style="display:flex;gap:20px;align-items:flex-end">
-            <div>
-              <div class="kpi-label">CAD</div>
-              <div class="kpi-val" id="kpi-pl-cad">—</div>
-            </div>
-            <div>
-              <div class="kpi-label">%</div>
-              <div class="kpi-val" id="kpi-pl-pct">—</div>
-            </div>
-          </div>
-          <div style="margin-top:14px">
-            <div class="kpi-label">Today P&L</div>
-            <div id="kpi-today-pl" style="font-size:14px;font-family:'DM Mono',monospace">Marché fermé</div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="section-title">Urgences</div>
-          <div class="urgence-item">
-            <div class="urgence-dot" style="background:#dc2626"></div>
-            <div class="urgence-label">Bénéficiaires Questrade</div>
-            <div class="urgence-time">5 min</div>
-          </div>
-          <div class="urgence-item">
-            <div class="urgence-dot" style="background:#dc2626"></div>
-            <div class="urgence-label">Ouvrir EQ Bank HISA</div>
-            <div class="urgence-time">15 min</div>
-          </div>
-          <div class="urgence-item">
-            <div class="urgence-dot" style="background:#d97706"></div>
-            <div class="urgence-label">Analyse $12K rétroactivité</div>
-            <div class="urgence-time">1h</div>
-          </div>
-          <div class="urgence-item">
-            <div class="urgence-dot" style="background:#2563eb"></div>
-            <div class="urgence-label">Banque du Canada → 18 mars</div>
-            <div class="urgence-time">5j</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid-3">
-        <div class="card">
-          <div class="section-title">FI Progress</div>
-          <div style="margin-bottom:10px">
-            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-              <span style="font-size:12px;color:var(--text2)">Vers $2.1M</span>
-              <span style="font-size:12px;font-family:'DM Mono',monospace" id="fi-pct-label">4.1%</span>
-            </div>
-            <div class="progress-bg"><div class="progress-fill" id="fi-bar" style="width:4.1%;background:var(--accent)"></div></div>
-          </div>
-          <div style="font-size:11px;color:var(--text3)">$85,683 / $2,100,000</div>
-        </div>
-        <div class="card">
-          <div class="section-title">RAP · Maison 2030</div>
-          <div style="margin-bottom:6px;display:flex;justify-content:space-between">
-            <span style="font-size:12px;color:var(--text2)">REER (RAP $60K)</span>
-            <span style="font-size:12px;font-family:'DM Mono',monospace">$2,771</span>
-          </div>
-          <div class="progress-bg" style="margin-bottom:10px"><div class="progress-fill" style="width:4.6%;background:#2563eb"></div></div>
-          <div style="margin-bottom:6px;display:flex;justify-content:space-between">
-            <span style="font-size:12px;color:var(--text2)">FHSA ($40K)</span>
-            <span style="font-size:12px;font-family:'DM Mono',monospace">$14,898</span>
-          </div>
-          <div class="progress-bg"><div class="progress-fill" style="width:37.2%;background:var(--accent)"></div></div>
-          <div style="font-size:11px;color:var(--text3);margin-top:10px">Down payment: $17,669 / $100,000</div>
-        </div>
-        <div class="card">
-          <div class="section-title">Exposition</div>
-          <div class="alloc-row">
-            <div class="alloc-label">USD</div>
-            <div class="alloc-bar-bg"><div class="alloc-bar-fill" style="width:44.8%;background:#2563eb"></div></div>
-            <div class="alloc-pct">44.8%</div>
-          </div>
-          <div class="alloc-row">
-            <div class="alloc-label">IA/Tech</div>
-            <div class="alloc-bar-bg"><div class="alloc-bar-fill" style="width:38%;background:#6d28d9"></div></div>
-            <div class="alloc-pct">~38%</div>
-          </div>
-          <div style="margin-top:10px">
-            <span class="kpi-badge g">USD ✓ ≤65%</span>
-            <span class="kpi-badge b" style="margin-left:4px">IA ✓ ≤45%</span>
-          </div>
-        </div>
+    <div class="topbar">
+      <div class="topbar-live"><div class="live-dot"></div><span id="topbar-status">Connexion…</span></div>
+      <div class="topbar-right">
+        <span class="topbar-info" id="usdcad-cell">USD/CAD —</span>
+        <span class="topbar-info" id="clock">—</span>
+        <label class="btn-sm" style="cursor:pointer;">JSON<input type="file" accept=".json" style="display:none" onchange="loadJSON(this)"></label>
+        <button class="btn-sm" onclick="fetchData()">↺</button>
       </div>
     </div>
+    <div class="content">
 
-    <!-- ═══ PORTFOLIO ═══ -->
-    <div class="page" id="page-portfolio">
-      <div class="page-header">
+      <div class="page active" id="page-today">
+        <div class="page-title">Aujourd'hui <span id="today-date"></span></div>
+        <div class="page-sub">Vue d'ensemble · HeyOS Life OS</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-label">Portfolio total</div><div class="kpi-val g" id="today-total">—</div><div class="kpi-sub" id="today-openpl">—</div></div>
+          <div class="kpi"><div class="kpi-label">Aujourd'hui</div><div class="kpi-val" id="today-daypl">—</div><div class="kpi-sub" id="today-mkt">—</div></div>
+          <div class="kpi"><div class="kpi-label">Maison 2030</div><div class="kpi-val am">17.7%</div><div class="kpi-sub">$17,669 / $100K</div></div>
+          <div class="kpi"><div class="kpi-label">Liberté financière</div><div class="kpi-val b" id="today-fi-pct">4.1%</div><div class="kpi-sub">$85K / $2.1M</div></div>
+        </div>
+        <div class="life-grid">
+          <div class="life-card" onclick="nav('portfolio',null)"><div class="life-icon">💼</div><div class="life-card-title">Portfolio</div><div class="life-card-stat g" id="lc-total">—</div><div class="life-card-sub" id="lc-sub">39 positions</div></div>
+          <div class="life-card" onclick="nav('maison',null)"><div class="life-icon">🏠</div><div class="life-card-title">Maison 2030</div><div class="life-card-stat am">$17,669</div><div class="life-card-sub">RAP + FHSA · 17.7% atteint</div></div>
+          <div class="life-card" onclick="nav('fi',null)"><div class="life-icon">📈</div><div class="life-card-title">Liberté financière</div><div class="life-card-stat b">~2040</div><div class="life-card-sub">$2.1M objectif · 8%/an</div></div>
+          <div class="life-card" onclick="nav('sante',null)"><div class="life-icon">🏋️</div><div class="life-card-title">Corps &amp; Santé</div><div class="life-card-stat">175 lbs</div><div class="life-card-sub">Objectif 190 lbs · PPL actif</div></div>
+          <div class="life-card" onclick="nav('films',null)"><div class="life-icon">🎬</div><div class="life-card-title">Culture</div><div class="life-card-stat" style="color:#7F77DD;">—</div><div class="life-card-sub">Films · Livres · Restaurants</div></div>
+          <div class="life-card" onclick="nav('actions',null)"><div class="life-icon">🚨</div><div class="life-card-title">Actions requises</div><div class="life-card-stat r">3</div><div class="life-card-sub">EQ Bank · Bénéficiaires · $12K</div></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-portfolio">
         <div class="page-title">Portfolio</div>
-        <div class="page-sub">Vue d'ensemble · données live</div>
-      </div>
-      <div class="grid-4" style="margin-bottom:24px">
-        <div class="card-sm"><div class="kpi-label">Total CAD</div><div class="kpi-val lg" id="p-total">—</div><div class="kpi-badge g" id="p-pl-badge">—</div></div>
-        <div class="card-sm"><div class="kpi-label">TFSA</div><div class="kpi-val" id="p-tfsa">—</div><div class="kpi-sub">ATH $87,252</div></div>
-        <div class="card-sm"><div class="kpi-label">FHSA</div><div class="kpi-val" id="p-fhsa">—</div><div class="kpi-sub">Room ~$9,700</div></div>
-        <div class="card-sm"><div class="kpi-label">REER</div><div class="kpi-val" id="p-reer">—</div><div class="kpi-sub">SCHD · $2K/mois</div></div>
-      </div>
-      <div class="grid-3" style="margin-bottom:24px">
-        <div class="card">
-          <div class="section-title">Répartition comptes</div>
-          <div id="compte-alloc"></div>
+        <div class="page-sub">Valeur live · TFSA · FHSA · REER</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-label">Valeur marché</div><div class="kpi-val g" id="pf-total">—</div></div>
+          <div class="kpi"><div class="kpi-label">Coût investi</div><div class="kpi-val" id="pf-cost">—</div></div>
+          <div class="kpi"><div class="kpi-label">Gain ouvert</div><div class="kpi-val g" id="pf-gain">—</div></div>
+          <div class="kpi"><div class="kpi-label">Rendement</div><div class="kpi-val g" id="pf-pct">—</div></div>
         </div>
-        <div class="card">
-          <div class="section-title">Exposition USD</div>
-          <div class="alloc-row"><div class="alloc-label">USD</div><div class="alloc-bar-bg"><div class="alloc-bar-fill" style="width:44.8%;background:#2563eb"></div></div><div class="alloc-pct">44.8%</div></div>
-          <div class="alloc-row"><div class="alloc-label">CAD</div><div class="alloc-bar-bg"><div class="alloc-bar-fill" style="width:55.2%;background:var(--accent)"></div></div><div class="alloc-pct">55.2%</div></div>
-          <div style="margin-top:12px"><span class="kpi-badge g">✓ Limite ≤65%</span></div>
+        <div class="grid2" style="margin-bottom:22px;">
+          <div class="card"><div class="card-title">Par compte</div>
+            <div class="data-row"><span class="data-label">TFSA</span><span class="data-val g" id="acc-tfsa">—</span></div>
+            <div class="data-row"><span class="data-label">FHSA</span><span class="data-val b" id="acc-fhsa">—</span></div>
+            <div class="data-row"><span class="data-label">REER</span><span class="data-val" id="acc-reer">—</span></div>
+            <div class="data-row"><span class="data-label">ATH</span><span class="data-val">$87,252 · 10 mars</span></div>
+          </div>
+          <div class="card"><div class="card-title">Expositions</div>
+            <div class="data-row"><span class="data-label">USD</span><span class="data-val" id="exp-usd">~45%</span></div>
+            <div class="data-row"><span class="data-label">CAD</span><span class="data-val" id="exp-cad">~55%</span></div>
+            <div class="data-row"><span class="data-label">Positions T1</span><span class="data-val">9 titres</span></div>
+            <div class="data-row"><span class="data-label">Dividendes annuels</span><span class="data-val g">~$1,926</span></div>
+          </div>
         </div>
-        <div class="card">
-          <div class="section-title">Règles actives</div>
-          <div style="font-size:12px;line-height:2;color:var(--text2)">
-            <div>✅ USD expo ≤65%</div>
-            <div>✅ IA expo ≤45%</div>
-            <div>🔒 T.TO / MFC.TO ne jamais vendre</div>
-            <div>📋 Devil's advocate avant achat</div>
-            <div>📅 Earnings calendar vérifié</div>
+        <div class="section-hdr">Top positions T1</div>
+        <table class="tbl"><thead><tr><th>Ticker</th><th>Compte</th><th>Valeur CAD</th><th>Gain $</th><th>Gain %</th></tr></thead><tbody id="tbl-top"></tbody></table>
+      </div>
+
+      <div class="page" id="page-positions">
+        <div class="page-title">Positions <span id="pos-count-lbl"></span></div>
+        <div class="page-sub">Prix live depuis GitHub · Refresh auto 60s</div>
+        <div class="filters">
+          <button class="btn-sm" id="f-all" onclick="filterPos('ALL')" style="background:#1a1a1a;color:#fff;border-color:#1a1a1a;">Tous</button>
+          <button class="btn-sm" id="f-t1" onclick="filterPos('T1')">T1</button>
+          <button class="btn-sm" id="f-t2" onclick="filterPos('T2')">T2</button>
+          <button class="btn-sm" id="f-t3" onclick="filterPos('T3')">T3</button>
+          <button class="btn-sm" id="f-t4" onclick="filterPos('T4')">T4</button>
+          <button class="btn-sm" id="f-tfsa" onclick="filterPos('TFSA')">TFSA</button>
+          <button class="btn-sm" id="f-fhsa" onclick="filterPos('FHSA')">FHSA</button>
+          <button class="btn-sm" id="f-reer" onclick="filterPos('REER')">REER</button>
+        </div>
+        <table class="tbl"><thead><tr><th>Ticker</th><th>Nom</th><th>Compte</th><th>Tier</th><th>Qté</th><th>Prix moy.</th><th>Prix live</th><th>Valeur CAD</th><th>Gain $</th><th>Gain %</th></tr></thead><tbody id="tbl-positions"></tbody></table>
+      </div>
+
+      <div class="page" id="page-budget">
+        <div class="page-title">Budget &amp; Cash Flow</div>
+        <div class="page-sub">Revenu net · Plan d'investissement · Taux d'épargne</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-label">Revenu net</div><div class="kpi-val">$7,950</div><div class="kpi-sub">/mois</div></div>
+          <div class="kpi"><div class="kpi-label">Dépenses</div><div class="kpi-val r">$1,182</div><div class="kpi-sub">/mois</div></div>
+          <div class="kpi"><div class="kpi-label">Investi structuré</div><div class="kpi-val b">$5,000</div><div class="kpi-sub">/mois</div></div>
+          <div class="kpi"><div class="kpi-label">Surplus libre</div><div class="kpi-val g">$1,768</div><div class="kpi-sub">/mois</div></div>
+        </div>
+        <div class="grid2">
+          <div class="card"><div class="card-title">Plan $5,000/mois</div>
+            <div class="data-row"><span class="data-label">REER → SCHD</span><span class="data-val g">$2,000</span></div>
+            <div class="data-row"><span class="data-label">FHSA → VFV.TO</span><span class="data-val g">$1,000</span></div>
+            <div class="data-row"><span class="data-label">TFSA → AVGO (fractional)</span><span class="data-val g">$500</span></div>
+            <div class="data-row"><span class="data-label">EQ Bank HISA</span><span class="data-val warn">$1,500 🔴 non ouvert</span></div>
+          </div>
+          <div class="card"><div class="card-title">Taux d'épargne</div>
+            <div class="data-row"><span class="data-label">Épargne / Revenu</span><span class="data-val g">85.1%</span></div>
+            <div class="data-row"><span class="data-label">Dépenses / Revenu</span><span class="data-val">14.9%</span></div>
+            <div class="data-row"><span class="data-label">Logement</span><span class="data-val">Fourni employeur ✅</span></div>
+            <div class="data-row"><span class="data-label">Nourriture</span><span class="data-val">Fournie employeur ✅</span></div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- ═══ POSITIONS ═══ -->
-    <div class="page" id="page-positions">
-      <div class="page-header">
-        <div class="page-title">Positions</div>
-        <div class="page-sub">39 positions · données live Sheets</div>
-      </div>
-      <div class="grid-3" style="margin-bottom:20px">
-        <div class="card-sm"><div class="kpi-label">Positions</div><div class="kpi-val">39</div></div>
-        <div class="card-sm"><div class="kpi-label">Valeur totale</div><div class="kpi-val" id="pos-total">—</div></div>
-        <div class="card-sm"><div class="kpi-label">Open P&L</div><div class="kpi-val pos" id="pos-pl">—</div></div>
-      </div>
-      <div class="card" style="margin-bottom:20px">
-        <div class="section-row">
-          <div class="section-title" style="margin-bottom:0">Tier System</div>
+      <div class="page" id="page-fiscal">
+        <div class="page-title">Fiscal &amp; REER</div>
+        <div class="page-sub">Snowball ARC · Room disponible · Optimisation</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-label">Taux marginal QC</div><div class="kpi-val r">52.98%</div></div>
+          <div class="kpi"><div class="kpi-label">Room FHSA 2026</div><div class="kpi-val b">~$9,700</div><div class="kpi-sub">après $4K en transit</div></div>
+          <div class="kpi"><div class="kpi-label">REER RAP cible</div><div class="kpi-val">$60,000</div></div>
+          <div class="kpi"><div class="kpi-label">Snowball mensuel</div><div class="kpi-val g">$1,060</div><div class="kpi-sub">remboursé par ARC</div></div>
         </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
-          <span class="t1" style="font-size:11px;padding:3px 10px;border-radius:99px">T1 Accumulation</span>
-          <span class="t2" style="font-size:11px;padding:3px 10px;border-radius:99px">T2 Hold</span>
-          <span class="t3" style="font-size:11px;padding:3px 10px;border-radius:99px">T3 Hold/No Add</span>
-          <span class="t4" style="font-size:11px;padding:3px 10px;border-radius:99px">T4 Dilute</span>
-        </div>
-        <div id="tier-chips-container"></div>
-      </div>
-      <div class="card">
-        <div class="section-title">Tableau positions</div>
-        <div style="overflow-x:auto">
-          <table class="tbl" id="positions-table">
-            <thead><tr><th>Ticker</th><th>Tier</th><th>Compte</th><th>Actions</th><th>Valeur CAD</th><th>P&L</th><th>%</th></tr></thead>
-            <tbody id="positions-tbody"><tr><td colspan="7" style="text-align:center;color:var(--text3);padding:24px">Chargement...</td></tr></tbody>
-          </table>
+        <div class="card" style="max-width:500px;">
+          <div class="card-title">Stratégie REER snowball</div>
+          <div class="data-row"><span class="data-label">Cotisation mensuelle</span><span class="data-val">$2,000</span></div>
+          <div class="data-row"><span class="data-label">Remboursement ARC (52.98%)</span><span class="data-val g">+$1,060/mois</span></div>
+          <div class="data-row"><span class="data-label">Coût net réel</span><span class="data-val g">$940/mois</span></div>
+          <div class="data-row"><span class="data-label">FTQ éligibilité 2025</span><span class="data-val am">Vérification pendante</span></div>
         </div>
       </div>
-    </div>
 
-    <!-- ═══ DIVIDENDES ═══ -->
-    <div class="page" id="page-dividendes">
-      <div class="page-header">
+      <div class="page" id="page-fi">
+        <div class="page-title">Projection FI</div>
+        <div class="page-sub">Liberté financière · $2.1M référence plancher · FI = liberté, pas un arrêt</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-label">Objectif FI</div><div class="kpi-val b">$2,100,000</div></div>
+          <div class="kpi"><div class="kpi-label">Atteint</div><div class="kpi-val" id="fi-pct">—</div></div>
+          <div class="kpi"><div class="kpi-label">Date estimée</div><div class="kpi-val" id="fi-yr">~2040</div></div>
+          <div class="kpi"><div class="kpi-label">Revenu passif cible</div><div class="kpi-val g">$7,000/mois</div></div>
+        </div>
+        <div class="grid2" style="margin-bottom:12px;">
+          <div class="card"><div class="card-title">Scénario réaliste · 8%/an</div>
+            <div class="prog-row"><span id="fi-r-val">—</span><span>$2,100,000</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="background:#378ADD;" id="fi-r-bar"></div></div>
+            <div style="font-size:12px;color:#aaa;" id="fi-r-sub">—</div>
+          </div>
+          <div class="card"><div class="card-title">Scénario optimiste · 10%/an</div>
+            <div class="prog-row"><span id="fi-o-val">—</span><span>$2,100,000</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="background:#22c55e;" id="fi-o-bar"></div></div>
+            <div style="font-size:12px;color:#aaa;" id="fi-o-sub">—</div>
+          </div>
+        </div>
+        <div class="card"><div class="card-title">Simulateur interactif</div>
+          <div class="slider-row"><span class="slider-label">Rendement annuel</span><input type="range" min="4" max="15" step="0.5" value="8" id="fi-rate" oninput="updateFI()"><span class="slider-val"><span id="fi-rate-v">8.0</span>%</span></div>
+          <div class="slider-row"><span class="slider-label">Cotisation mensuelle</span><input type="range" min="1000" max="10000" step="250" value="5000" id="fi-contrib" oninput="updateFI()"><span class="slider-val">$<span id="fi-contrib-v">5,000</span></span></div>
+          <div class="sim-results">
+            <div class="sim-kpi"><div class="sim-kpi-label">Date liberté</div><div class="sim-kpi-val b" id="fi-sim-yr">—</div></div>
+            <div class="sim-kpi"><div class="sim-kpi-label">Portfolio à 55 ans</div><div class="sim-kpi-val g" id="fi-sim-55">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-maison">
+        <div class="page-title">Maison 2030+</div>
+        <div class="page-sub">RAP $60K + FHSA $40K = $100K mise de fonds · Solo</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-label">REER RAP</div><div class="kpi-val" id="m-reer">$2,771</div><div class="kpi-sub">/ $60,000 · 4.6%</div></div>
+          <div class="kpi"><div class="kpi-label">FHSA</div><div class="kpi-val b" id="m-fhsa">$14,898</div><div class="kpi-sub">/ $40,000 · 37.2%</div></div>
+          <div class="kpi"><div class="kpi-label">Mise de fonds</div><div class="kpi-val am" id="m-total">$17,669</div><div class="kpi-sub">/ $100,000 · 17.7%</div></div>
+          <div class="kpi"><div class="kpi-label">Date estimée</div><div class="kpi-val">2028–2030</div></div>
+        </div>
+        <div class="grid2" style="margin-bottom:12px;">
+          <div class="card"><div class="card-title">Progression détaillée</div>
+            <div class="prog-row"><span>REER RAP</span><span id="mp-reer-lbl">$2,771 / $60K</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="background:#1a1a1a;width:4.6%;" id="mp-reer-bar"></div></div>
+            <div class="prog-row"><span>FHSA</span><span id="mp-fhsa-lbl">$14,898 / $40K</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="background:#378ADD;width:37.2%;" id="mp-fhsa-bar"></div></div>
+            <div class="prog-row"><span>Mise de fonds totale</span><span id="mp-total-lbl">$17,669 / $100K</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="background:#EF9F27;width:17.7%;" id="mp-total-bar"></div></div>
+          </div>
+          <div class="card"><div class="card-title">Simulateur hypothèque</div>
+            <div class="slider-row"><span class="slider-label">Prix propriété</span><input type="range" min="300000" max="900000" step="10000" value="550000" id="mort-price" oninput="updateMortgage()"><span class="slider-val">$<span id="mort-price-v">550K</span></span></div>
+            <div class="slider-row"><span class="slider-label">Taux hypothécaire</span><input type="range" min="2" max="8" step="0.25" value="5" id="mort-rate" oninput="updateMortgage()"><span class="slider-val"><span id="mort-rate-v">5.00</span>%</span></div>
+            <div class="sim-results">
+              <div class="sim-kpi"><div class="sim-kpi-label">Mensualité</div><div class="sim-kpi-val" id="mort-pmt">—</div></div>
+              <div class="sim-kpi"><div class="sim-kpi-label">Intérêts totaux</div><div class="sim-kpi-val r" id="mort-int">—</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card"><div class="card-title">Stratégie 2030</div>
+          <div class="data-row"><span class="data-label">✅ FHSA $1,000/mois → VFV.TO</span><span class="data-val">croissance + retraits libres impôt</span></div>
+          <div class="data-row"><span class="data-label">✅ REER $2,000/mois → SCHD</span><span class="data-val">RAP + snowball ARC</span></div>
+          <div class="data-row"><span class="data-label">✅ Achat solo sans co-emprunteur</span><span class="data-val">finances 100% séparées</span></div>
+          <div class="data-row"><span class="data-label">⚡ RAP retrait max $60K</span><span class="data-val">remboursement 15 ans</span></div>
+          <div class="data-row"><span class="data-label">⚡ FHSA retrait illimité</span><span class="data-val">aucune obligation remboursement</span></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-dividendes">
         <div class="page-title">Dividendes</div>
-        <div class="page-sub">Revenus passifs · portefeuille de revenus</div>
+        <div class="page-sub">Revenus passifs · Calendrier · Projection</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-label">Annuel estimé</div><div class="kpi-val g">~$1,926</div></div>
+          <div class="kpi"><div class="kpi-label">Mensuel moyen</div><div class="kpi-val g">~$161</div></div>
+          <div class="kpi"><div class="kpi-label">Yield moyen</div><div class="kpi-val">~2.2%</div></div>
+          <div class="kpi"><div class="kpi-label">Positions div.</div><div class="kpi-val">12</div></div>
+        </div>
+        <div class="placeholder"><div class="placeholder-title">Calendrier dividendes à venir</div><div class="placeholder-sub">SCHD · ENB.TO · JEPI · REITs · Détail par ticker · À connecter S27+</div></div>
       </div>
-      <div class="grid-4" style="margin-bottom:24px">
-        <div class="card-sm"><div class="kpi-label">Revenu annuel est.</div><div class="kpi-val" id="div-annual">~$1,840</div><div class="kpi-sub">CAD + USD</div></div>
-        <div class="card-sm"><div class="kpi-label">Revenu mensuel est.</div><div class="kpi-val" id="div-monthly">~$153</div><div class="kpi-sub">moyenne</div></div>
-        <div class="card-sm"><div class="kpi-label">Positions dividendes</div><div class="kpi-val">6</div><div class="kpi-sub">actifs</div></div>
-        <div class="card-sm"><div class="kpi-label">Yield moyen</div><div class="kpi-val" id="div-yield-avg">~4.2%</div></div>
-      </div>
-      <div class="card" style="margin-bottom:20px">
-        <div class="section-title">Positions dividendes</div>
-        <div id="div-list"></div>
-      </div>
-      <div class="card">
-        <div class="section-title">Calendrier approximatif</div>
-        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;font-size:12px" id="div-cal"></div>
-      </div>
-    </div>
 
-    <!-- ═══ COTISATIONS ═══ -->
-    <div class="page" id="page-cotisations">
-      <div class="page-header">
-        <div class="page-title">Cotisations</div>
-        <div class="page-sub">Plan automatique · $5,000/mois</div>
-      </div>
-      <div class="grid-4" style="margin-bottom:24px">
-        <div class="card-sm"><div class="kpi-label">Revenu net</div><div class="kpi-val">$7,950</div><div class="kpi-sub">/mois</div></div>
-        <div class="card-sm"><div class="kpi-label">Cotisations</div><div class="kpi-val">$5,000</div><div class="kpi-sub">/mois · auto</div></div>
-        <div class="card-sm"><div class="kpi-label">Dépenses fixes</div><div class="kpi-val">$700</div><div class="kpi-sub">/mois · logement inclus</div></div>
-        <div class="card-sm"><div class="kpi-label">Surplus libre</div><div class="kpi-val">~$1,768</div><div class="kpi-sub">/mois intentionnel</div></div>
-      </div>
-      <div class="grid-2">
-        <div class="card">
-          <div class="section-title">Répartition mensuelle</div>
-          <table class="tbl">
-            <thead><tr><th>Compte</th><th>Cible</th><th>Ticker</th><th>Statut</th></tr></thead>
-            <tbody>
-              <tr><td>FHSA</td><td class="num">$1,000</td><td>VFV.TO</td><td><span class="status ok">✅ Actif</span></td></tr>
-              <tr><td>REER</td><td class="num">$2,000</td><td>SCHD</td><td><span class="status ok">✅ Actif</span></td></tr>
-              <tr><td>TFSA</td><td class="num">$500</td><td>AVGO</td><td><span class="status ok">✅ Actif</span></td></tr>
-              <tr><td>EQ Bank HISA</td><td class="num">$1,500</td><td>—</td><td><span class="status err">🔴 Non ouvert</span></td></tr>
-            </tbody>
-          </table>
+      <div class="page" id="page-sante">
+        <div class="page-title">Corps &amp; Santé</div>
+        <div class="page-sub">Entraînement · Nutrition · Objectifs physiques</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-label">Poids actuel</div><div class="kpi-val">175 lbs</div><div class="kpi-sub">Objectif 190 lbs</div></div>
+          <div class="kpi"><div class="kpi-label">Programme</div><div class="kpi-val">PPL</div><div class="kpi-sub">Push · Pull · Legs</div></div>
+          <div class="kpi"><div class="kpi-label">BJJ</div><div class="kpi-val b">Q2 2026</div><div class="kpi-sub">Retour prévu</div></div>
+          <div class="kpi"><div class="kpi-label">Running</div><div class="kpi-val g">Actif</div></div>
         </div>
-        <div class="card">
-          <div class="section-title">Ordre de priorité FI</div>
-          <div style="font-size:13px;line-height:2.2;color:var(--text2)">
-            <div>① FHSA → <b>$1,000</b> · maison 2030</div>
-            <div>② REER → <b>$2,000</b> · RAP + impôt</div>
-            <div>③ TFSA → <b>$500</b> · croissance libre</div>
-            <div>④ EQ Bank → <b>$1,500</b> · liquidité 🔴</div>
+        <div class="grid2">
+          <div class="card"><div class="card-title">Programme — semaine type</div>
+            <div class="data-row"><span class="data-label">Lundi</span><span class="data-val">Push · Chest · Shoulders · Triceps</span></div>
+            <div class="data-row"><span class="data-label">Mardi</span><span class="data-val">Pull · Back · Biceps</span></div>
+            <div class="data-row"><span class="data-label">Mercredi</span><span class="data-val">Legs · Quads · Hamstrings</span></div>
+            <div class="data-row"><span class="data-label">Jeudi</span><span class="data-val">Cardio · Running</span></div>
+            <div class="data-row"><span class="data-label">Vendredi</span><span class="data-val">BJJ / Boxing</span></div>
+            <div class="data-row"><span class="data-label">Samedi</span><span class="data-val">Yoga · Mobilité</span></div>
           </div>
-          <div class="alert warn" style="margin-top:14px">⚠️ EQ Bank HISA jamais ouvert — $1,500/mois non investi</div>
+          <div class="placeholder" style="display:flex;flex-direction:column;justify-content:center;min-height:200px;"><div class="placeholder-title">Suivi PRs &amp; poids</div><div class="placeholder-sub">Bench · Squat · Deadlift · Poids corporel · À connecter S27+</div></div>
         </div>
       </div>
-    </div>
 
-    <!-- ═══ VERDICTS J+30 ═══ -->
-    <div class="page" id="page-verdicts">
-      <div class="page-header">
-        <div class="page-header-row">
-          <div>
-            <div class="page-title">Verdicts J+30</div>
-            <div class="page-sub">Chaque décision documentée · analysée · révisée</div>
-          </div>
-          <button class="btn primary" onclick="openVerdictModal()">+ Nouvelle décision</button>
-        </div>
+      <div class="page" id="page-films">
+        <div class="page-title">Films &amp; Séries</div>
+        <div class="page-sub">Liste à voir · En cours · Favoris</div>
+        <div class="placeholder"><div class="placeholder-title">Ta liste de films &amp; séries</div><div class="placeholder-sub">Films à voir · Séries en cours · Notes · À construire S27+</div></div>
       </div>
-      <div class="filter-tabs">
-        <div class="ftab active" onclick="filterVerdicts('all',this)">Tous</div>
-        <div class="ftab" onclick="filterVerdicts('pending',this)">En attente</div>
-        <div class="ftab" onclick="filterVerdicts('due',this)">Échéance proche</div>
-        <div class="ftab" onclick="filterVerdicts('done',this)">Verdicts rendus</div>
-      </div>
-      <div id="verdicts-list"></div>
-    </div>
 
-    <!-- ═══ OBJECTIFS ═══ -->
-    <div class="page" id="page-objectifs">
-      <div class="page-header">
-        <div class="page-title">Objectifs</div>
-        <div class="page-sub">Vision 10 ans · révisée annuellement</div>
+      <div class="page" id="page-livres">
+        <div class="page-title">Livres</div>
+        <div class="page-sub">En cours · À lire · Complétés</div>
+        <div class="placeholder"><div class="placeholder-title">Ta liste de lecture</div><div class="placeholder-sub">Livres en cours · Wishlist · Notes de lecture · À construire S27+</div></div>
       </div>
-      <div class="grid-2" style="margin-bottom:20px">
-        <div class="card">
-          <div class="section-title">Vision 10 ans</div>
-          <div style="font-size:13px;line-height:2;color:var(--text2)">
-            <div>🏠 Maison solo <b>2030</b> — RAP $60K + FHSA $40K</div>
-            <div>💰 FI plancher <b>$2.1M</b> — liberté, pas arrêt</div>
-            <div>👨‍👩‍👧 Famille — travailler <b>par choix</b></div>
-            <div>📈 Actifs gérés <b>indépendamment</b></div>
-            <div>🌍 30 ans de décisions <b>systémiques</b></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="section-title">Prochaines étapes</div>
-          <div class="urgence-item"><div class="urgence-dot" style="background:#dc2626"></div><div class="urgence-label">Ouvrir EQ Bank HISA</div><div class="urgence-time">🔴 Urgent</div></div>
-          <div class="urgence-item"><div class="urgence-dot" style="background:#dc2626"></div><div class="urgence-label">Bénéficiaires Questrade</div><div class="urgence-time">🔴 Urgent</div></div>
-          <div class="urgence-item"><div class="urgence-dot" style="background:#d97706"></div><div class="urgence-label">Analyser $12K rétroactivité</div><div class="urgence-time">S29</div></div>
-          <div class="urgence-item"><div class="urgence-dot" style="background:#2563eb"></div><div class="urgence-label">BdC annonce 18 mars</div><div class="urgence-time">5j</div></div>
-        </div>
-      </div>
-    </div>
 
-    <!-- ═══ PERSONAL RECORDS ═══ -->
-    <div class="page" id="page-prs">
-      <div class="page-header">
-        <div class="page-header-row">
-          <div>
-            <div class="page-title">Personal Records</div>
-            <div class="page-sub">Documentés à chaque mention · progression réelle</div>
-          </div>
-          <button class="btn primary" onclick="openPRModal()">Mettre à jour PR</button>
-        </div>
+      <div class="page" id="page-restaurants">
+        <div class="page-title">Restaurants</div>
+        <div class="page-sub">À essayer · Favoris · Par ville</div>
+        <div class="placeholder"><div class="placeholder-title">Ta liste de restaurants</div><div class="placeholder-sub">Montréal · Québec · Autres villes · Cuisine · À construire S27+</div></div>
       </div>
-      <div class="card" style="margin-bottom:20px">
-        <div id="pr-list"></div>
+
+      <div class="page" id="page-voyages">
+        <div class="page-title">Voyages</div>
+        <div class="page-sub">Destinations · Bucket list · Planification</div>
+        <div class="placeholder"><div class="placeholder-title">Tes destinations</div><div class="placeholder-sub">Bucket list · Voyages planifiés · Pays visités · À construire S27+</div></div>
       </div>
-      <div class="card">
-        <div class="section-title">Programme 2on/2off</div>
-        <div class="grid-2">
-          <div>
-            <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;font-weight:600">Jours ON · Récupération</div>
-            <div style="font-size:13px;line-height:2;color:var(--text2)">
-              <div>🧘 Yoga / mobilité</div>
-              <div>🚶 Marche active</div>
-              <div>🛌 Optimiser sommeil</div>
-            </div>
-          </div>
-          <div>
-            <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;font-weight:600">Jours OFF · Intensité</div>
-            <div style="font-size:13px;line-height:2;color:var(--text2)">
-              <div>💪 PPL (Push/Pull/Legs)</div>
-              <div>🏃 Course / cardio</div>
-              <div>🥋 BJJ (objectif retour)</div>
-            </div>
+
+      <div class="page" id="page-nutrition">
+        <div class="page-title">Nutrition</div>
+        <div class="page-sub">Alimentation · Objectifs · Suivi</div>
+        <div class="placeholder"><div class="placeholder-title">Suivi nutritionnel</div><div class="placeholder-sub">Macros · Objectifs caloriques · Habitudes · À construire S27+</div></div>
+      </div>
+
+      <div class="page" id="page-actions">
+        <div class="page-title">Actions requises</div>
+        <div class="page-sub">3 urgences en attente</div>
+        <div class="action-item"><div class="action-dot red"></div><div><div class="action-title">🔴 EQ Bank HISA — Ouvrir maintenant</div><div class="action-sub">$1,500/mois qui dort · Taux ~4% · eqbank.ca · 15 minutes</div></div></div>
+        <div class="action-item"><div class="action-dot red"></div><div><div class="action-title">🔴 Bénéficiaires Questrade — 5 minutes</div><div class="action-sub">$85,683 sans bénéficiaires · My Account → Beneficiaries</div></div></div>
+        <div class="action-item"><div class="action-dot amber"></div><div><div class="action-title">🟡 Analyse $12K rétroactivité</div><div class="action-sub">Room FHSA ~$9,700 · Allocation pendante · avec Claude</div></div></div>
+        <div class="action-item"><div class="action-dot blue"></div><div><div class="action-title">📅 BdC 18 mars — Dans 5 jours</div><div class="action-sub">Décision taux directeur · Impact FHSA et hypothèque 2030</div></div></div>
+      </div>
+
+      <div class="page" id="page-verdicts">
+        <div class="page-title">Verdicts J+30</div>
+        <div class="page-sub">Décisions passées · Résultats · Apprentissages</div>
+        <div class="placeholder"><div class="placeholder-title">Journal de décisions</div><div class="placeholder-sub">Historique des achats · Verdicts 30 jours après · À construire S27+</div></div>
+      </div>
+
+      <div class="page" id="page-crash">
+        <div class="page-title">Crash Simulator</div>
+        <div class="page-sub">Scénarios de stress · COVID 2020 comme ancrage de conviction</div>
+        <div class="card" style="max-width:520px;">
+          <div class="card-title">Simuler une correction</div>
+          <div class="slider-row"><span class="slider-label">Correction marché</span><input type="range" min="5" max="60" step="5" value="20" id="crash-pct" oninput="updateCrash()"><span class="slider-val">-<span id="crash-pct-v">20</span>%</span></div>
+          <div class="sim-results">
+            <div class="sim-kpi"><div class="sim-kpi-label">Portfolio après crash</div><div class="sim-kpi-val r" id="crash-after">—</div></div>
+            <div class="sim-kpi"><div class="sim-kpi-label">Perte en $</div><div class="sim-kpi-val r" id="crash-loss">—</div></div>
+            <div class="sim-kpi"><div class="sim-kpi-label">Récupération à 8%/an</div><div class="sim-kpi-val" id="crash-rec">—</div></div>
+            <div class="sim-kpi"><div class="sim-kpi-label">Opportunité DCA</div><div class="sim-kpi-val g" id="crash-dca">—</div></div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- ═══ PROGRAMME ═══ -->
-    <div class="page" id="page-programme">
-      <div class="page-header">
-        <div class="page-title">Programme Entraînement</div>
-        <div class="page-sub">PPL adapté · rotation 2on/2off</div>
-      </div>
-      <div class="grid-3">
-        <div class="card"><div class="section-title" style="color:#2563eb">Push</div><div style="font-size:13px;line-height:2;color:var(--text2)"><div>Bench Press</div><div>Incline DB Press</div><div>Overhead Press</div><div>Lateral Raises</div><div>Triceps</div></div></div>
-        <div class="card"><div class="section-title" style="color:#16a34a">Pull</div><div style="font-size:13px;line-height:2;color:var(--text2)"><div>Deadlift</div><div>Pull-ups / Rows</div><div>Face Pulls</div><div>Curls</div><div>Rear Delts</div></div></div>
-        <div class="card"><div class="section-title" style="color:#d97706">Legs</div><div style="font-size:13px;line-height:2;color:var(--text2)"><div>Squat</div><div>Romanian DL</div><div>Leg Press</div><div>Leg Curls</div><div>Calf Raises</div></div></div>
-      </div>
-    </div>
-
-    <!-- ═══ FILMS & SÉRIES ═══ -->
-    <div class="page" id="page-films">
-      <div class="page-header">
-        <div class="page-header-row">
-          <div>
-            <div class="page-title">Films & Séries</div>
-            <div class="page-sub">Ma liste personnelle · filtrée par profil</div>
-          </div>
-          <button class="btn primary" onclick="openFilmModal()">+ Ajouter</button>
-        </div>
-      </div>
-      <div class="filter-tabs">
-        <div class="ftab active" onclick="filterFilms('all',this)">Tous</div>
-        <div class="ftab" onclick="filterFilms('a-voir',this)">À voir</div>
-        <div class="ftab" onclick="filterFilms('en-cours',this)">En cours</div>
-        <div class="ftab" onclick="filterFilms('vu',this)">Vus</div>
-      </div>
-      <div id="films-list"></div>
-    </div>
-
-    <!-- ═══ LIVRES ═══ -->
-    <div class="page" id="page-livres">
-      <div class="page-header">
-        <div class="page-header-row">
-          <div>
-            <div class="page-title">Livres</div>
-            <div class="page-sub">Connectés aux décisions de vie · documentés HeyOS</div>
-          </div>
-          <button class="btn primary" onclick="openLivreModal()">+ Ajouter</button>
-        </div>
-      </div>
-      <div class="filter-tabs">
-        <div class="ftab active" onclick="filterLivres('all',this)">Tous</div>
-        <div class="ftab" onclick="filterLivres('a-lire',this)">À lire</div>
-        <div class="ftab" onclick="filterLivres('en-cours',this)">En cours</div>
-        <div class="ftab" onclick="filterLivres('lu',this)">Lus</div>
-      </div>
-      <div id="livres-list"></div>
-    </div>
-
-    <!-- ═══ RESTAURANTS ═══ -->
-    <div class="page" id="page-restos">
-      <div class="page-header">
-        <div class="page-header-row">
-          <div>
-            <div class="page-title">Restaurants</div>
-            <div class="page-sub">Expériences mémorables · documentées</div>
-          </div>
-          <button class="btn primary" onclick="openRestoModal()">+ Ajouter</button>
-        </div>
-      </div>
-      <div class="filter-tabs">
-        <div class="ftab active" onclick="filterRestos('all',this)">Tous</div>
-        <div class="ftab" onclick="filterRestos('a-essayer',this)">À essayer</div>
-        <div class="ftab" onclick="filterRestos('fav',this)">Favoris</div>
-        <div class="ftab" onclick="filterRestos('visite',this)">Visités</div>
-      </div>
-      <div id="restos-list"></div>
-    </div>
-
-    <!-- ═══ 30 RÈGLES ═══ -->
-    <div class="page" id="page-regles">
-      <div class="page-header">
-        <div class="page-title">30 Règles HeyOS</div>
-        <div class="page-sub">Actives · sans exception · sans attendre qu'on les demande</div>
-      </div>
-      <div id="regles-list"></div>
-    </div>
-
-  </div><!-- end main -->
-</div><!-- end app -->
-
-<!-- MODALS -->
-<div class="modal-overlay" id="modal-verdict">
-  <div class="modal">
-    <div class="modal-title">📋 Nouvelle décision</div>
-    <div class="form-group" style="margin-bottom:12px">
-      <div class="form-label">Titre de la décision</div>
-      <input class="form-input" id="v-titre" placeholder="ex: Acheter VFV.TO avec les $4K FHSA">
-    </div>
-    <div class="form-group" style="margin-bottom:12px">
-      <div class="form-label">Raisonnement</div>
-      <textarea class="form-input" id="v-raison" rows="3" placeholder="Pourquoi cette décision ? Quels étaient les alternatives ?" style="resize:vertical"></textarea>
-    </div>
-    <div class="form-row" style="margin-bottom:12px">
-      <div class="form-group">
-        <div class="form-label">Pilier</div>
-        <select class="form-select" id="v-pilier">
-          <option value="Finances">Finances</option>
-          <option value="Corps">Corps & Performance</option>
-          <option value="Culture">Culture</option>
-          <option value="Projet de vie">Projet de vie</option>
-          <option value="Système">Système de décision</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <div class="form-label">Date</div>
-        <input class="form-input" id="v-date" type="date">
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" onclick="closeModal('modal-verdict')">Annuler</button>
-      <button class="btn primary" onclick="saveVerdict()">Enregistrer</button>
     </div>
   </div>
 </div>
-
-<div class="modal-overlay" id="modal-pr">
-  <div class="modal">
-    <div class="modal-title">💪 Mettre à jour PR</div>
-    <div id="pr-form-fields"></div>
-    <div class="modal-footer">
-      <button class="btn" onclick="closeModal('modal-pr')">Annuler</button>
-      <button class="btn primary" onclick="savePRs()">Sauvegarder</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="modal-film">
-  <div class="modal">
-    <div class="modal-title">🎬 Ajouter film / série</div>
-    <div class="form-row" style="margin-bottom:12px">
-      <div class="form-group">
-        <div class="form-label">Titre</div>
-        <input class="form-input" id="film-titre" placeholder="ex: Interstellar">
-      </div>
-      <div class="form-group">
-        <div class="form-label">Type</div>
-        <select class="form-select" id="film-type"><option value="Film">Film</option><option value="Série">Série</option><option value="Doc">Documentaire</option></select>
-      </div>
-    </div>
-    <div class="form-row" style="margin-bottom:12px">
-      <div class="form-group">
-        <div class="form-label">Statut</div>
-        <select class="form-select" id="film-statut"><option value="a-voir">À voir</option><option value="en-cours">En cours</option><option value="vu">Vu ✓</option></select>
-      </div>
-      <div class="form-group">
-        <div class="form-label">Note (optionnel)</div>
-        <input class="form-input" id="film-note" placeholder="ex: 8/10">
-      </div>
-    </div>
-    <div class="form-group" style="margin-bottom:12px">
-      <div class="form-label">Commentaire (optionnel)</div>
-      <input class="form-input" id="film-comment" placeholder="ex: Recommandé pour vision long terme">
-    </div>
-    <div class="modal-footer">
-      <button class="btn" onclick="closeModal('modal-film')">Annuler</button>
-      <button class="btn primary" onclick="saveFilm()">Ajouter</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="modal-livre">
-  <div class="modal">
-    <div class="modal-title">📚 Ajouter un livre</div>
-    <div class="form-row" style="margin-bottom:12px">
-      <div class="form-group">
-        <div class="form-label">Titre</div>
-        <input class="form-input" id="livre-titre" placeholder="ex: The Psychology of Money">
-      </div>
-      <div class="form-group">
-        <div class="form-label">Auteur</div>
-        <input class="form-input" id="livre-auteur" placeholder="ex: Morgan Housel">
-      </div>
-    </div>
-    <div class="form-row" style="margin-bottom:12px">
-      <div class="form-group">
-        <div class="form-label">Statut</div>
-        <select class="form-select" id="livre-statut"><option value="a-lire">À lire</option><option value="en-cours">En cours</option><option value="lu">Lu ✓</option></select>
-      </div>
-      <div class="form-group">
-        <div class="form-label">Pilier lié</div>
-        <select class="form-select" id="livre-pilier"><option value="Finances">Finances</option><option value="Corps">Corps</option><option value="Culture">Culture</option><option value="Vie">Projet de vie</option><option value="Décision">Décision</option></select>
-      </div>
-    </div>
-    <div class="form-group" style="margin-bottom:12px">
-      <div class="form-label">Leçon clé (optionnel)</div>
-      <input class="form-input" id="livre-lecon" placeholder="ex: Wealth is what you don't spend">
-    </div>
-    <div class="modal-footer">
-      <button class="btn" onclick="closeModal('modal-livre')">Annuler</button>
-      <button class="btn primary" onclick="saveLivre()">Ajouter</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="modal-resto">
-  <div class="modal">
-    <div class="modal-title">🍽️ Ajouter un restaurant</div>
-    <div class="form-row" style="margin-bottom:12px">
-      <div class="form-group">
-        <div class="form-label">Nom</div>
-        <input class="form-input" id="resto-nom" placeholder="ex: Joe Beef">
-      </div>
-      <div class="form-group">
-        <div class="form-label">Ville</div>
-        <input class="form-input" id="resto-ville" placeholder="ex: Montréal">
-      </div>
-    </div>
-    <div class="form-row" style="margin-bottom:12px">
-      <div class="form-group">
-        <div class="form-label">Cuisine</div>
-        <input class="form-input" id="resto-cuisine" placeholder="ex: Française, Japonaise...">
-      </div>
-      <div class="form-group">
-        <div class="form-label">Statut</div>
-        <select class="form-select" id="resto-statut"><option value="a-essayer">À essayer</option><option value="visite">Visité</option><option value="fav">Favori ⭐</option></select>
-      </div>
-    </div>
-    <div class="form-group" style="margin-bottom:12px">
-      <div class="form-label">Note (optionnel)</div>
-      <input class="form-input" id="resto-note" placeholder="ex: Exceptionnel · à revisiter">
-    </div>
-    <div class="modal-footer">
-      <button class="btn" onclick="closeModal('modal-resto')">Annuler</button>
-      <button class="btn primary" onclick="saveResto()">Ajouter</button>
-    </div>
-  </div>
-</div>
-
 <script>
-// ─── CONFIG ───────────────────────────────────────────────
-const PIN = '123';
-const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbweF17MTm4wgPbj4a5kYbJQkVOxC1kP5EV3pK3n3VEFg5cPsQ8WllsLOL6eJJHwv1o0/exec';
-
-// ─── LOGIN ────────────────────────────────────────────────
-document.getElementById('pin-input').addEventListener('keydown', e => { if(e.key === 'Enter') tryLogin(); });
-function tryLogin(){
-  const v = document.getElementById('pin-input').value;
-  if(v === PIN){
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').classList.add('on');
-    init();
-  } else {
-    document.getElementById('login-err').textContent = 'PIN incorrect';
-    document.getElementById('pin-input').value = '';
-  }
-}
-
-// ─── NAV ──────────────────────────────────────────────────
-function nav(id){
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
-  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
-  const pg = document.getElementById('page-' + id);
-  if(pg) pg.classList.add('on');
-  document.querySelectorAll('.sb-item').forEach(i => {
-    if(i.getAttribute('onclick') && i.getAttribute('onclick').includes("'"+id+"'")) i.classList.add('active');
-  });
-}
-
-// ─── CLOCK ────────────────────────────────────────────────
-function updateClock(){
-  const now = new Date();
-  const hne = new Date(now.toLocaleString('en-US', {timeZone:'America/Toronto'}));
-  const h = String(hne.getHours()).padStart(2,'0');
-  const m = String(hne.getMinutes()).padStart(2,'0');
-  document.getElementById('sb-time').textContent = h + ':' + m + ' HNE';
-}
-setInterval(updateClock, 10000);
-updateClock();
-
-// ─── MARKET STATUS ────────────────────────────────────────
-function checkMarket(){
-  const now = new Date();
-  const hne = new Date(now.toLocaleString('en-US', {timeZone:'America/Toronto'}));
-  const day = hne.getDay();
-  const h = hne.getHours();
-  const m = hne.getMinutes();
-  const mins = h * 60 + m;
-  const open = 9*60+30;
-  const close = 16*60;
-  const isWeekend = day === 0 || day === 6;
-  const isOpen = !isWeekend && mins >= open && mins < close;
-  const banner = document.getElementById('market-status-banner');
-  if(!isOpen){
-    let next = '';
-    if(isWeekend || day === 5 && mins >= close) next = 'Lundi 9h30';
-    else if(mins < open) next = 'Aujourd\'hui 9h30';
-    else next = 'Demain 9h30';
-    banner.innerHTML = `<div class="market-closed">🔴 Marché fermé · Réouverture: ${next} HNE</div>`;
-    document.getElementById('kpi-today-pl').textContent = '—  (marché fermé)';
-    document.getElementById('kpi-today-pl').style.color = 'var(--text3)';
-  } else {
-    banner.innerHTML = '<div class="alert ok" style="margin-bottom:16px">🟢 Marché ouvert · NYSE/NASDAQ/TSX</div>';
-  }
-}
-
-// ─── LOAD DATA ────────────────────────────────────────────
-async function loadData(){
-  try {
-    const r = await fetch(SHEETS_URL + '?t=' + Date.now());
-    const d = await r.json();
-    renderKPIs(d);
-    renderPositions(d);
-  } catch(e) {
-    console.warn('Sheets unavailable, using cached data');
-    renderKPIsStatic();
-  }
-}
-
-function renderKPIs(d){
-  const total = d.totalCAD || 85683;
-  const tfsa = d.tfsaCAD || 69199;
-  const fhsa = d.fhsaCAD || 14898;
-  const reer = d.reerCAD || 2771;
-  const pl = d.openPLCAD || 13906;
-  const plPct = d.openPLPct || 19.37;
-
-  const fmt = n => '$' + Math.round(n).toLocaleString('fr-CA');
-  const fmtSign = n => (n >= 0 ? '+' : '') + '$' + Math.round(n).toLocaleString('fr-CA');
-
-  ['kpi-total','p-total'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = fmt(total); });
-  ['kpi-tfsa','p-tfsa'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = fmt(tfsa); });
-  ['kpi-fhsa','p-fhsa'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = fmt(fhsa); });
-  ['kpi-reer','p-reer'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = fmt(reer); });
-  ['pos-total'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = fmt(total); });
-
-  const plEl = document.getElementById('kpi-pl-cad');
-  if(plEl){ plEl.textContent = fmtSign(pl); plEl.className = 'kpi-val ' + (pl >= 0 ? 'pos' : 'neg'); }
-  const plPctEl = document.getElementById('kpi-pl-pct');
-  if(plPctEl){ plPctEl.textContent = (pl >= 0 ? '+' : '') + plPct.toFixed(2) + '%'; plPctEl.className = 'kpi-val ' + (pl >= 0 ? 'pos' : 'neg'); }
-  const posPlEl = document.getElementById('pos-pl');
-  if(posPlEl){ posPlEl.textContent = fmtSign(pl); }
-
-  const badge = document.getElementById('p-pl-badge');
-  if(badge){ badge.textContent = fmtSign(pl) + ' (' + (pl>=0?'+':'') + plPct.toFixed(2) + '%)'; badge.className = 'kpi-badge ' + (pl >= 0 ? 'g' : 'r'); }
-
-  const fiPct = (total / 2100000 * 100).toFixed(1);
-  const fiBar = document.getElementById('fi-bar');
-  const fiLabel = document.getElementById('fi-pct-label');
-  if(fiBar) fiBar.style.width = fiPct + '%';
-  if(fiLabel) fiLabel.textContent = fiPct + '%';
-
-  renderCompteAlloc(tfsa, fhsa, reer, total);
-  if(d.positions) renderPositionsTable(d.positions);
-}
-
-function renderKPIsStatic(){
-  renderKPIs({totalCAD:85683,tfsaCAD:69199,fhsaCAD:14898,reerCAD:2771,openPLCAD:13906,openPLPct:19.37});
-}
-
-function renderCompteAlloc(tfsa, fhsa, reer, total){
-  const el = document.getElementById('compte-alloc');
-  if(!el) return;
-  const data = [
-    {label:'TFSA', val:tfsa, color:'#22c55e'},
-    {label:'FHSA', val:fhsa, color:'#2563eb'},
-    {label:'REER', val:reer, color:'#d97706'},
-  ];
-  el.innerHTML = data.map(d => `
-    <div class="alloc-row">
-      <div class="alloc-label">${d.label}</div>
-      <div class="alloc-bar-bg"><div class="alloc-bar-fill" style="width:${(d.val/total*100).toFixed(1)}%;background:${d.color}"></div></div>
-      <div class="alloc-pct">${(d.val/total*100).toFixed(0)}%</div>
-    </div>`).join('');
-}
-
-// ─── TIER DATA ────────────────────────────────────────────
-const TIERS = {
-  T1: ['AVGO','SMH','VFV.TO','GOOG','AMZN','META','ENB.TO','GEV','SCHD'],
-  T2: ['MSFT','NVDA','QQQM','XEQT.TO','SPGI','JEPI','TSLA'],
-  T3: [],
-  T4: ['REI-UN.TO','HR-UN.TO','SRU-UN.TO','AP-UN.TO']
-};
-
-function renderPositions(d){
-  const container = document.getElementById('tier-chips-container');
-  if(!container) return;
-  let html = '';
-  Object.entries(TIERS).forEach(([tier, tickers]) => {
-    if(tickers.length === 0) return;
-    html += `<div style="margin-bottom:14px"><div style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">${tier}</div><div class="pos-chips">`;
-    tickers.forEach(t => {
-      const cls = tier === 'T1' ? 't1' : tier === 'T2' ? 't2' : tier === 'T4' ? 't4' : 't3';
-      html += `<span class="pos-chip"><span class="${cls}" style="padding:1px 6px;border-radius:4px">${tier}</span> ${t}</span>`;
-    });
-    html += '</div></div>';
-  });
-  container.innerHTML = html;
-}
-
-function renderPositionsTable(positions){
-  const tbody = document.getElementById('positions-tbody');
-  if(!tbody || !positions) return;
-  const fmt = n => '$' + parseFloat(n||0).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',');
-  tbody.innerHTML = positions.slice(0,30).map(p => {
-    const pl = parseFloat(p.pl || 0);
-    const plCls = pl >= 0 ? 'pos' : 'neg';
-    const tier = Object.entries(TIERS).find(([k,v]) => v.includes(p.ticker));
-    const tierLabel = tier ? `<span class="${tier[0].toLowerCase()}">${tier[0]}</span>` : '';
-    return `<tr>
-      <td><b>${p.ticker}</b></td>
-      <td>${tierLabel}</td>
-      <td>${p.account || '—'}</td>
-      <td class="num">${p.shares || '—'}</td>
-      <td class="num">${fmt(p.valueCAD)}</td>
-      <td class="num ${plCls}">${pl >= 0 ? '+' : ''}${fmt(pl)}</td>
-      <td class="num ${plCls}">${parseFloat(p.plPct||0).toFixed(1)}%</td>
-    </tr>`;
-  }).join('');
-}
-
-// ─── DIVIDENDES ───────────────────────────────────────────
-const DIV_DATA = [
-  {ticker:'SCHD', name:'Schwab Dividend', freq:'Trimestriel', yield:3.5, valCAD:2400, currency:'USD'},
-  {ticker:'JEPI', name:'JPMorgan Premium', freq:'Mensuel', yield:7.2, valCAD:1200, currency:'USD'},
-  {ticker:'ENB.TO', name:'Enbridge', freq:'Trimestriel', yield:6.8, valCAD:3200, currency:'CAD'},
-  {ticker:'SRU-UN.TO', name:'SmartCentres REIT', freq:'Mensuel', yield:7.5, valCAD:800, currency:'CAD'},
-  {ticker:'HR-UN.TO', name:'H&R REIT', freq:'Mensuel', yield:5.2, valCAD:600, currency:'CAD'},
-  {ticker:'AP-UN.TO', name:'Allied REIT', freq:'Mensuel', yield:9.1, valCAD:500, currency:'CAD'},
+const PW_HASH='c838df5335c1eba2532f32090cd555d17c9e218289d99ecaf55525d7b199aa88';
+async function sha256(s){const b=new TextEncoder().encode(s);const h=await crypto.subtle.digest('SHA-256',b);return Array.from(new Uint8Array(h)).map(x=>x.toString(16).padStart(2,'0')).join('');}
+async function tryLogin(){const pw=document.getElementById('pw-input').value;if(await sha256(pw)===PW_HASH){sessionStorage.setItem('heyos_auth','1');document.getElementById('login-screen').style.display='none';document.getElementById('app').classList.add('visible');init();}else{document.getElementById('login-err').textContent='Code incorrect';document.getElementById('pw-input').value='';}}
+if(sessionStorage.getItem('heyos_auth')==='1'){document.getElementById('login-screen').style.display='none';document.getElementById('app').classList.add('visible');}
+const DATA_URL='https://raw.githubusercontent.com/Lemiwinks007/heyos-dashboard/main/data.json';
+let USDCAD=1.3559,TOTAL_CAD=85683,COST_BASE=71776.46,_lc={},_pf='ALL';
+let POSITIONS=[
+{ticker:'VFV.TO',nom:'Vanguard S&P 500',tier:'T1',compte:'TFSA',qty:84,prixMoy:119.9246,dev:'CAD'},
+{ticker:'GOOG',nom:'Alphabet',tier:'T1',compte:'TFSA',qty:6,prixMoy:90.6059,dev:'USD'},
+{ticker:'AVGO',nom:'Broadcom',tier:'T1',compte:'TFSA',qty:16.5743,prixMoy:342.1593,dev:'USD'},
+{ticker:'AMZN',nom:'Amazon',tier:'T1',compte:'TFSA',qty:7.4817,prixMoy:113.7377,dev:'USD'},
+{ticker:'SMH',nom:'VanEck Semis',tier:'T1',compte:'TFSA',qty:19.2266,prixMoy:393.5653,dev:'USD'},
+{ticker:'META',nom:'Meta Platforms',tier:'T1',compte:'TFSA',qty:1,prixMoy:637.7698,dev:'USD'},
+{ticker:'ENB.TO',nom:'Enbridge',tier:'T1',compte:'TFSA',qty:9,prixMoy:49.62,dev:'CAD'},
+{ticker:'GEV',nom:'GE Vernova',tier:'T1',compte:'TFSA',qty:2.4431,prixMoy:831.9907,dev:'USD'},
+{ticker:'MSFT',nom:'Microsoft',tier:'T2',compte:'TFSA',qty:2,prixMoy:312.5938,dev:'USD'},
+{ticker:'NVDA',nom:'NVIDIA',tier:'T2',compte:'TFSA',qty:4,prixMoy:128.59,dev:'USD'},
+{ticker:'TSLA',nom:'Tesla',tier:'T2',compte:'TFSA',qty:1.8645,prixMoy:303.5644,dev:'USD'},
+{ticker:'QQQM',nom:'Invesco Nasdaq 100',tier:'T2',compte:'TFSA',qty:4.4515,prixMoy:247.1068,dev:'USD'},
+{ticker:'XEQT.TO',nom:'iShares Core Equity',tier:'T2',compte:'TFSA',qty:25,prixMoy:39.97,dev:'CAD'},
+{ticker:'SPGI',nom:'S&P Global',tier:'T2',compte:'TFSA',qty:0.9996,prixMoy:443.2458,dev:'USD'},
+{ticker:'TD.TO',nom:'TD Bank',tier:'T3',compte:'TFSA',qty:87,prixMoy:79.8348,dev:'CAD'},
+{ticker:'ZLB.TO',nom:'BMO Low Volatility',tier:'T3',compte:'TFSA',qty:37,prixMoy:58.1416,dev:'CAD'},
+{ticker:'H.TO',nom:'Hydro One',tier:'T3',compte:'TFSA',qty:22,prixMoy:52.8663,dev:'CAD'},
+{ticker:'T.TO',nom:'TELUS',tier:'T3',compte:'TFSA',qty:32,prixMoy:22.04,dev:'CAD'},
+{ticker:'QTUM',nom:'Defiance Quantum',tier:'T3',compte:'TFSA',qty:5,prixMoy:120.81,dev:'USD'},
+{ticker:'HURA.TO',nom:'Global X Uranium',tier:'T3',compte:'TFSA',qty:6,prixMoy:55.25,dev:'CAD'},
+{ticker:'XEI.TO',nom:'iShares High Div',tier:'T4',compte:'TFSA',qty:51,prixMoy:30.6811,dev:'CAD'},
+{ticker:'SRU.UN.TO',nom:'SmartCentres REIT',tier:'T4',compte:'TFSA',qty:57,prixMoy:25.2543,dev:'CAD'},
+{ticker:'XIC.TO',nom:'iShares Core TSX',tier:'T4',compte:'TFSA',qty:21,prixMoy:40.4066,dev:'CAD'},
+{ticker:'ZRE.TO',nom:'BMO Equal REITs',tier:'T4',compte:'TFSA',qty:19,prixMoy:20.83,dev:'CAD'},
+{ticker:'MFC.TO',nom:'Manulife',tier:'T4',compte:'TFSA',qty:8,prixMoy:51.7,dev:'CAD'},
+{ticker:'VDU.TO',nom:'Vanguard Dev Markets',tier:'T4',compte:'TFSA',qty:6,prixMoy:43.75,dev:'CAD'},
+{ticker:'VFV.TO',nom:'Vanguard S&P 500',tier:'T1',compte:'FHSA',qty:16,prixMoy:157.3812,dev:'CAD'},
+{ticker:'AMZN',nom:'Amazon',tier:'T1',compte:'FHSA',qty:7,prixMoy:154.9418,dev:'USD'},
+{ticker:'QQQM',nom:'Invesco Nasdaq 100',tier:'T2',compte:'FHSA',qty:5.311,prixMoy:247.4064,dev:'USD'},
+{ticker:'XEQT.TO',nom:'iShares Core Equity',tier:'T2',compte:'FHSA',qty:15,prixMoy:40.06,dev:'CAD'},
+{ticker:'TD.TO',nom:'TD Bank',tier:'T3',compte:'FHSA',qty:15,prixMoy:82.29,dev:'CAD'},
+{ticker:'H.TO',nom:'Hydro One',tier:'T3',compte:'FHSA',qty:10,prixMoy:51.78,dev:'CAD'},
+{ticker:'ZLB.TO',nom:'BMO Low Volatility',tier:'T3',compte:'FHSA',qty:3,prixMoy:59.0666,dev:'CAD'},
+{ticker:'SRU.UN.TO',nom:'SmartCentres REIT',tier:'T4',compte:'FHSA',qty:63,prixMoy:23.61,dev:'CAD'},
+{ticker:'REI.UN.TO',nom:'RioCan REIT',tier:'T4',compte:'FHSA',qty:80,prixMoy:18.73,dev:'CAD'},
+{ticker:'XIC.TO',nom:'iShares Core TSX',tier:'T4',compte:'FHSA',qty:19,prixMoy:48.3705,dev:'CAD'},
+{ticker:'XEI.TO',nom:'iShares High Div',tier:'T4',compte:'FHSA',qty:26,prixMoy:32.6111,dev:'CAD'},
+{ticker:'SCHD',nom:'Schwab US Dividend',tier:'T1',compte:'REER',qty:64.3053,prixMoy:25.5008,dev:'USD'},
+{ticker:'JEPI',nom:'JPMorgan Premium Income',tier:'T2',compte:'REER',qty:1,prixMoy:54.52,dev:'USD'},
 ];
-
-function renderDividendes(){
-  const list = document.getElementById('div-list');
-  if(!list) return;
-  const maxYield = Math.max(...DIV_DATA.map(d => d.yield));
-  list.innerHTML = DIV_DATA.map(d => {
-    const annualEst = (d.valCAD * d.yield / 100).toFixed(0);
-    return `<div class="div-card" style="margin-bottom:10px">
-      <div class="div-ticker">${d.ticker}</div>
-      <div class="div-bar">
-        <div style="font-size:11px;color:var(--text2);margin-bottom:5px">${d.name} · ${d.freq} · ${d.currency}</div>
-        <div class="progress-bg"><div class="progress-fill" style="width:${(d.yield/maxYield*100).toFixed(0)}%;background:var(--accent)"></div></div>
-      </div>
-      <div class="div-meta">~$${annualEst}/an</div>
-      <div class="div-yield">${d.yield}%</div>
-    </div>`;
-  }).join('');
-
-  const cal = document.getElementById('div-cal');
-  if(cal){
-    const months = ['Jan','Fév','Mar','Avr','Mai','Jun'];
-    cal.innerHTML = months.map(m => `<div class="card-sm" style="padding:12px;text-align:center"><div style="font-size:11px;font-weight:600;margin-bottom:8px;color:var(--text3)">${m}</div><div style="font-size:11px;color:var(--text2)">JEPI<br>ENB.TO<br>SRU-UN</div></div>`).join('');
-  }
+function fc(v){return '$'+Math.abs(v).toLocaleString('fr-CA',{maximumFractionDigits:0});}
+function fp(v){return(v>=0?'+':'')+v.toFixed(2)+'%';}
+function gr(v){return v>=0?'g':'r';}
+function compute(){POSITIONS.forEach(p=>{p.cout=p.dev==='CAD'?p.qty*p.prixMoy:p.qty*p.prixMoy*USDCAD;if(!p.prixLive)p.prixLive=p.prixMoy;p.val=p.dev==='CAD'?p.qty*p.prixLive:p.qty*p.prixLive*USDCAD;p.gain=p.val-p.cout;p.pct=p.gain/p.cout*100;if(!p.todayPL)p.todayPL=0;});}
+async function fetchData(){
+  try{const r=await fetch(DATA_URL+'?t='+Date.now());if(!r.ok)throw new Error();const d=await r.json();
+  const V=['T1','T2','T3','T4'];
+  if(d.positions&&Array.isArray(d.positions)){POSITIONS=d.positions.filter(p=>p.ticker&&p.tier&&V.includes(String(p.tier).trim())&&parseFloat(p.qty)>0).map(p=>({...p,qty:parseFloat(p.qty),prixMoy:parseFloat(p.prixMoy)||0}));}
+  if(d.usdcad)USDCAD=d.usdcad;if(d.total_cad&&d.total_cad>0)TOTAL_CAD=d.total_cad;if(d.totalCAD&&d.totalCAD>0)TOTAL_CAD=d.totalCAD;if(d.costBase)COST_BASE=d.costBase;
+  if(d.positions)d.positions.forEach(dp=>POSITIONS.forEach(p=>{if(p.ticker===dp.ticker&&p.compte===dp.compte&&dp.prixLive)_lc[p.ticker+'_'+p.compte]={price:dp.prixLive,prev:dp.prixPrev||dp.prixLive};}));
+  const raw=d.date||'';let dh=raw;try{const dd=new Date(raw);dh=dd.toLocaleString('fr-CA',{timeZone:'America/Toronto',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false})+' HNE';}catch(e){}
+  setStatus('Live · '+POSITIONS.length+' positions · '+fc(TOTAL_CAD)+' CAD · '+dh);
+  }catch(e){setStatus('Données locales · '+POSITIONS.length+' positions');}
+  applyLive();compute();renderAll();
 }
-
-// ─── PERSONAL RECORDS ─────────────────────────────────────
-const DEFAULT_PRS = [
-  {name:'Bench Press', val:0, unit:'kg', max:140, icon:'🏋️'},
-  {name:'Squat', val:0, unit:'kg', max:180, icon:'🦵'},
-  {name:'Deadlift', val:0, unit:'kg', max:220, icon:'💪'},
-  {name:'Course 5km', val:0, unit:'min', max:40, icon:'🏃', desc:'Temps en minutes'},
-  {name:'Poids corporel', val:0, unit:'kg', max:120, icon:'⚖️'},
-  {name:'BJJ', val:0, unit:'mois pratique', max:60, icon:'🥋'},
-];
-function getPRs(){ return JSON.parse(localStorage.getItem('heyos_prs') || JSON.stringify(DEFAULT_PRS)); }
-function savePRsData(prs){ localStorage.setItem('heyos_prs', JSON.stringify(prs)); }
-
-function renderPRs(){
-  const prs = getPRs();
-  const list = document.getElementById('pr-list');
-  if(!list) return;
-  list.innerHTML = prs.map((pr, i) => `
-    <div class="pr-row">
-      <div class="pr-name">${pr.icon} ${pr.name}</div>
-      <div>
-        <div class="pr-val">${pr.val || '—'}</div>
-        <div class="pr-unit">${pr.unit}</div>
-      </div>
-      <div class="pr-bar">
-        <div class="progress-bg"><div class="progress-fill" style="width:${pr.val ? Math.min(pr.val/pr.max*100,100).toFixed(0) : 0}%;background:var(--accent)"></div></div>
-      </div>
-    </div>`).join('');
+function applyLive(){let td=0;POSITIONS.forEach(p=>{const l=_lc[p.ticker+'_'+p.compte]||_lc[p.ticker];if(l){p.prixLive=l.price;p.val=p.dev==='CAD'?p.qty*l.price:p.qty*l.price*USDCAD;p.cout=p.dev==='CAD'?p.qty*p.prixMoy:p.qty*p.prixMoy*USDCAD;p.gain=p.val-p.cout;p.pct=p.gain/p.cout*100;const pv=p.dev==='CAD'?p.qty*l.prev:p.qty*l.prev*USDCAD;p.todayPL=p.val-pv;}td+=p.todayPL||0;});const lt=POSITIONS.reduce((s,p)=>s+(p.val||0),0);if(lt>0)TOTAL_CAD=lt;}
+function setStatus(t){document.getElementById('topbar-status').textContent=t;}
+function renderAll(){document.getElementById('usdcad-cell').textContent='USD/CAD '+USDCAD.toFixed(4);renderToday();renderPortfolio();renderPositions();renderFI();renderMaison();updateMortgage();updateCrash();}
+function renderToday(){
+  const op=TOTAL_CAD-COST_BASE,opP=op/COST_BASE*100,td=POSITIONS.reduce((s,p)=>s+(p.todayPL||0),0);
+  document.getElementById('today-total').textContent=fc(TOTAL_CAD);
+  document.getElementById('today-openpl').textContent=(op>=0?'+':'-')+fc(op)+' ('+fp(opP)+') depuis début';
+  const tde=document.getElementById('today-daypl');tde.textContent=(td>=0?'+':'-')+fc(td);tde.className='kpi-val '+gr(td);
+  document.getElementById('today-mkt').textContent=td===0?'Marché fermé':'Variation du jour';
+  document.getElementById('today-fi-pct').textContent=(TOTAL_CAD/2100000*100).toFixed(1)+'%';
+  document.getElementById('lc-total').textContent=fc(TOTAL_CAD);
+  document.getElementById('lc-sub').textContent=POSITIONS.length+' positions · '+fp(opP);
+  const d=new Date().toLocaleDateString('fr-CA',{timeZone:'America/Toronto',weekday:'long',day:'numeric',month:'long'});
+  document.getElementById('today-date').textContent='· '+d;
 }
-
-function openPRModal(){
-  const prs = getPRs();
-  const fields = document.getElementById('pr-form-fields');
-  fields.innerHTML = prs.map((pr, i) => `
-    <div class="form-group" style="margin-bottom:12px">
-      <div class="form-label">${pr.icon} ${pr.name} (${pr.unit})</div>
-      <input class="form-input" id="pr-inp-${i}" type="number" placeholder="0" value="${pr.val || ''}">
-    </div>`).join('');
-  document.getElementById('modal-pr').classList.add('on');
+function renderPortfolio(){
+  const op=TOTAL_CAD-COST_BASE;
+  document.getElementById('pf-total').textContent=fc(TOTAL_CAD);
+  document.getElementById('pf-cost').textContent=fc(COST_BASE);
+  const ge=document.getElementById('pf-gain');ge.textContent=(op>=0?'+':'')+fc(op);ge.className='kpi-val '+gr(op);
+  const pe=document.getElementById('pf-pct');pe.textContent=fp(op/COST_BASE*100);pe.className='kpi-val '+gr(op);
+  const ba={TFSA:0,FHSA:0,REER:0};
+  POSITIONS.forEach(p=>{if(ba[p.compte]!==undefined)ba[p.compte]+=(p.val||p.cout||0);});
+  document.getElementById('acc-tfsa').textContent=fc(ba.TFSA);
+  document.getElementById('acc-fhsa').textContent=fc(ba.FHSA);
+  document.getElementById('acc-reer').textContent=fc(ba.REER);
+  const uv=POSITIONS.filter(p=>p.dev==='USD').reduce((s,p)=>s+(p.val||p.cout||0),0);
+  const up=(uv/TOTAL_CAD*100).toFixed(0);
+  document.getElementById('exp-usd').textContent='~'+up+'%';
+  document.getElementById('exp-cad').textContent='~'+(100-parseInt(up))+'%';
+  const t1=POSITIONS.filter(p=>p.tier==='T1').sort((a,b)=>(b.val||0)-(a.val||0)).slice(0,6);
+  document.getElementById('tbl-top').innerHTML=t1.map(p=>'<tr><td><strong>'+p.ticker+'</strong></td><td>'+p.compte+'</td><td>'+fc(p.val||0)+'</td><td class="'+gr(p.gain||0)+'">'+(p.gain>=0?'+':'-')+fc(p.gain||0)+'</td><td class="'+gr(p.pct||0)+'">'+fp(p.pct||0)+'</td></tr>').join('');
 }
-
-function savePRs(){
-  const prs = getPRs();
-  prs.forEach((pr, i) => {
-    const inp = document.getElementById('pr-inp-' + i);
-    if(inp && inp.value !== '') pr.val = parseFloat(inp.value);
-  });
-  savePRsData(prs);
-  renderPRs();
-  closeModal('modal-pr');
+function renderPositions(){
+  const f=_pf==='ALL'?POSITIONS:['T1','T2','T3','T4'].includes(_pf)?POSITIONS.filter(p=>p.tier===_pf):POSITIONS.filter(p=>p.compte===_pf);
+  document.getElementById('pos-count-lbl').textContent='('+f.length+')';
+  document.getElementById('tbl-positions').innerHTML=f.map(p=>'<tr><td><strong>'+p.ticker+'</strong></td><td>'+p.nom+'</td><td style="font-size:11px;color:#aaa;">'+p.compte+'</td><td><span class="tier-pill '+p.tier.toLowerCase()+'">'+p.tier+'</span></td><td>'+p.qty.toFixed(2)+'</td><td>$'+p.prixMoy.toFixed(2)+'</td><td>$'+(p.prixLive||p.prixMoy).toFixed(2)+'</td><td>'+fc(p.val||p.cout||0)+'</td><td class="'+gr(p.gain||0)+'">'+(p.gain>=0?'+':'-')+fc(p.gain||0)+'</td><td class="'+gr(p.pct||0)+'">'+fp(p.pct||0)+'</td></tr>').join('');
 }
-
-// ─── VERDICTS ─────────────────────────────────────────────
-function getVerdicts(){ return JSON.parse(localStorage.getItem('heyos_verdicts') || '[]'); }
-function saveVerdictsData(v){ localStorage.setItem('heyos_verdicts', JSON.stringify(v)); }
-
-const PILIER_COLORS = {
-  'Finances':'g','Corps':'b','Culture':'p','Projet de vie':'a','Système':'r'
-};
-
-function renderVerdicts(filter = 'all'){
-  let verts = getVerdicts();
-  const now = new Date();
-  if(filter === 'pending') verts = verts.filter(v => !v.verdict);
-  else if(filter === 'due') verts = verts.filter(v => {
-    const d = new Date(v.dateJ30);
-    const diff = (d - now) / 86400000;
-    return diff <= 7 && diff >= 0 && !v.verdict;
-  });
-  else if(filter === 'done') verts = verts.filter(v => v.verdict);
-
-  const list = document.getElementById('verdicts-list');
-  if(!list) return;
-  if(verts.length === 0){
-    list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text3)">Aucune décision documentée encore.<br><br>Chaque grande décision mérite d\'être documentée.</div>';
-    return;
-  }
-  list.innerHTML = verts.map((v, i) => {
-    const j30 = new Date(v.dateJ30);
-    const diff = Math.round((j30 - now) / 86400000);
-    const diffTxt = v.verdict ? '✓ Verdict rendu' : diff <= 0 ? '⚠️ Échéance dépassée' : `J+30 dans ${diff}j`;
-    const colorCls = PILIER_COLORS[v.pilier] || 'b';
-    return `<div class="verdict-card">
-      <div class="verdict-header">
-        <div>
-          <div class="verdict-title">${v.titre}</div>
-          <div class="verdict-date" style="margin-top:4px">${v.date} · ${diffTxt}</div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <span class="kpi-badge ${colorCls}">${v.pilier}</span>
-          <button class="btn sm verdict-delete danger" onclick="deleteVerdict(${i})">✕</button>
-        </div>
-      </div>
-      <div class="verdict-raisonnement">${v.raison}</div>
-      ${v.verdict ? `<div class="alert ok"style="margin-top:4px">✅ ${v.verdict}</div>` : `
-      <div style="display:flex;gap:8px;align-items:center">
-        <input class="form-input" id="verd-inp-${i}" placeholder="Verdict J+30 : bonne décision ? Pourquoi ?" style="flex:1">
-        <button class="btn sm primary" onclick="addVerdict(${i})">Verdict</button>
-      </div>`}
-    </div>`;
-  }).join('');
+function filterPos(f){_pf=f;['ALL','T1','T2','T3','T4','TFSA','FHSA','REER'].forEach(k=>{const el=document.getElementById('f-'+k.toLowerCase());if(el){el.style.background=k===f?'#1a1a1a':'#fff';el.style.color=k===f?'#fff':'#555';el.style.borderColor=k===f?'#1a1a1a':'#ddd';}});renderPositions();}
+function renderFI(){const p=(TOTAL_CAD/2100000*100);document.getElementById('fi-pct').textContent=p.toFixed(1)+'%';document.getElementById('fi-r-val').textContent=fc(TOTAL_CAD);document.getElementById('fi-o-val').textContent=fc(TOTAL_CAD);document.getElementById('fi-r-bar').style.width=Math.min(p,100)+'%';document.getElementById('fi-o-bar').style.width=Math.min(p,100)+'%';updateFI();}
+function updateFI(){
+  const rate=parseFloat(document.getElementById('fi-rate').value)/100,contrib=parseFloat(document.getElementById('fi-contrib').value);
+  document.getElementById('fi-rate-v').textContent=parseFloat(document.getElementById('fi-rate').value).toFixed(1);
+  document.getElementById('fi-contrib-v').textContent=contrib.toLocaleString('fr-CA');
+  let v=TOTAL_CAD,y=0;while(v<2100000&&y<50){v=v*(1+rate)+contrib*12;y++;}
+  const yr=new Date().getFullYear()+y;
+  document.getElementById('fi-sim-yr').textContent=y<50?yr.toString():'50+ ans';
+  document.getElementById('fi-yr').textContent='~'+yr;
+  let v55=TOTAL_CAD;for(let i=0;i<21;i++)v55=v55*(1+rate)+contrib*12;
+  document.getElementById('fi-sim-55').textContent=fc(v55);
+  function cy(r){let vv=TOTAL_CAD,yy=0;while(vv<2100000&&yy<50){vv=vv*(1+r/100)+5000*12;yy++;}return yy;}
+  const ry=new Date().getFullYear()+cy(8),oy=new Date().getFullYear()+cy(10);
+  document.getElementById('fi-r-sub').textContent='~'+ry+' · '+(ry-new Date().getFullYear())+' ans à 8%/an';
+  document.getElementById('fi-o-sub').textContent='~'+oy+' · '+(oy-new Date().getFullYear())+' ans à 10%/an';
 }
-
-function openVerdictModal(){
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('v-date').value = today;
-  document.getElementById('v-titre').value = '';
-  document.getElementById('v-raison').value = '';
-  document.getElementById('modal-verdict').classList.add('on');
+function renderMaison(){
+  const rv=POSITIONS.filter(p=>p.compte==='REER').reduce((s,p)=>s+(p.val||p.cout||0),0);
+  const fv=POSITIONS.filter(p=>p.compte==='FHSA').reduce((s,p)=>s+(p.val||p.cout||0),0);
+  document.getElementById('m-reer').textContent=fc(rv);document.getElementById('m-fhsa').textContent=fc(fv);document.getElementById('m-total').textContent=fc(rv+fv);
+  const rp=(rv/60000*100).toFixed(1),fp2=(fv/40000*100).toFixed(1),tp=((rv+fv)/100000*100).toFixed(1);
+  document.getElementById('mp-reer-bar').style.width=Math.min(rp,100)+'%';document.getElementById('mp-fhsa-bar').style.width=Math.min(fp2,100)+'%';document.getElementById('mp-total-bar').style.width=Math.min(tp,100)+'%';
+  document.getElementById('mp-reer-lbl').textContent=fc(rv)+' / $60K · '+rp+'%';document.getElementById('mp-fhsa-lbl').textContent=fc(fv)+' / $40K · '+fp2+'%';document.getElementById('mp-total-lbl').textContent=fc(rv+fv)+' / $100K · '+tp+'%';
+  updateMortgage();
 }
-
-function saveVerdict(){
-  const titre = document.getElementById('v-titre').value.trim();
-  const raison = document.getElementById('v-raison').value.trim();
-  if(!titre) return;
-  const date = document.getElementById('v-date').value;
-  const pilier = document.getElementById('v-pilier').value;
-  const j30 = new Date(date);
-  j30.setDate(j30.getDate() + 30);
-  const verts = getVerdicts();
-  verts.unshift({titre, raison, date, pilier, dateJ30: j30.toISOString().split('T')[0], verdict: ''});
-  saveVerdictsData(verts);
-  renderVerdicts();
-  closeModal('modal-verdict');
-}
-
-function addVerdict(i){
-  const inp = document.getElementById('verd-inp-' + i);
-  if(!inp || !inp.value.trim()) return;
-  const verts = getVerdicts();
-  verts[i].verdict = inp.value.trim();
-  saveVerdictsData(verts);
-  renderVerdicts();
-}
-
-function deleteVerdict(i){
-  if(!confirm('Supprimer cette décision ?')) return;
-  const verts = getVerdicts();
-  verts.splice(i, 1);
-  saveVerdictsData(verts);
-  renderVerdicts();
-}
-
-function filterVerdicts(f, el){
-  document.querySelectorAll('#page-verdicts .ftab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  renderVerdicts(f);
-}
-
-// ─── FILMS ────────────────────────────────────────────────
-function getFilms(){ return JSON.parse(localStorage.getItem('heyos_films') || '[]'); }
-function saveFilmsData(f){ localStorage.setItem('heyos_films', JSON.stringify(f)); }
-
-const FILM_STATUS_LABELS = {'a-voir':'À voir','en-cours':'En cours','vu':'Vu ✓'};
-const FILM_STATUS_CLS = {'a-voir':'info','en-cours':'watch','vu':'done'};
-
-function renderFilms(filter = 'all'){
-  let films = getFilms();
-  if(filter !== 'all') films = films.filter(f => f.statut === filter);
-  const list = document.getElementById('films-list');
-  if(!list) return;
-  if(films.length === 0){
-    list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text3)">Aucun film ajouté.<br>Clique sur "+ Ajouter" pour commencer ta liste.</div>';
-    return;
-  }
-  list.innerHTML = films.map((f, i) => `
-    <div class="edit-item">
-      <div class="edit-item-content">
-        <div class="edit-item-title">${f.titre} <span style="font-size:11px;color:var(--text3);font-weight:400">(${f.type})</span></div>
-        <div class="edit-item-meta">${f.comment || ''}${f.note ? ' · ⭐ ' + f.note : ''}</div>
-      </div>
-      <span class="status ${FILM_STATUS_CLS[f.statut]}">${FILM_STATUS_LABELS[f.statut]}</span>
-      <div class="edit-item-actions">
-        <button class="btn sm" onclick="cycleFilmStatus(${i})">→</button>
-        <button class="btn sm danger" onclick="deleteFilm(${i})">✕</button>
-      </div>
-    </div>`).join('');
-}
-
-function openFilmModal(){ document.getElementById('modal-film').classList.add('on'); }
-function saveFilm(){
-  const titre = document.getElementById('film-titre').value.trim();
-  if(!titre) return;
-  const films = getFilms();
-  films.unshift({titre, type: document.getElementById('film-type').value, statut: document.getElementById('film-statut').value, note: document.getElementById('film-note').value, comment: document.getElementById('film-comment').value});
-  saveFilmsData(films);
-  renderFilms();
-  closeModal('modal-film');
-  document.getElementById('film-titre').value = '';
-  document.getElementById('film-note').value = '';
-  document.getElementById('film-comment').value = '';
-}
-
-function cycleFilmStatus(i){
-  const films = getFilms();
-  const order = ['a-voir','en-cours','vu'];
-  const idx = order.indexOf(films[i].statut);
-  films[i].statut = order[(idx + 1) % order.length];
-  saveFilmsData(films);
-  renderFilms();
-}
-
-function deleteFilm(i){
-  const films = getFilms();
-  films.splice(i, 1);
-  saveFilmsData(films);
-  renderFilms();
-}
-
-function filterFilms(f, el){
-  document.querySelectorAll('#page-films .ftab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  renderFilms(f);
-}
-
-// ─── LIVRES ───────────────────────────────────────────────
-function getLivres(){ return JSON.parse(localStorage.getItem('heyos_livres') || '[]'); }
-function saveLivresData(l){ localStorage.setItem('heyos_livres', JSON.stringify(l)); }
-
-function renderLivres(filter = 'all'){
-  let livres = getLivres();
-  if(filter !== 'all') livres = livres.filter(l => l.statut === filter);
-  const list = document.getElementById('livres-list');
-  if(!list) return;
-  if(livres.length === 0){
-    list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text3)">Aucun livre ajouté.</div>';
-    return;
-  }
-  const statCls = {'a-lire':'info','en-cours':'watch','lu':'done'};
-  const statLbl = {'a-lire':'À lire','en-cours':'En cours','lu':'Lu ✓'};
-  list.innerHTML = livres.map((l, i) => `
-    <div class="edit-item">
-      <div class="edit-item-content">
-        <div class="edit-item-title">${l.titre}</div>
-        <div class="edit-item-meta">${l.auteur || ''} · ${l.pilier}${l.lecon ? ' · "' + l.lecon + '"' : ''}</div>
-      </div>
-      <span class="status ${statCls[l.statut]}">${statLbl[l.statut]}</span>
-      <div class="edit-item-actions">
-        <button class="btn sm" onclick="cycleLivreStatus(${i})">→</button>
-        <button class="btn sm danger" onclick="deleteLivre(${i})">✕</button>
-      </div>
-    </div>`).join('');
-}
-
-function openLivreModal(){ document.getElementById('modal-livre').classList.add('on'); }
-function saveLivre(){
-  const titre = document.getElementById('livre-titre').value.trim();
-  if(!titre) return;
-  const livres = getLivres();
-  livres.unshift({titre, auteur: document.getElementById('livre-auteur').value, statut: document.getElementById('livre-statut').value, pilier: document.getElementById('livre-pilier').value, lecon: document.getElementById('livre-lecon').value});
-  saveLivresData(livres);
-  renderLivres();
-  closeModal('modal-livre');
-  ['livre-titre','livre-auteur','livre-lecon'].forEach(id => document.getElementById(id).value = '');
-}
-
-function cycleLivreStatus(i){
-  const livres = getLivres();
-  const order = ['a-lire','en-cours','lu'];
-  const idx = order.indexOf(livres[i].statut);
-  livres[i].statut = order[(idx + 1) % order.length];
-  saveLivresData(livres);
-  renderLivres();
-}
-
-function deleteLivre(i){
-  const livres = getLivres();
-  livres.splice(i, 1);
-  saveLivresData(livres);
-  renderLivres();
-}
-
-function filterLivres(f, el){
-  document.querySelectorAll('#page-livres .ftab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  renderLivres(f);
-}
-
-// ─── RESTAURANTS ──────────────────────────────────────────
-function getRestos(){ return JSON.parse(localStorage.getItem('heyos_restos') || '[]'); }
-function saveRestosData(r){ localStorage.setItem('heyos_restos', JSON.stringify(r)); }
-
-function renderRestos(filter = 'all'){
-  let restos = getRestos();
-  if(filter !== 'all') restos = restos.filter(r => r.statut === filter);
-  const list = document.getElementById('restos-list');
-  if(!list) return;
-  if(restos.length === 0){
-    list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text3)">Aucun restaurant ajouté.</div>';
-    return;
-  }
-  const statCls = {'a-essayer':'info','visite':'done','fav':'ok'};
-  const statLbl = {'a-essayer':'À essayer','visite':'Visité','fav':'Favori ⭐'};
-  list.innerHTML = restos.map((r, i) => `
-    <div class="edit-item">
-      <div class="edit-item-content">
-        <div class="edit-item-title">${r.nom}</div>
-        <div class="edit-item-meta">${r.ville} · ${r.cuisine}${r.note ? ' · ' + r.note : ''}</div>
-      </div>
-      <span class="status ${statCls[r.statut]}">${statLbl[r.statut]}</span>
-      <div class="edit-item-actions">
-        <button class="btn sm" onclick="cycleRestoStatus(${i})">→</button>
-        <button class="btn sm danger" onclick="deleteResto(${i})">✕</button>
-      </div>
-    </div>`).join('');
-}
-
-function openRestoModal(){ document.getElementById('modal-resto').classList.add('on'); }
-function saveResto(){
-  const nom = document.getElementById('resto-nom').value.trim();
-  if(!nom) return;
-  const restos = getRestos();
-  restos.unshift({nom, ville: document.getElementById('resto-ville').value, cuisine: document.getElementById('resto-cuisine').value, statut: document.getElementById('resto-statut').value, note: document.getElementById('resto-note').value});
-  saveRestosData(restos);
-  renderRestos();
-  closeModal('modal-resto');
-  ['resto-nom','resto-ville','resto-cuisine','resto-note'].forEach(id => document.getElementById(id).value = '');
-}
-
-function cycleRestoStatus(i){
-  const restos = getRestos();
-  const order = ['a-essayer','visite','fav'];
-  const idx = order.indexOf(restos[i].statut);
-  restos[i].statut = order[(idx + 1) % order.length];
-  saveRestosData(restos);
-  renderRestos();
-}
-
-function deleteResto(i){
-  const restos = getRestos();
-  restos.splice(i, 1);
-  saveRestosData(restos);
-  renderRestos();
-}
-
-function filterRestos(f, el){
-  document.querySelectorAll('#page-restos .ftab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  renderRestos(f);
-}
-
-// ─── 30 RÈGLES ────────────────────────────────────────────
-const REGLES = [
-  {num:1,pilier:'Finances',text:'Avant tout achat → web search + earnings calendar + USD/IA exposure + room FHSA'},
-  {num:2,pilier:'Finances',text:'Achat/vente mentionné → xlsx MAJ immédiatement'},
-  {num:3,pilier:'Finances',text:'Chaque décision → devil\'s advocate d\'abord'},
-  {num:4,pilier:'Finances',text:'Chaque dollar → FHSA, REER, TFSA, HISA dans cet ordre'},
-  {num:5,pilier:'Finances',text:'Chaque décision → RAISONNEMENTS + verdict J+30'},
-  {num:6,pilier:'Finances',text:'Toujours chiffrer en dollars réels'},
-  {num:7,pilier:'Finances',text:'Émotion identifiée → nommer avant d\'agir'},
-  {num:8,pilier:'Finances',text:'Annuellement → recalculer projection FI + MAJ HeyOS'},
-  {num:9,pilier:'Corps',text:'PPL adapté 2on/2off — ON=récupération, OFF=intensité'},
-  {num:10,pilier:'Corps',text:'PRs documentés à chaque mention entraînement'},
-  {num:11,pilier:'Corps',text:'Blessure → adapter programme immédiatement + documenter'},
-  {num:12,pilier:'Corps',text:'Mauvais sommeil/fatigue → différer décisions majeures'},
-  {num:13,pilier:'Corps',text:'BJJ → progression documentée, objectif retour actif'},
-  {num:14,pilier:'Culture',text:'Livre → connecté aux décisions de vie + documenté HeyOS'},
-  {num:15,pilier:'Culture',text:'Film/série/restaurant/voyage → ajouté HeyOS avec note'},
-  {num:16,pilier:'Culture',text:'Recommandation culturelle → filtrée par profil réel, jamais générique'},
-  {num:17,pilier:'Culture',text:'Idée importante → reliée à un pilier HeyOS avant archivage'},
-  {num:18,pilier:'Projet de vie',text:'Décision majeure → contexte + raisonnement + verdict J+30'},
-  {num:19,pilier:'Projet de vie',text:'Maison 2030 → vérifier RAP + FHSA à chaque session financière'},
-  {num:20,pilier:'Projet de vie',text:'Regard des autres comme frein → nommer explicitement'},
-  {num:21,pilier:'Projet de vie',text:'Chaque année → réviser vision 10 ans dans HeyOS'},
-  {num:22,pilier:'Décision',text:'Décision irréversible → analyse approfondie + nuit de réflexion'},
-  {num:23,pilier:'Décision',text:'Biais cognitif → documenté HeyOS immédiatement'},
-  {num:24,pilier:'Décision',text:'Inaction = décision → analyser et documenter'},
-  {num:25,pilier:'Décision',text:'Pire scénario réaliste calculé avant décision majeure'},
-  {num:26,pilier:'Décision',text:'Pattern récurrent → documenté pour futures décisions'},
-  {num:27,pilier:'Partenariat',text:'"Update"/"Sauvegarde" → dashboard+xlsx+BRIEF livrés immédiatement'},
-  {num:28,pilier:'Partenariat',text:'Erreur répétée → corrigée + enregistrée dans la même session'},
-  {num:29,pilier:'Partenariat',text:'Hey corrige Claude → enregistré en mémoire immédiatement'},
-  {num:30,pilier:'Partenariat',text:'Chaque session → mémoires nettoyées avant de livrer les fichiers'},
-];
-
-const PILIER_COL = {'Finances':'g','Corps':'b','Culture':'p','Projet de vie':'a','Décision':'r','Partenariat':'info'};
-
-function renderRegles(){
-  const list = document.getElementById('regles-list');
-  if(!list) return;
-  const grouped = {};
-  REGLES.forEach(r => { if(!grouped[r.pilier]) grouped[r.pilier] = []; grouped[r.pilier].push(r); });
-  list.innerHTML = Object.entries(grouped).map(([pilier, rules]) => `
-    <div class="card" style="margin-bottom:16px">
-      <div class="section-row" style="margin-bottom:12px">
-        <div class="section-title" style="margin-bottom:0">${pilier}</div>
-        <span class="kpi-badge ${PILIER_COL[pilier]}">${rules.length} règles</span>
-      </div>
-      ${rules.map(r => `<div style="display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:0.5px solid var(--border-light)">
-        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);min-width:24px;padding-top:2px">${String(r.num).padStart(2,'0')}</div>
-        <div style="font-size:13px;color:var(--text2);line-height:1.5">${r.text}</div>
-      </div>`).join('')}
-    </div>`).join('');
-}
-
-// ─── MODAL UTILS ──────────────────────────────────────────
-function closeModal(id){
-  document.getElementById(id).classList.remove('on');
-}
-document.querySelectorAll && document.addEventListener('click', e => {
-  if(e.target.classList && e.target.classList.contains('modal-overlay')) e.target.classList.remove('on');
-});
-
-// ─── INIT ─────────────────────────────────────────────────
-function init(){
-  checkMarket();
-  renderKPIsStatic();
-  loadData();
-  renderDividendes();
-  renderPRs();
-  renderVerdicts();
-  renderFilms();
-  renderLivres();
-  renderRestos();
-  renderRegles();
-  renderPositions({});
-  setInterval(checkMarket, 60000);
-  setInterval(loadData, 600000);
-}
+function updateMortgage(){const price=parseFloat(document.getElementById('mort-price').value),rate=parseFloat(document.getElementById('mort-rate').value)/100/12,n=300,principal=price-100000,pmt=rate>0?principal*(rate*Math.pow(1+rate,n))/(Math.pow(1+rate,n)-1):principal/n;document.getElementById('mort-price-v').textContent=(price/1000).toFixed(0)+'K';document.getElementById('mort-rate-v').textContent=parseFloat(document.getElementById('mort-rate').value).toFixed(2);document.getElementById('mort-pmt').textContent=fc(pmt)+'/mois';document.getElementById('mort-int').textContent=fc(pmt*n-principal);}
+function updateCrash(){const pct=parseInt(document.getElementById('crash-pct').value);document.getElementById('crash-pct-v').textContent=pct;const after=TOTAL_CAD*(1-pct/100),loss=TOTAL_CAD-after;let v=after,y=0;while(v<TOTAL_CAD&&y<20){v=v*1.08+5000*12;y++;}document.getElementById('crash-after').textContent=fc(after);document.getElementById('crash-loss').textContent='-'+fc(loss);document.getElementById('crash-rec').textContent=y<20?y+' ans':'20+ ans';document.getElementById('crash-dca').textContent='$5,000/mois · buy the dip';}
+function loadJSON(input){const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(d.positions)POSITIONS=d.positions.map(p=>({...p,qty:parseFloat(p.qty),prixMoy:parseFloat(p.prixMoy)||0}));if(d.usdcad)USDCAD=d.usdcad;if(d.total_cad)TOTAL_CAD=d.total_cad;if(d.totalCAD)TOTAL_CAD=d.totalCAD;if(d.costBase)COST_BASE=d.costBase;compute();renderAll();setStatus('JSON local · '+POSITIONS.length+' positions');}catch(err){alert('Erreur JSON');}};r.readAsText(f);}
+function nav(page,el){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));const pg=document.getElementById('page-'+page);if(pg)pg.classList.add('active');if(el)el.classList.add('active');else document.querySelectorAll('.nav-item').forEach(n=>{if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+page+"'"))n.classList.add('active');});}
+function updateClock(){const t=new Date().toLocaleString('fr-CA',{timeZone:'America/Toronto',hour:'2-digit',minute:'2-digit',hour12:false});document.getElementById('clock').textContent=t+' HNE';}
+setInterval(updateClock,1000);updateClock();
+function init(){compute();renderAll();fetchData();setInterval(fetchData,60000);}
+if(sessionStorage.getItem('heyos_auth')==='1')init();
 </script>
 </body>
 </html>
