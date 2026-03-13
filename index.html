@@ -762,7 +762,7 @@ function navPillar(pillar,el){
   }
   if(pillar==='finances'){document.querySelectorAll('.ni').forEach(n=>n.style.display='');}
 }
-function nav(pg,el){document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));const p=document.getElementById('page-'+pg);if(p)p.classList.add('on');if(el)el.classList.add('on');else document.querySelectorAll('.ni').forEach(n=>{if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+pg+"'"))n.classList.add('on');});const rs={films:rFilms,livres:rLivres,restaurants:rRestos,voyages:rVoyages,verdicts:rVerdicts,sante:rPRs,nutrition:rNut};if(rs[pg])rs[pg]();}
+function nav(pg,el){document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));const p=document.getElementById('page-'+pg);if(p)p.classList.add('on');if(el)el.classList.add('on');else document.querySelectorAll('.ni').forEach(n=>{if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+pg+"'"))n.classList.add('on');});const rs={films:rFilms,livres:rLivres,restaurants:rRestos,voyages:rVoyages,verdicts:rVerdicts,sante:rPRs,nutrition:rNut};if(rs[pg])rs[pg]();if(pg==='analyse')setTimeout(buildChart,50);}
 function updateClock(){se('clk',new Date().toLocaleString('fr-CA',{timeZone:'America/Toronto',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})+' HNE');}
 setInterval(updateClock,1000);updateClock();
 function loadJSON(input){const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(d.positions)POS=d.positions.map(p=>({t:p.ticker,n:p.nom||p.ticker,tier:p.tier,c:p.compte,q:parseFloat(p.qty),avg:parseFloat(p.prixMoy)||0,fx:p.dev||'CAD'}));if(d.usdcad)FX=d.usdcad;if(d.total_cad)TOT=d.total_cad;if(d.totalCAD)TOT=d.totalCAD;if(d.costBase)CST=d.costBase;compute();rAll();se('ttxt','JSON local · '+POS.length+' positions');}catch{alert('Erreur JSON');}};r.readAsText(f);}
@@ -839,6 +839,5 @@ function setChartType(type,el){
 }
 
 // Rebuild chart when navigating to analyse page
-const _origNav=nav;
-function nav(pg,el){_origNav(pg,el);if(pg==='analyse')setTimeout(buildChart,50);}
+
 </script>
