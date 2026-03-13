@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HeyOS v15</title>
+<title>HeyOS v16</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -191,7 +191,7 @@ tbody tr:hover td{background:var(--bg)}
 </div>
 <div id="app">
   <nav class="sidebar">
-    <div class="slogo"><div class="sm">HEY<span>OS</span></div><div class="ss">v15 · Mind and Body OS</div></div>
+    <div class="slogo"><div class="sm">HEY<span>OS</span></div><div class="ss">v16 · Mind and Body OS</div></div>
     <div class="ns">Vie</div>
     <div class="ni on" onclick="nav('today',this)"><span class="nd g"></span>Aujourd'hui</div>
     <div class="ns">Finances</div>
@@ -334,7 +334,16 @@ tbody tr:hover td{background:var(--bg)}
           <button class="fb" onclick="fp2('TFSA',this)">TFSA</button><button class="fb" onclick="fp2('FHSA',this)">FHSA</button>
           <button class="fb" onclick="fp2('REER',this)">REER</button>
         </div>
-        <div class="tw"><table><thead><tr><th>Ticker</th><th>Nom</th><th>Compte</th><th>Tier</th><th>Qté</th><th>Prix moy.</th><th>Prix live</th><th>Valeur CAD</th><th>Gain $</th><th>Gain %</th></tr></thead><tbody id="tpos"></tbody></table></div>
+        <div class="tw"><table><thead><tr>
+          <th onclick="sortPositions('ticker')" style="cursor:pointer">Ticker <span id="si-ticker" style="opacity:.4">⇅</span></th>
+          <th>Nom</th>
+          <th onclick="sortPositions('compte')" style="cursor:pointer">Compte <span id="si-compte" style="opacity:.4">⇅</span></th>
+          <th onclick="sortPositions('tier')" style="cursor:pointer">Tier <span id="si-tier" style="opacity:.4">⇅</span></th>
+          <th>Qté</th><th>Prix moy.</th><th>Prix live</th>
+          <th onclick="sortPositions('val')" style="cursor:pointer">Valeur CAD <span id="si-val" style="opacity:.4">⇅</span></th>
+          <th onclick="sortPositions('gain')" style="cursor:pointer">Gain $ <span id="si-gain" style="opacity:.4">⇅</span></th>
+          <th onclick="sortPositions('pct')" style="cursor:pointer">Gain % <span id="si-pct" style="opacity:.4">⇅</span></th>
+        </tr></thead><tbody id="tpos"></tbody></table></div>
       </div>
 
       <div class="page" id="page-analyse">
@@ -344,6 +353,25 @@ tbody tr:hover td{background:var(--bg)}
           <div class="kpi"><div class="kl">Exposition USD</div><div class="kv" id="ausd">—</div><div class="ks">Limite ≤65%</div></div>
           <div class="kpi"><div class="kl">T1 positions</div><div class="kv b">9</div></div>
           <div class="kpi"><div class="kl">Room FHSA</div><div class="kv am">~$9,700</div><div class="ks">Après $4K en transit</div></div>
+        </div>
+        <!-- Chart tabs -->
+        <div class="filters" style="margin-bottom:12px">
+          <button class="fb on" onclick="switchChart('tier',this)">Par Tier</button>
+          <button class="fb" onclick="switchChart('compte',this)">Par Compte</button>
+          <button class="fb" onclick="switchChart('top10',this)">Top 10</button>
+          <button class="fb" onclick="switchChart('gains',this)">Gains</button>
+        </div>
+        <div class="card" style="padding:16px 20px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <div class="cl" id="chart-title">Répartition par Tier</div>
+            <div style="display:flex;gap:8px">
+              <button class="fb on" id="btn-doughnut" onclick="setChartType('doughnut',this)" style="font-size:9px;padding:4px 8px">🍩 Donut</button>
+              <button class="fb" id="btn-bar" onclick="setChartType('bar',this)" style="font-size:9px;padding:4px 8px">📊 Barres</button>
+            </div>
+          </div>
+          <div style="max-height:280px;display:flex;justify-content:center">
+            <canvas id="mainChart" style="max-height:260px"></canvas>
+          </div>
         </div>
         <div class="g2">
           <div class="card"><div class="cl">Par tier</div><div id="tbd"></div></div>
@@ -604,7 +632,49 @@ function rToday(){const op=TOT-CST,opP=op/CST*100,td=POS.reduce((s,p)=>s+(p.dayP
   se('lcfilm',films.length||'—');se('lclivre',livres.length||'—');se('lcrest',restos.length||'—');
 }
 function rPortfolio(){const op=TOT-CST;se('pft',fc(TOT));se('pfc',fc(CST));const ge=document.getElementById('pfg');if(ge){ge.textContent=(op>=0?'+':'')+fc(op);ge.className='kv '+gr(op);}const pe=document.getElementById('pfp');if(pe){pe.textContent=fp(op/CST*100);pe.className='kv '+gr(op);}const ba={TFSA:0,FHSA:0,REER:0};POS.forEach(p=>{if(ba[p.c]!==undefined)ba[p.c]+=(p.val||p.cout);});se('at',fc(ba.TFSA));se('af',fc(ba.FHSA));se('ar',fc(ba.REER));const uv=POS.filter(p=>p.fx==='USD').reduce((s,p)=>s+(p.val||p.cout),0),up=(uv/TOT*100).toFixed(0);se('eu','~'+up+'%');se('ec','~'+(100-parseInt(up))+'%');sh('tt1',[...POS].filter(p=>p.tier==='T1').sort((a,b)=>(b.val||0)-(a.val||0)).slice(0,6).map(p=>`<tr><td><strong>${p.t}</strong></td><td>${p.c}</td><td>${fc(p.val||0)}</td><td class="${gr(p.gain||0)}">${(p.gain||0)>=0?'+':'-'}${fc(Math.abs(p.gain||0))}</td><td class="${gr(p.pct||0)}">${fp(p.pct||0)}</td></tr>`).join(''));}
-function rPositions(){const f=PF==='ALL'?POS:['T1','T2','T3','T4'].includes(PF)?POS.filter(p=>p.tier===PF):POS.filter(p=>p.c===PF);se('pcount','('+f.length+')');sh('tpos',f.map(p=>`<tr><td><strong>${p.t}</strong></td><td style="font-family:var(--body);color:var(--text2);font-size:11px">${p.n}</td><td style="font-size:10px;color:var(--text3)">${p.c}</td><td><span class="tier ${p.tier.toLowerCase()}">${p.tier}</span></td><td>${p.q.toFixed(2)}</td><td>$${p.avg.toFixed(2)}</td><td><strong>$${(p.live||p.avg).toFixed(2)}</strong></td><td>${fc(p.val||p.cout)}</td><td class="${gr(p.gain||0)}">${(p.gain||0)>=0?'+':'-'}${fc(Math.abs(p.gain||0))}</td><td class="${gr(p.pct||0)}">${fp(p.pct||0)}</td></tr>`).join(''));}
+// ── TICKER FACTSHEETS ──
+const LINKS = {
+  'VFV.TO':'https://www.vanguard.ca/en/advisor/products/products-group/etfs/9563',
+  'AVGO':'https://investors.broadcom.com/',
+  'GOOG':'https://abc.xyz/investor/',
+  'AMZN':'https://ir.aboutamazon.com/',
+  'SMH':'https://www.vaneck.com/us/en/investments/semiconductor-etf-smh/',
+  'META':'https://investor.fb.com/',
+  'ENB.TO':'https://www.enbridge.com/investors',
+  'GEV':'https://www.gevernova.com/investors',
+  'SCHD':'https://www.schwabassetmanagement.com/products/schd',
+  'MSFT':'https://www.microsoft.com/en-us/investor',
+  'NVDA':'https://investor.nvidia.com/',
+  'QQQM':'https://www.invesco.com/us/financial-products/etfs/product-detail?audienceType=Investor&ticker=QQQM',
+  'XEQT.TO':'https://www.blackrock.com/ca/investors/en/products/products-list#!type=ishares&style=All&config=CA-Retail-iShares-CA&view=keyFacts&fac=43557',
+  'SPGI':'https://investor.spglobal.com/',
+  'JEPI':'https://am.jpmorgan.com/us/en/asset-management/adv/products/jpmorgan-equity-premium-income-etf-46641q761',
+  'TSLA':'https://ir.tesla.com/',
+  'T.TO':'https://www.telus.com/en/investors',
+  'MFC.TO':'https://www.manulife.com/en/investors.html',
+  'HURA.TO':'https://globalxetfs.ca/funds/hura/',
+  'ZLB.TO':'https://www.bmo.com/gam/ca/advisor/products/etfs?fundUrl=/fundProfile/ZLB',
+  'XIC.TO':'https://www.blackrock.com/ca/investors/en/products/239837/',
+  'XEI.TO':'https://www.blackrock.com/ca/investors/en/products/251421/',
+  'ZRE.TO':'https://www.bmo.com/gam/ca/advisor/products/etfs?fundUrl=/fundProfile/ZRE',
+  'VDU.TO':'https://www.vanguard.ca/en/advisor/products/products-group/etfs/9542',
+  'REI-UN.TO':'https://www.reitmansinvestors.com/',
+  'SRU-UN.TO':'https://www.smartcentres.com/investors',
+  'XUU.TO':'https://www.blackrock.com/ca/investors/en/products/264040/',
+  'FEQT.TO':'https://ci.com/en/investments/etfs/feqt',
+  'H.TO':'https://www.hydro.qc.ca/en/enterprise/investor-relations/',
+  'TD.TO':'https://www.td.com/ca/en/about-td/for-investors/',
+};
+function tickerLink(t){const url=LINKS[t]||LINKS[t+'.TO'];return url?`<a href="${url}" target="_blank" rel="noopener" style="color:var(--text);text-decoration:none;border-bottom:1px dotted var(--text3)" title="Ouvrir fiche ${t}">${t} <span style="font-size:9px;opacity:.5">↗</span></a>`:`<strong>${t}</strong>`;}
+
+// ── SORT STATE ──
+let SORT_COL = null, SORT_DIR = 1;
+function sortPositions(col){if(SORT_COL===col){SORT_DIR*=-1;}else{SORT_COL=col;SORT_DIR=1;}rPositions();}
+function sortIcon(col){if(SORT_COL!==col)return'<span style="opacity:.3">⇅</span>';return SORT_DIR===1?'▲':'▼';}
+function getSortedPos(arr){if(!SORT_COL)return arr;return[...arr].sort((a,b)=>{let va,vb;if(SORT_COL==='val'){va=a.val||0;vb=b.val||0;}else if(SORT_COL==='gain'){va=a.gain||0;vb=b.gain||0;}else if(SORT_COL==='pct'){va=a.pct||0;vb=b.pct||0;}else if(SORT_COL==='ticker'){va=a.t;vb=b.t;}else if(SORT_COL==='tier'){va=a.tier;vb=b.tier;}else if(SORT_COL==='compte'){va=a.c;vb=b.c;}else{va=0;vb=0;}if(typeof va==='string')return SORT_DIR*(va.localeCompare(vb));return SORT_DIR*(va-vb);});}
+function rPositions(){const f=PF==='ALL'?POS:['T1','T2','T3','T4'].includes(PF)?POS.filter(p=>p.tier===PF):POS.filter(p=>p.c===PF);se('pcount','('+f.length+')');const sorted=getSortedPos(f);
+['ticker','compte','tier','val','gain','pct'].forEach(col=>{const el=document.getElementById('si-'+col);if(el){if(SORT_COL===col){el.textContent=SORT_DIR===1?'▲':'▼';el.style.opacity='1';}else{el.textContent='⇅';el.style.opacity='.4';}}});
+sh('tpos',sorted.map(p=>`<tr><td>${tickerLink(p.t)}</td><td style="font-family:var(--body);color:var(--text2);font-size:11px">${p.n}</td><td style="font-size:10px;color:var(--text3)">${p.c}</td><td><span class="tier ${p.tier.toLowerCase()}">${p.tier}</span></td><td>${p.q.toFixed(2)}</td><td>$${p.avg.toFixed(2)}</td><td><strong>$${(p.live||p.avg).toFixed(2)}</strong></td><td>${fc(p.val||p.cout)}</td><td class="${gr(p.gain||0)}">${(p.gain||0)>=0?'+':'-'}${fc(Math.abs(p.gain||0))}</td><td class="${gr(p.pct||0)}">${fp(p.pct||0)}</td></tr>`).join(''));}
 function fp2(f,el){PF=f;document.querySelectorAll('.filters .fb').forEach(b=>b.classList.remove('on'));if(el)el.classList.add('on');rPositions();}
 function rAnalyse(){const uv=POS.filter(p=>p.fx==='USD').reduce((s,p)=>s+(p.val||p.cout),0),up=(uv/TOT*100).toFixed(1);const iaTk=['AVGO','SMH','NVDA','MSFT','GOOG','META','AMZN','QQQM'],iav=POS.filter(p=>iaTk.includes(p.t)).reduce((s,p)=>s+(p.val||0),0),iap=(iav/TOT*100).toFixed(1);const ue=document.getElementById('ausd');if(ue){ue.textContent='~'+up+'%';ue.className='kv '+(parseFloat(up)>65?'r':'');}const ie=document.getElementById('aia');if(ie){ie.textContent='~'+iap+'%';ie.className='kv '+(parseFloat(iap)>45?'r':'am');}se('rusd',parseFloat(up)<=65?'✓ OK — '+up+'%':'⚠ '+up+'% > 65%');const re=document.getElementById('rusd');if(re)re.className='rv '+(parseFloat(up)<=65?'g':'r');se('ria',parseFloat(iap)<=45?'✓ OK — '+iap+'%':'⚠ '+iap+'% > 45%');const ri=document.getElementById('ria');if(ri)ri.className='rv '+(parseFloat(iap)<=45?'g':'am');const tiers={T1:0,T2:0,T3:0,T4:0};POS.forEach(p=>{if(tiers[p.tier]!==undefined)tiers[p.tier]+=(p.val||0);});sh('tbd',Object.entries(tiers).map(([t,v])=>`<div class="row"><span class="rl"><span class="tier ${t.toLowerCase()}">${t}</span></span><span class="rv">${fc(v)} · ${(v/TOT*100).toFixed(1)}%</span></div>`).join(''));sh('t5bd',[...POS].sort((a,b)=>(b.val||0)-(a.val||0)).slice(0,5).map(p=>`<div class="row"><span class="rl">${p.t} <span style="font-size:10px;color:var(--text3)">${p.c}</span></span><span class="rv">${fc(p.val||0)} · ${((p.val||0)/TOT*100).toFixed(1)}%</span></div>`).join(''));}
 function rFI(){const p=TOT/2100000*100;se('fip',p.toFixed(1)+'%');se('fir',fc(TOT));se('fio',fc(TOT));document.getElementById('firb').style.width=Math.min(p,100)+'%';document.getElementById('fiob').style.width=Math.min(p,100)+'%';uFI();}
@@ -699,5 +769,76 @@ function loadJSON(input){const f=input.files[0];if(!f)return;const r=new FileRea
 function init(){compute();rAll();rPRs();rNut();rVerdicts();fetchData();setInterval(fetchData,60000);}
 if(sessionStorage.getItem('h')==='1')init();
 </script>
-</body>
-</html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+// ── INTERACTIVE CHARTS ──
+let mainChart=null, currentChartMode='tier', currentChartType='doughnut';
+const CHART_COLORS=['#1A1A1A','#4A7C59','#B5541C','#1565C0','#7B3F9E','#C0392B','#2C7873','#E67E22','#16A085','#8E44AD','#2980B9','#27AE60'];
+
+function getChartData(mode){
+  if(mode==='tier'){
+    const tiers={T1:0,T2:0,T3:0,T4:0};
+    POS.forEach(p=>{if(tiers[p.tier]!==undefined)tiers[p.tier]+=(p.val||0);});
+    return{labels:Object.keys(tiers),data:Object.values(tiers).map(v=>parseFloat(v.toFixed(0))),title:'Répartition par Tier'};
+  }
+  if(mode==='compte'){
+    const c={TFSA:0,FHSA:0,REER:0};
+    POS.forEach(p=>{if(c[p.c]!==undefined)c[p.c]+=(p.val||0);});
+    return{labels:Object.keys(c),data:Object.values(c).map(v=>parseFloat(v.toFixed(0))),title:'Répartition par Compte'};
+  }
+  if(mode==='top10'){
+    const sorted=[...POS].sort((a,b)=>(b.val||0)-(a.val||0)).slice(0,10);
+    return{labels:sorted.map(p=>p.t),data:sorted.map(p=>parseFloat((p.val||0).toFixed(0))),title:'Top 10 Positions'};
+  }
+  if(mode==='gains'){
+    const sorted=[...POS].filter(p=>p.gain!==undefined).sort((a,b)=>(b.gain||0)-(a.gain||0)).slice(0,12);
+    return{labels:sorted.map(p=>p.t),data:sorted.map(p=>parseFloat((p.gain||0).toFixed(0))),title:'Gains par Position ($CAD)',colors:sorted.map(p=>(p.gain||0)>=0?'rgba(46,125,50,0.8)':'rgba(198,40,40,0.8)')};
+  }
+  return{labels:[],data:[],title:''};
+}
+
+function buildChart(){
+  const canvas=document.getElementById('mainChart');
+  if(!canvas||typeof Chart==='undefined')return;
+  if(!POS||POS.length===0){setTimeout(buildChart,500);return;}
+  const d=getChartData(currentChartMode);
+  se('chart-title',d.title);
+  if(mainChart)mainChart.destroy();
+  const colors=d.colors||CHART_COLORS.slice(0,d.labels.length);
+  const isDoughnut=currentChartType==='doughnut';
+  mainChart=new Chart(canvas,{
+    type:isDoughnut?'doughnut':'bar',
+    data:{labels:d.labels,datasets:[{data:d.data,backgroundColor:colors,borderColor:isDoughnut?'#f8f7f5':'rgba(0,0,0,0.1)',borderWidth:isDoughnut?2:1,borderRadius:isDoughnut?0:4}]},
+    options:{
+      responsive:true,maintainAspectRatio:true,
+      plugins:{
+        legend:{display:isDoughnut,position:'right',labels:{font:{size:11,family:'system-ui'},color:'#1A1A1A',padding:12,boxWidth:12}},
+        tooltip:{callbacks:{label:ctx=>{const val=ctx.raw;const total=ctx.dataset.data.reduce((a,b)=>a+b,0);const pct=(val/total*100).toFixed(1);return` $${val.toLocaleString('fr-CA')} CAD (${pct}%)`;}}}
+      },
+      scales:isDoughnut?{}:{
+        x:{ticks:{font:{size:10},color:'#555'},grid:{display:false}},
+        y:{ticks:{callback:v=>'$'+Math.round(v/1000)+'K',font:{size:10},color:'#555'},grid:{color:'rgba(0,0,0,0.05)'}}
+      },
+      onClick:(e,els)=>{if(els.length>0){const label=d.labels[els[0].index];const pos=POS.find(p=>p.t===label);if(pos&&LINKS[pos.t])window.open(LINKS[pos.t],'_blank');}}
+    }
+  });
+}
+
+function switchChart(mode,el){
+  currentChartMode=mode;
+  document.querySelectorAll('#page-analyse .filters .fb').forEach(b=>b.classList.remove('on'));
+  if(el)el.classList.add('on');
+  buildChart();
+}
+
+function setChartType(type,el){
+  currentChartType=type;
+  document.querySelectorAll('#btn-doughnut,#btn-bar').forEach(b=>b.classList.remove('on'));
+  if(el)el.classList.add('on');
+  buildChart();
+}
+
+// Rebuild chart when navigating to analyse page
+const _origNav=nav;
+function nav(pg,el){_origNav(pg,el);if(pg==='analyse')setTimeout(buildChart,50);}
+</script>
