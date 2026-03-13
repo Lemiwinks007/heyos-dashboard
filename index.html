@@ -1131,7 +1131,7 @@ td.num { font-family:var(--mono); font-size:.73rem; text-align:right; }
         <div class="card-hdr"><span class="card-title">FHSA — Room & Stratégie</span></div>
         <div class="card-body">
           <div class="fiscal-row"><span class="fiscal-label">Limite annuelle 2026</span><span class="fiscal-val">$16,000</span></div>
-          <div class="fiscal-row"><span class="fiscal-label">Utilisé (estimé)</span><span class="fiscal-val" style="color:var(--red)">~$6,300</span></div>
+          <div class="fiscal-row"><span class="fiscal-label">Utilisé (estimé)</span><span class="fiscal-val" style="color:var(--red)">~$2,300</span></div>
           <div class="fiscal-row"><span class="fiscal-label">En transit → VFV.TO</span><span class="fiscal-val" style="color:var(--amber)">$4,000 ⏳</span></div>
           <div class="fiscal-row"><span class="fiscal-label">Room restant</span><span class="fiscal-val">~$9,700</span></div>
           <div class="fiscal-row"><span class="fiscal-label">Objectif total FHSA</span><span class="fiscal-val">$40,000</span></div>
@@ -1475,49 +1475,52 @@ async function tryLogin() {
 const DATA_JSON_URL = 'https://raw.githubusercontent.com/Lemiwinks007/heyos-dashboard/main/data.json';
 
 let POSITIONS = [
-  {ticker:'VFV.TO',nom:'Vanguard S&P 500 ETF',type:'ETF',tier:'T1',compte:'TFSA',qty:84,prixMoy:119.9246,dev:'CAD',ciblePrix:155},
-  {ticker:'GOOG',nom:'Alphabet Inc.',type:'Action',tier:'T1',compte:'TFSA',qty:6,prixMoy:90.6059,dev:'USD',ciblePrix:280},
-  {ticker:'AVGO',nom:'Broadcom Inc.',type:'Action',tier:'T1',compte:'TFSA',qty:16.5743,prixMoy:342.1593,dev:'USD'},
-  {ticker:'AMZN',nom:'Amazon.com',type:'Action',tier:'T1',compte:'TFSA',qty:7.4817,prixMoy:113.7377,dev:'USD'},
-  {ticker:'SMH',nom:'VanEck Semiconductor ETF',type:'ETF',tier:'T1',compte:'TFSA',qty:19.2266,prixMoy:393.5653,dev:'USD',ciblePrix:350},
+  // ── TFSA ──
+  {ticker:'VFV.TO',nom:'Vanguard S&P 500',type:'ETF',tier:'T1',compte:'TFSA',qty:84,prixMoy:119.9246,dev:'CAD',ciblePrix:155},
+  {ticker:'GOOG',nom:'Alphabet',type:'Action',tier:'T1',compte:'TFSA',qty:6,prixMoy:90.6059,dev:'USD',ciblePrix:280},
+  {ticker:'AVGO',nom:'Broadcom',type:'Action',tier:'T1',compte:'TFSA',qty:16.5743,prixMoy:342.1593,dev:'USD'},
+  {ticker:'AMZN',nom:'Amazon',type:'Action',tier:'T1',compte:'TFSA',qty:7.4817,prixMoy:113.7377,dev:'USD'},
+  {ticker:'SMH',nom:'VanEck Semis',type:'ETF',tier:'T1',compte:'TFSA',qty:19.2266,prixMoy:393.5653,dev:'USD',ciblePrix:350},
   {ticker:'META',nom:'Meta Platforms',type:'Action',tier:'T1',compte:'TFSA',qty:1,prixMoy:637.7698,dev:'USD',ciblePrix:580},
-  {ticker:'ENB.TO',nom:'Enbridge Inc.',type:'Action',tier:'T1',compte:'TFSA',qty:9,prixMoy:49.62,dev:'CAD'},
+  {ticker:'ENB.TO',nom:'Enbridge',type:'Action',tier:'T1',compte:'TFSA',qty:9,prixMoy:49.62,dev:'CAD'},
   {ticker:'GEV',nom:'GE Vernova',type:'Action',tier:'T1',compte:'TFSA',qty:2.4431,prixMoy:831.9907,dev:'USD',ciblePrix:750},
-  {ticker:'MSFT',nom:'Microsoft Corp.',type:'Action',tier:'T2',compte:'TFSA',qty:2,prixMoy:312.5938,dev:'USD',ciblePrix:370},
-  {ticker:'NVDA',nom:'NVIDIA Corp.',type:'Action',tier:'T2',compte:'TFSA',qty:4,prixMoy:128.59,dev:'USD',ciblePrix:160},
-  {ticker:'TSLA',nom:'Tesla Inc.',type:'Action',tier:'T2',compte:'TFSA',qty:1.8645,prixMoy:303.5644,dev:'USD'},
-  {ticker:'QQQM',nom:'Nasdaq 100 ETF',type:'ETF',tier:'T2',compte:'TFSA',qty:4.4515,prixMoy:247.1068,dev:'USD'},
-  {ticker:'XEQT.TO',nom:'iShares Core Equity ETF',type:'ETF',tier:'T2',compte:'TFSA',qty:25,prixMoy:39.97,dev:'CAD'},
-  {ticker:'SPGI',nom:'S&P Global Inc.',type:'Action',tier:'T2',compte:'TFSA',qty:0.9996,prixMoy:443.2458,dev:'USD'},
+  {ticker:'MSFT',nom:'Microsoft',type:'Action',tier:'T2',compte:'TFSA',qty:2,prixMoy:312.5938,dev:'USD',ciblePrix:370},
+  {ticker:'NVDA',nom:'NVIDIA',type:'Action',tier:'T2',compte:'TFSA',qty:4,prixMoy:128.59,dev:'USD',ciblePrix:160},
+  {ticker:'TSLA',nom:'Tesla',type:'Action',tier:'T2',compte:'TFSA',qty:1.8645,prixMoy:303.5644,dev:'USD'},
+  {ticker:'QQQM',nom:'Invesco Nasdaq 100',type:'ETF',tier:'T2',compte:'TFSA',qty:4.4515,prixMoy:247.1068,dev:'USD'},
+  {ticker:'XEQT.TO',nom:'iShares Core Equity',type:'ETF',tier:'T2',compte:'TFSA',qty:25,prixMoy:39.97,dev:'CAD'},
+  {ticker:'SPGI',nom:'S&P Global',type:'Action',tier:'T2',compte:'TFSA',qty:0.9996,prixMoy:443.2458,dev:'USD'},
   {ticker:'TD.TO',nom:'TD Bank',type:'Action',tier:'T3',compte:'TFSA',qty:87,prixMoy:79.8348,dev:'CAD'},
   {ticker:'ZLB.TO',nom:'BMO Low Volatility',type:'ETF',tier:'T3',compte:'TFSA',qty:37,prixMoy:58.1416,dev:'CAD'},
-  {ticker:'H.TO',nom:'Hydro One Ltd.',type:'Action',tier:'T3',compte:'TFSA',qty:22,prixMoy:52.8663,dev:'CAD'},
-  {ticker:'T.TO',nom:'Telus Corp ⚠️NEVER SELL',type:'Action',tier:'T3',compte:'TFSA',qty:32,prixMoy:22.04,dev:'CAD'},
-  {ticker:'QTUM',nom:'Defiance Quantum ETF',type:'ETF',tier:'T3',compte:'TFSA',qty:5,prixMoy:120.81,dev:'USD'},
-  {ticker:'HURA.TO',nom:'Global X Uranium ETF',type:'ETF',tier:'T3',compte:'TFSA',qty:6,prixMoy:55.25,dev:'CAD'},
-  {ticker:'XEI.TO',nom:'iShares S&P/TSX HYD',type:'ETF',tier:'T4',compte:'TFSA',qty:51,prixMoy:30.6811,dev:'CAD'},
-  {ticker:'SRU-UN.TO',nom:'Smart REIT',type:'REIT',tier:'T4',compte:'TFSA',qty:57,prixMoy:25.2543,dev:'CAD'},
-  {ticker:'XIC.TO',nom:'iShares Core S&P/TSX',type:'ETF',tier:'T4',compte:'TFSA',qty:21,prixMoy:40.4066,dev:'CAD'},
-  {ticker:'ZRE.TO',nom:'BMO Equal Weight REITs',type:'ETF',tier:'T4',compte:'TFSA',qty:19,prixMoy:20.83,dev:'CAD'},
+  {ticker:'H.TO',nom:'Hydro One',type:'Action',tier:'T3',compte:'TFSA',qty:22,prixMoy:52.8663,dev:'CAD'},
+  {ticker:'T.TO',nom:'TELUS ⚠️NEVER SELL',type:'Action',tier:'T3',compte:'TFSA',qty:32,prixMoy:22.04,dev:'CAD'},
+  {ticker:'QTUM',nom:'Defiance Quantum',type:'ETF',tier:'T3',compte:'TFSA',qty:5,prixMoy:120.81,dev:'USD'},
+  {ticker:'HURA.TO',nom:'Global X Uranium',type:'ETF',tier:'T3',compte:'TFSA',qty:6,prixMoy:55.25,dev:'CAD'},
+  {ticker:'XEI.TO',nom:'iShares High Div',type:'ETF',tier:'T4',compte:'TFSA',qty:51,prixMoy:30.6811,dev:'CAD'},
+  {ticker:'SRU.UN.TO',nom:'SmartCentres REIT',type:'REIT',tier:'T4',compte:'TFSA',qty:57,prixMoy:25.2543,dev:'CAD'},
+  {ticker:'XIC.TO',nom:'iShares Core TSX',type:'ETF',tier:'T4',compte:'TFSA',qty:21,prixMoy:40.4066,dev:'CAD'},
+  {ticker:'ZRE.TO',nom:'BMO Equal REITs',type:'ETF',tier:'T4',compte:'TFSA',qty:19,prixMoy:20.83,dev:'CAD'},
   {ticker:'MFC.TO',nom:'Manulife ⚠️NEVER SELL',type:'Action',tier:'T4',compte:'TFSA',qty:8,prixMoy:51.7,dev:'CAD'},
-  {ticker:'VDU.TO',nom:'Vanguard Intl Equity',type:'ETF',tier:'T4',compte:'TFSA',qty:6,prixMoy:43.75,dev:'CAD'},
-  {ticker:'VFV.TO',nom:'Vanguard S&P 500 ETF',type:'ETF',tier:'T1',compte:'FHSA',qty:16,prixMoy:157.3812,dev:'CAD'},
-  {ticker:'AMZN',nom:'Amazon.com',type:'Action',tier:'T1',compte:'FHSA',qty:7,prixMoy:154.9418,dev:'USD'},
-  {ticker:'QQQM',nom:'Nasdaq 100 ETF',type:'ETF',tier:'T2',compte:'FHSA',qty:5.311,prixMoy:247.4064,dev:'USD'},
-  {ticker:'XEQT.TO',nom:'iShares Core Equity ETF',type:'ETF',tier:'T2',compte:'FHSA',qty:15,prixMoy:40.06,dev:'CAD'},
+  {ticker:'VDU.TO',nom:'Vanguard Dev Markets',type:'ETF',tier:'T4',compte:'TFSA',qty:6,prixMoy:43.75,dev:'CAD'},
+  // ── FHSA ──
+  {ticker:'VFV.TO',nom:'Vanguard S&P 500',type:'ETF',tier:'T1',compte:'FHSA',qty:16,prixMoy:157.3812,dev:'CAD'},
+  {ticker:'AMZN',nom:'Amazon',type:'Action',tier:'T1',compte:'FHSA',qty:7,prixMoy:154.9418,dev:'USD'},
+  {ticker:'QQQM',nom:'Invesco Nasdaq 100',type:'ETF',tier:'T2',compte:'FHSA',qty:5.311,prixMoy:247.4064,dev:'USD'},
+  {ticker:'XEQT.TO',nom:'iShares Core Equity',type:'ETF',tier:'T2',compte:'FHSA',qty:15,prixMoy:40.06,dev:'CAD'},
   {ticker:'TD.TO',nom:'TD Bank',type:'Action',tier:'T3',compte:'FHSA',qty:15,prixMoy:82.29,dev:'CAD'},
-  {ticker:'H.TO',nom:'Hydro One Ltd.',type:'Action',tier:'T3',compte:'FHSA',qty:10,prixMoy:51.78,dev:'CAD'},
+  {ticker:'H.TO',nom:'Hydro One',type:'Action',tier:'T3',compte:'FHSA',qty:10,prixMoy:51.78,dev:'CAD'},
   {ticker:'ZLB.TO',nom:'BMO Low Volatility',type:'ETF',tier:'T3',compte:'FHSA',qty:3,prixMoy:59.0666,dev:'CAD'},
-  {ticker:'SRU-UN.TO',nom:'Smart REIT',type:'REIT',tier:'T4',compte:'FHSA',qty:63,prixMoy:23.61,dev:'CAD'},
-  {ticker:'REI-UN.TO',nom:'RioCan REIT',type:'REIT',tier:'T4',compte:'FHSA',qty:80,prixMoy:18.73,dev:'CAD'},
-  {ticker:'XIC.TO',nom:'iShares Core S&P/TSX',type:'ETF',tier:'T4',compte:'FHSA',qty:19,prixMoy:48.3705,dev:'CAD'},
-  {ticker:'XEI.TO',nom:'iShares S&P/TSX HYD',type:'ETF',tier:'T4',compte:'FHSA',qty:26,prixMoy:32.6111,dev:'CAD'},
-  {ticker:'SCHD',nom:'Schwab US Dividend ETF',type:'ETF',tier:'T1',compte:'REER',qty:64.3053,prixMoy:25.5008,dev:'USD'},
+  {ticker:'SRU.UN.TO',nom:'SmartCentres REIT',type:'REIT',tier:'T4',compte:'FHSA',qty:63,prixMoy:23.61,dev:'CAD'},
+  {ticker:'REI.UN.TO',nom:'RioCan REIT',type:'REIT',tier:'T4',compte:'FHSA',qty:80,prixMoy:18.73,dev:'CAD'},
+  {ticker:'XIC.TO',nom:'iShares Core TSX',type:'ETF',tier:'T4',compte:'FHSA',qty:19,prixMoy:48.3705,dev:'CAD'},
+  {ticker:'XEI.TO',nom:'iShares High Div',type:'ETF',tier:'T4',compte:'FHSA',qty:26,prixMoy:32.6111,dev:'CAD'},
+  // ── REER ──
+  {ticker:'SCHD',nom:'Schwab US Dividend',type:'ETF',tier:'T1',compte:'REER',qty:64.3053,prixMoy:25.5008,dev:'USD'},
   {ticker:'JEPI',nom:'JPMorgan Premium Income',type:'ETF',tier:'T2',compte:'REER',qty:1,prixMoy:54.52,dev:'USD'},
 ];
 
 let USDCAD = 1.3559;
-let TOTAL_CAD = 86869.43;
+let TOTAL_CAD = 86869.43; // TFSA $69,199.98 + FHSA $14,898.25 + REER $2,771.20 · 12 mars 2026
 let COST_BASE = 71776.46;
 let _acct = 'all';
 let _posTbl = 'pos';
@@ -1610,13 +1613,13 @@ async function fetchLivePrices() {
       document.getElementById('usdcad-hero').textContent = rate.toFixed(4);
     }
   } catch(e) {}
-  const keyTickers = ['AVGO','SMH','VFV-TO','GEV','GOOG','SCHD','META','AMZN','ENB-TO','MSFT','NVDA','TSLA','TD-TO'];
+  const keyTickers = ['AVGO','SMH','VFV-TO','GEV','GOOG','SCHD','META','AMZN','ENB-TO','MSFT','NVDA','TSLA','TD-TO','SRU-UN-TO','REI-UN-TO','XEQT-TO'];
   for (const t of keyTickers) {
     try {
       const r = await fetch('https://corsproxy.io/?' + encodeURIComponent(`https://query1.finance.yahoo.com/v8/finance/chart/${t}?interval=1d&range=2d`));
       const d = await r.json();
       const meta = d?.chart?.result?.[0]?.meta;
-      const orig = t.replace('-TO', '.TO');
+      const orig = t.replace(/-TO$/, '.TO').replace(/-UN-TO$/, '.UN.TO');
       if (meta?.regularMarketPrice) _liveCache[orig] = {price:meta.regularMarketPrice, prev:meta.chartPreviousClose||meta.regularMarketPrice};
     } catch(e) {}
   }
@@ -1952,6 +1955,7 @@ function renderVerdicts() {
     {ticker:'META',nom:'Meta Platforms',compte:'TFSA',entree:637.77,dev:'USD'},
     {ticker:'SMH',nom:'VanEck Semis',compte:'TFSA',entree:393.57,dev:'USD'},
     {ticker:'GOOG',nom:'Alphabet',compte:'TFSA',entree:90.61,dev:'USD'},
+    {ticker:'AMZN',nom:'Amazon',compte:'TFSA+FHSA',entree:113.74,dev:'USD'},
   ];
   const savedVFV=parseFloat(_verdictData['VFV.TO']||0);
   const vfvPerf=savedVFV>0?(savedVFV-157.38)/157.38*100:null;
