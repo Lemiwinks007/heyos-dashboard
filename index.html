@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HeyOS v14</title>
+<title>HeyOS v15</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -191,7 +191,7 @@ tbody tr:hover td{background:var(--bg)}
 </div>
 <div id="app">
   <nav class="sidebar">
-    <div class="slogo"><div class="sm">HEY<span>OS</span></div><div class="ss">v14 · Mind and Body OS</div></div>
+    <div class="slogo"><div class="sm">HEY<span>OS</span></div><div class="ss">v15 · Mind and Body OS</div></div>
     <div class="ns">Vie</div>
     <div class="ni on" onclick="nav('today',this)"><span class="nd g"></span>Aujourd'hui</div>
     <div class="ns">Finances</div>
@@ -632,8 +632,32 @@ let _rc={key:'',idx:0,val:0};
 function oRating(key,idx){_rc={key,idx,val:0};document.getElementById('stp').innerHTML=[1,2,3,4,5].map(n=>`<button class="stb" id="s${n}" onclick="setStar(${n})">☆</button>`).join('');document.getElementById('mrt2').classList.add('on');}
 function setStar(n){_rc.val=n;[1,2,3,4,5].forEach(i=>document.getElementById('s'+i).textContent=i<=n?'★':'☆');}
 function saveRating(){if(!_rc.val){cM('mrt2');return;}const d=S.g(_rc.key,[]);if(d[_rc.idx])d[_rc.idx].rating=_rc.val;S.s(_rc.key,d);cM('mrt2');if(_rc.key==='films')rFilms();if(_rc.key==='restaurants')rRestos();}
-const DP=[{label:'🏋️ Bench press',key:'bench',val:'205 lbs'},{label:'🦵 Squat',key:'squat',val:'275 lbs'},{label:'⬆️ Deadlift',key:'dead',val:'315 lbs'},{label:'🏃 5km',key:'run5',val:'24:30'},{label:'💪 Overhead press',key:'ohp',val:'135 lbs'},{label:'⚖️ Poids',key:'poids',val:'175 lbs'},{label:'🥋 BJJ',key:'bjj',val:'Q2 2026'}];
-function rPRs(){const d=S.g('prs',DP);sh('prlist',d.map(p=>`<div class="pr-row"><div class="prn">${p.label}</div><div class="prv">${p.val}</div></div>`).join(''));const pw=d.find(p=>p.key==='poids');if(pw){se('kpds',pw.val);se('lcp',pw.val);}const bj=d.find(p=>p.key==='bjj');if(bj)se('kbjj',bj.val);}
+const DP=[
+  {label:'🏋️ Bench press',key:'bench',val:'205 lbs',obj:'225 lbs',cur:205,goal:225,unit:'lbs'},
+  {label:'🦵 Squat',key:'squat',val:'275 lbs',obj:'315 lbs',cur:275,goal:315,unit:'lbs'},
+  {label:'⬆️ Deadlift',key:'dead',val:'315 lbs',obj:'365 lbs',cur:315,goal:365,unit:'lbs'},
+  {label:'💪 Overhead press',key:'ohp',val:'135 lbs',obj:'155 lbs',cur:135,goal:155,unit:'lbs'},
+  {label:'🏃 5km',key:'run5',val:'24:30',obj:'22:00',cur:null,goal:null,unit:'min'},
+  {label:'⚖️ Poids',key:'poids',val:'175 lbs',obj:'190 lbs',cur:175,goal:190,unit:'lbs'},
+  {label:'🥋 BJJ',key:'bjj',val:'Q2 2026',obj:'Actif',cur:null,goal:null,unit:''}
+];
+function parseLbs(s){return parseFloat(String(s).replace(/[^\d.]/g,''))||0;}
+function prPct(p){
+  if(p.cur===null)return null;
+  const cur=parseLbs(p.val),goal=p.goal;
+  if(!goal||!cur)return null;
+  return Math.min(Math.round(cur/goal*100),100);
+}
+function rPRs(){
+  const d=S.g('prs',DP);
+  sh('prlist',d.map(p=>{
+    const pct=prPct(p);
+    const bar=pct!==null?`<div style="margin-top:6px"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:3px"><span>${p.val}</span><span style="color:var(--text2)">→ ${p.obj||'—'}</span></div><div style="height:3px;background:var(--bg);border-radius:2px;border:0.5px solid var(--border)"><div style="height:100%;border-radius:2px;background:var(--green);width:${pct}%;transition:width .6s ease"></div></div></div>`:'<div style="font-size:11px;color:var(--text3);margin-top:4px">→ '+( p.obj||'—')+'</div>';
+    return`<div class="pr-row"><div style="flex:1"><div class="prn">${p.label}</div>${bar}</div><div class="prv">${p.val}</div></div>`;
+  }).join(''));
+  const pw=d.find(p=>p.key==='poids');if(pw){se('kpds',pw.val);se('lcp',pw.val);}
+  const bj=d.find(p=>p.key==='bjj');if(bj)se('kbjj',bj.val);
+}
 function openPRM(){const d=S.g('prs',DP);sh('prfields',d.map(p=>`<div class="mf"><div class="ml">${p.label}</div><input class="inp" id="prf${p.key}" value="${p.val}"></div>`).join(''));document.getElementById('mpr').classList.add('on');}
 function savePR(){const d=S.g('prs',DP);d.forEach(p=>{const e=document.getElementById('prf'+p.key);if(e&&e.value.trim())p.val=e.value.trim();});S.s('prs',d);cM('mpr');rPRs();}
 const DN={cal:'3,200 kcal',prot:'190g / jour',gluc:'380g / jour',lip:'90g / jour',eau:'3.5L / jour'};
