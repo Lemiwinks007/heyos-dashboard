@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeyOS v17 · COMMAND CENTER</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Syne:wght@400;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f0f0f; --surface:#1a1a1a; --card:#242424; --border:#333;
+  --text:#ffffff; --text2:#a0a0a0; --accent:#ff3e3e;
+  --green:#00ff66; --blue:#0066ff; --gold:#ffcc00;
+  --body:'Syne', sans-serif; --mono:'DM Mono', monospace;
+}
+body{ background:var(--bg); color:var(--text); font-family:var(--body); padding:20px; }
+
+/* KILL-SWITCH BANNER */
+.kill-switch {
+    background: var(--accent);
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-family: 'Bebas Neue';
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    display: none; /* Activé par JS */
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse { 0% {opacity: 1;} 50% {opacity: 0.7;} 100% {opacity: 1;} }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.card { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 8px; }
+.label { font-size: 0.8rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; }
+.val { font-size: 2.2rem; font-family: 'Bebas Neue'; margin: 5px 0; }
+.delta { font-family: var(--mono); font-size: 0.9rem; }
+.delta.plus { color: var(--green); }
+
+.status-tag { padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; background: var(--border); }
+
+/* BARRE DE PROGRESSION SNOWBALL */
+.snowball-bar { height: 8px; background: #333; border-radius: 4px; margin-top: 10px; overflow: hidden; }
+.snowball-fill { height: 100%; background: var(--blue); transition: width 1s; }
+
+table { width: 100%; border-collapse: collapse; margin-top: 15px; font-family: var(--mono); font-size: 0.8rem; }
+th { text-align: left; color: var(--text2); padding: 10px; border-bottom: 1px solid var(--border); }
+td { padding: 10px; border-bottom: 1px solid var(--border); }
+.tier-1 { color: var(--green); font-weight: bold; }
+</style>
+</head>
+<body>
+
+<div id="kill-switch" class="kill-switch">🚨 ALERTE SYSTÈME : FONDS D'URGENCE À $0 - LIQUIDITÉ CRITIQUE 🚨</div>
+
+<header style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:30px; border-bottom: 1px solid var(--border); padding-bottom:10px;">
+    <div>
+        <h1 style="font-family:'Bebas Neue'; font-size:3rem; line-height:1;">HeyOS <span style="color:var(--accent)">v17</span></h1>
+        <p class="label">Système d'exploitation personnel · S38</p>
+    </div>
+    <div style="text-align:right">
+        <div id="last-update" class="label">--:--</div>
+        <div class="status-tag">LOGGED AS: Lemiwinks007</div>
+    </div>
+</header>
+
+<div class="grid">
+    <div class="card">
+        <p class="label">Valeur Totale (CAD)</p>
+        <div id="total-val" class="val">$0</div>
+        <div id="total-delta" class="delta plus">+0.00% (ATH)</div>
+    </div>
+
+    <div class="card">
+        <p class="label">Snowball ARC (Estimée)</p>
+        <div id="arc-val" class="val" style="color:var(--blue)">$0</div>
+        <p class="label" style="font-size:0.6rem">Récupération fiscale 52.98% sur REER</p>
+        <div class="snowball-bar"><div id="arc-progress" class="snowball-fill" style="width: 0%"></div></div>
+    </div>
+
+    <div class="card">
+        <p class="label">Exposition IA (Seuil 45%)</p>
+        <div id="ia-val" class="val">$0</div>
+        <div id="ia-status" class="delta">SÉCURISÉ</div>
+    </div>
+</div>
+
+<div class="card" style="margin-top:20px;">
+    <h3 class="label" style="margin-bottom:15px;">Top Positions Stratégiques</h3>
+    <table id="pos-table">
+        <thead>
+            <tr>
+                <th>TICKER</th>
+                <th>TIER</th>
+                <th>VALEUR</th>
+                <th>GAIN</th>
+                <th>SIGNAL</th>
+            </tr>
+        </thead>
+        <tbody>
+            </tbody>
+    </table>
+</div>
+
+<script>
+async function loadData() {
+    try {
+        const r = await fetch('data.json');
+        const d = await r.json();
+        
+        // Update Stats
+        document.getElementById('total-val').innerText = d.total_cad.toLocaleString('fr-CA') + ' $';
+        document.getElementById('total-delta').innerText = '+' + d.open_pl_pct + '% Open P&L';
+        
+        // Kill-Switch Logic (Simulé ici, à lier à ton montant HISA dans data.json)
+        const hasUrgencyFund = false; // Sera d.hisa > 0
+        if(!hasUrgencyFund) document.getElementById('kill-switch').style.display = 'block';
+
+        // Snowball ARC (calcul basé sur REER cotisé)
+        const reerCotise = 2000; // Exemple
+        const arcRemboursement = reerCotise * 0.5298;
+        document.getElementById('arc-val').innerText = arcRemboursement.toLocaleString('fr-CA') + ' $';
+        document.getElementById('arc-progress').style.width = '35%'; // Ratio vers objectif annuel
+
+        // IA Expo
+        document.getElementById('ia-val').innerText = '28.4%';
+        
+        // Table positions
+        const tbody = document.querySelector('#pos-table tbody');
+        d.positions.slice(0, 8).forEach(p => {
+            const row = `<tr>
+                <td style="font-weight:bold">${p.ticker}</td>
+                <td><span class="tier-1">${p.tier}</span></td>
+                <td>$${Math.round(p.qty * p.prixLive).toLocaleString()}</td>
+                <td class="plus">+${((p.prixLive/p.prixMoy - 1)*100).toFixed(1)}%</td>
+                <td><span class="status-tag">ACCUMULER</span></td>
+            </tr>`;
+            tbody.innerHTML += row;
+        });
+
+        document.getElementById('last-update').innerText = 'SYSTÈME LIVE : ' + new Date(d.date).toLocaleString();
+
+    } catch(e) { console.error("Data error", e); }
+}
+loadData();
+</script>
+</body>
+</html>
