@@ -3,553 +3,590 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HeyOS v12</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>HeyOS</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;font-family:'Inter',sans-serif;background:#f5f4f0;color:#1a1a1a;font-size:14px;}
-#login-screen{position:fixed;inset:0;background:#f5f4f0;display:flex;align-items:center;justify-content:center;z-index:999;}
-.login-box{background:#fff;border:0.5px solid #e0ddd6;border-radius:16px;padding:40px;width:320px;text-align:center;}
-.login-logo{font-size:26px;font-weight:600;margin-bottom:8px;letter-spacing:-.03em;}
-.login-logo span{color:#22c55e;}
-.login-sub{font-size:12px;color:#999;margin-bottom:28px;}
-.login-input{width:100%;padding:11px 14px;border:0.5px solid #ddd;border-radius:8px;font-size:15px;background:#fafaf8;outline:none;text-align:center;letter-spacing:.2em;}
-.login-input:focus{border-color:#aaa;}
-.login-btn{width:100%;margin-top:12px;padding:11px;background:#1a1a1a;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;}
-.login-btn:hover{background:#333;}
-.login-err{color:#e24b4a;font-size:12px;margin-top:8px;min-height:18px;}
-#app{display:none;height:100vh;overflow:hidden;flex-direction:row;}
-#app.visible{display:flex;}
-.sidebar{width:215px;min-width:215px;background:#fff;border-right:0.5px solid #e0ddd6;display:flex;flex-direction:column;overflow-y:auto;padding-bottom:20px;}
-.sidebar::-webkit-scrollbar{width:3px;}.sidebar::-webkit-scrollbar-thumb{background:#eee;}
-.sidebar-logo{padding:22px 18px 18px;border-bottom:0.5px solid #e0ddd6;font-size:22px;font-weight:600;letter-spacing:-.04em;flex-shrink:0;}
-.sidebar-logo span{color:#22c55e;}
-.nav-section{padding:16px 18px 4px;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#bbb;}
-.nav-item{display:flex;align-items:center;gap:10px;padding:8px 18px;cursor:pointer;font-size:13px;color:#666;transition:background .1s,color .1s;}
-.nav-item:hover{background:#f5f4f0;color:#1a1a1a;}
-.nav-item.active{background:#f5f4f0;color:#1a1a1a;font-weight:500;}
-.nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-.dot-green{background:#22c55e;}.dot-blue{background:#378ADD;}.dot-amber{background:#EF9F27;}
-.dot-purple{background:#7F77DD;}.dot-coral{background:#D85A30;}.dot-teal{background:#1D9E75;}.dot-gray{background:#ccc;}
-.nav-badge{margin-left:auto;background:#e24b4a;color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;font-weight:600;}
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-.topbar{height:46px;background:#fff;border-bottom:0.5px solid #e0ddd6;display:flex;align-items:center;padding:0 22px;gap:12px;flex-shrink:0;}
-.topbar-live{display:flex;align-items:center;gap:7px;font-size:12px;color:#555;}
-.live-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;}
-.topbar-right{margin-left:auto;display:flex;align-items:center;gap:14px;}
-.topbar-info{font-size:12px;color:#aaa;}
-.btn-sm{padding:5px 12px;border:0.5px solid #ddd;border-radius:6px;font-size:12px;background:#fff;cursor:pointer;color:#555;font-family:'Inter',sans-serif;}
-.btn-sm:hover{background:#f5f4f0;}
-.content{flex:1;overflow-y:auto;padding:26px;}
-.content::-webkit-scrollbar{width:4px;}.content::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px;}
-.page{display:none;}.page.active{display:block;}
-.page-title{font-size:22px;font-weight:600;letter-spacing:-.04em;margin-bottom:4px;}
-.page-title span{color:#aaa;font-weight:400;}
-.page-sub{font-size:12px;color:#aaa;margin-bottom:22px;}
-.kpi-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:22px;}
-.kpi{background:#fff;border:0.5px solid #e0ddd6;border-radius:12px;padding:16px 18px;}
-.kpi-label{font-size:11px;color:#aaa;font-weight:500;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em;}
-.kpi-val{font-size:20px;font-weight:600;color:#1a1a1a;letter-spacing:-.03em;}
-.kpi-val.g{color:#16a34a;}.kpi-val.r{color:#e24b4a;}.kpi-val.b{color:#378ADD;}.kpi-val.am{color:#d97706;}
-.kpi-sub{font-size:11px;color:#aaa;margin-top:4px;}
-.life-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
-.life-card{background:#fff;border:0.5px solid #e0ddd6;border-radius:12px;padding:20px;cursor:pointer;transition:border-color .15s,box-shadow .15s;}
-.life-card:hover{border-color:#ccc;box-shadow:0 2px 10px rgba(0,0,0,.06);}
-.life-icon{font-size:22px;margin-bottom:10px;}
-.life-card-title{font-size:13px;font-weight:500;color:#1a1a1a;margin-bottom:6px;}
-.life-card-stat{font-size:21px;font-weight:600;letter-spacing:-.03em;margin-bottom:3px;}
-.life-card-sub{font-size:11px;color:#aaa;}
-.section-hdr{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#aaa;margin:22px 0 10px;}
-.tbl{width:100%;border-collapse:collapse;}
-.tbl th{text-align:left;font-size:11px;font-weight:500;color:#aaa;padding:6px 10px;border-bottom:0.5px solid #e0ddd6;text-transform:uppercase;letter-spacing:.04em;}
-.tbl td{padding:10px;border-bottom:0.5px solid #f0ede8;font-size:13px;color:#1a1a1a;vertical-align:middle;}
-.tbl tr:hover td{background:#fafaf8;}
-.tier-pill{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;}
-.t1{background:#dcfce7;color:#15803d;}.t2{background:#dbeafe;color:#1d4ed8;}
-.t3{background:#fef3c7;color:#92400e;}.t4{background:#f3f4f6;color:#4b5563;}
-.g{color:#16a34a;}.r{color:#e24b4a;}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.card{background:#fff;border:0.5px solid #e0ddd6;border-radius:12px;padding:18px;}
-.card-title{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#aaa;margin-bottom:14px;}
-.prog-row{display:flex;justify-content:space-between;font-size:12px;color:#666;margin-bottom:5px;}
-.prog-bar{height:6px;background:#f0ede8;border-radius:3px;overflow:hidden;margin-bottom:14px;}
-.prog-fill{height:100%;border-radius:3px;transition:width .5s;}
-.data-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid #f5f2ed;font-size:13px;}
-.data-row:last-child{border-bottom:none;}
-.data-label{color:#666;}.data-val{font-weight:500;color:#1a1a1a;}
-.data-val.g{color:#16a34a;}.data-val.r{color:#e24b4a;}.data-val.warn{color:#e24b4a;}
-.action-item{background:#fff;border:0.5px solid #e0ddd6;border-radius:10px;padding:16px;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px;}
-.action-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px;}
-.action-dot.red{background:#e24b4a;}.action-dot.amber{background:#EF9F27;}.action-dot.blue{background:#378ADD;}
-.action-title{font-size:13px;font-weight:500;color:#1a1a1a;margin-bottom:3px;}
-.action-sub{font-size:12px;color:#aaa;}
-.placeholder{background:#fafaf8;border:0.5px dashed #ddd;border-radius:12px;padding:48px;text-align:center;}
-.placeholder-title{font-size:14px;font-weight:500;margin-bottom:6px;color:#888;}
-.placeholder-sub{font-size:12px;color:#bbb;}
-.slider-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
-.slider-label{font-size:12px;color:#666;width:130px;flex-shrink:0;}
-.slider-row input[type=range]{flex:1;}
-.slider-val{font-size:13px;font-weight:500;color:#1a1a1a;width:80px;text-align:right;}
-.sim-results{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;}
-.sim-kpi{background:#f5f4f0;border-radius:8px;padding:12px;}
-.sim-kpi-label{font-size:11px;color:#aaa;margin-bottom:4px;}
-.sim-kpi-val{font-size:17px;font-weight:600;letter-spacing:-.02em;color:#1a1a1a;}
-.filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+:root{
+  --bg:#e8e8e6;--surface:#f2f2f0;--card:#fafaf8;--border:#d4d4d0;--border-d:#b8b8b2;
+  --text:#111110;--text2:#666662;--text3:#999994;
+  --green:#1a6b3c;--green-l:#e8f5ee;--red:#b91c1c;--red-l:#fef2f2;
+  --amber:#92400e;--amber-l:#fffbeb;--blue:#1e40af;--blue-l:#eff6ff;
+  --sw:210px;--disp:'Bebas Neue',sans-serif;--body:'Syne',sans-serif;--mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:var(--body);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+#login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999}
+.lw{display:flex;flex-direction:column;align-items:center}
+.lh{font-family:var(--disp);font-size:100px;letter-spacing:.04em;color:var(--text);line-height:.85;margin-bottom:36px;animation:fu .5s ease both}
+.lh span{color:var(--text3)}
+.lb{background:var(--card);border:0.5px solid var(--border);border-radius:20px;padding:36px;width:310px;animation:fu .5s .12s ease both;opacity:0}
+.ll{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;font-weight:600}
+.li{width:100%;padding:14px 16px;border:0.5px solid var(--border);border-radius:10px;font-size:20px;background:var(--bg);outline:none;text-align:center;letter-spacing:.5em;font-family:var(--mono);transition:border-color .2s;color:var(--text)}
+.li:focus{border-color:var(--text);background:#fff}
+.lbtn{width:100%;margin-top:12px;padding:13px;background:var(--text);color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--body);letter-spacing:.1em;text-transform:uppercase;transition:opacity .15s}
+.lbtn:hover{opacity:.8}
+.lerr{color:var(--red);font-size:11px;margin-top:8px;min-height:16px;text-align:center}
+@keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+#app{display:none;height:100vh;overflow:hidden;flex-direction:row}
+#app.on{display:flex}
+.sidebar{width:var(--sw);min-width:var(--sw);background:var(--card);border-right:0.5px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;padding-bottom:32px}
+.sidebar::-webkit-scrollbar{width:0}
+.slogo{padding:22px 20px 18px;border-bottom:0.5px solid var(--border)}
+.sm{font-family:var(--disp);font-size:30px;letter-spacing:.04em;line-height:1}
+.sm span{color:var(--text3)}
+.ss{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);margin-top:2px;font-weight:500}
+.ns{padding:20px 20px 5px;font-size:9px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--text3)}
+.ni{display:flex;align-items:center;gap:10px;padding:7px 20px;cursor:pointer;font-size:12px;color:var(--text2);letter-spacing:.02em;transition:all .12s;position:relative;font-weight:500}
+.ni:hover{color:var(--text);background:var(--bg)}
+.ni.on{color:var(--text);background:var(--bg)}
+.ni.on::before{content:'';position:absolute;left:0;top:15%;bottom:15%;width:2.5px;background:var(--text);border-radius:0 2px 2px 0}
+.nd{width:5px;height:5px;border-radius:50%;flex-shrink:0;background:var(--border-d)}
+.nd.g{background:var(--green)}.nd.b{background:var(--blue)}.nd.am{background:var(--amber)}.nd.r{background:var(--red)}.nd.p{background:#7c3aed}
+.nb{margin-left:auto;background:var(--red);color:#fff;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:700;font-family:var(--mono)}
+.nw{margin-left:auto;background:var(--text);color:#fff;font-size:8px;padding:1px 6px;border-radius:4px;font-weight:600;letter-spacing:.06em}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:44px;background:var(--card);border-bottom:0.5px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;flex-shrink:0}
+.tli{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text2)}
+.tld{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.trgt{margin-left:auto;display:flex;align-items:center;gap:14px}
+.ts{font-size:11px;color:var(--text3);font-family:var(--mono)}
+.tb{padding:5px 12px;border:0.5px solid var(--border);border-radius:6px;font-size:11px;background:transparent;cursor:pointer;color:var(--text2);font-family:var(--body);font-weight:500;letter-spacing:.04em;transition:all .1s}
+.tb:hover{background:var(--bg);border-color:var(--border-d)}
+.content{flex:1;overflow-y:auto;padding:36px 40px}
+.content::-webkit-scrollbar{width:3px}
+.content::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.page{display:none}.page.on{display:block;animation:fu .22s ease both}
+.ey{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600}
+.hl{font-family:var(--disp);font-size:60px;letter-spacing:.04em;line-height:.9;margin-bottom:24px}
+.hl small{font-family:var(--body);font-size:14px;color:var(--text3);font-weight:400;letter-spacing:0;margin-left:8px;vertical-align:middle}
+.krow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:24px}
+.kpi{background:var(--card);border:0.5px solid var(--border);border-radius:18px;padding:20px 22px;transition:border-color .18s,transform .18s;animation:fu .35s ease both}
+.kpi:nth-child(1){animation-delay:.04s}.kpi:nth-child(2){animation-delay:.08s}.kpi:nth-child(3){animation-delay:.12s}.kpi:nth-child(4){animation-delay:.16s}
+.kpi:hover{border-color:var(--border-d);transform:translateY(-2px)}
+.kl{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);font-weight:600;margin-bottom:10px}
+.kv{font-family:var(--disp);font-size:36px;letter-spacing:.03em;color:var(--text);line-height:1}
+.kv.g{color:var(--green)}.kv.r{color:var(--red)}.kv.b{color:var(--blue)}.kv.am{color:var(--amber)}
+.ks{font-size:11px;color:var(--text3);margin-top:5px;font-family:var(--mono)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:16px}
+.card{background:var(--card);border:0.5px solid var(--border);border-radius:18px;padding:22px;transition:border-color .15s}
+.card:hover{border-color:var(--border-d)}
+.cl{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);font-weight:600;margin-bottom:16px}
+.lgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.lc{background:var(--card);border:0.5px solid var(--border);border-radius:18px;padding:24px;cursor:pointer;transition:border-color .18s,transform .2s,box-shadow .2s}
+.lc:hover{border-color:var(--text);transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,.08)}
+.li2{font-size:20px;margin-bottom:13px}
+.lt{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);font-weight:600;margin-bottom:7px}
+.ln{font-family:var(--disp);font-size:42px;letter-spacing:.03em;color:var(--text);line-height:1;margin-bottom:4px}
+.ln.g{color:var(--green)}.ln.b{color:var(--blue)}.ln.am{color:var(--amber)}.ln.r{color:var(--red)}.ln.p{color:#7c3aed}
+.ld{font-size:11px;color:var(--text3);line-height:1.4}
+.row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid var(--border)}
+.row:last-child{border:none}
+.rl{font-size:12px;color:var(--text2)}
+.rv{font-size:12px;font-weight:600;color:var(--text);font-family:var(--mono)}
+.rv.g{color:var(--green)}.rv.r{color:var(--red)}.rv.am{color:var(--amber)}.rv.b{color:var(--blue)}.rv.w{color:var(--red)}
+.sdiv{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--text3);font-weight:600;margin:26px 0 12px;padding-bottom:8px;border-bottom:0.5px solid var(--border)}
+.tw{overflow-x:auto;border-radius:18px;border:0.5px solid var(--border)}
+table{width:100%;border-collapse:collapse;background:var(--card)}
+th{text-align:left;font-size:9px;font-weight:600;color:var(--text3);padding:10px 14px;border-bottom:0.5px solid var(--border);text-transform:uppercase;letter-spacing:.12em;white-space:nowrap}
+td{padding:11px 14px;border-bottom:0.5px solid var(--border);font-size:12px;color:var(--text);font-family:var(--mono);white-space:nowrap}
+tbody tr:last-child td{border:none}
+tbody tr:hover td{background:var(--bg)}
+.tier{font-size:9px;padding:3px 8px;border-radius:6px;font-weight:700;letter-spacing:.05em;font-family:var(--body)}
+.t1{background:#111;color:#fff}.t2{background:var(--blue-l);color:var(--blue)}.t3{background:var(--amber-l);color:var(--amber)}.t4{background:var(--bg);color:var(--text3)}
+.g{color:var(--green)}.r{color:var(--red)}
+.filters{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.fb{padding:6px 16px;border:0.5px solid var(--border);border-radius:20px;font-size:11px;background:var(--card);cursor:pointer;color:var(--text2);font-family:var(--body);font-weight:500;letter-spacing:.04em;transition:all .12s}
+.fb:hover{border-color:var(--border-d);color:var(--text)}
+.fb.on{background:var(--text);color:#fff;border-color:var(--text)}
+.prow{display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:5px;font-family:var(--mono)}
+.pbar{height:4px;background:var(--bg);border-radius:2px;overflow:hidden;margin-bottom:15px;border:0.5px solid var(--border)}
+.pf{height:100%;border-radius:2px;transition:width .7s cubic-bezier(.4,0,.2,1)}
+.sr{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.sl{font-size:11px;color:var(--text2);width:150px;flex-shrink:0;font-weight:500}
+.sr input[type=range]{flex:1;accent-color:var(--text)}
+.sv{font-size:12px;font-weight:600;color:var(--text);width:80px;text-align:right;font-family:var(--mono)}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.sk{background:var(--bg);border-radius:12px;padding:14px;border:0.5px solid var(--border)}
+.skl{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:5px;font-weight:600}
+.skv{font-family:var(--disp);font-size:26px;letter-spacing:.03em;color:var(--text)}
+.ir{display:flex;gap:8px;margin-bottom:16px;align-items:center}
+.inp{padding:10px 14px;border:0.5px solid var(--border);border-radius:10px;font-size:12px;background:var(--bg);outline:none;font-family:var(--body);color:var(--text);transition:border-color .15s;flex:1;font-weight:500}
+.inp:focus{border-color:var(--text);background:#fff}
+.inp.sm{flex:0;width:120px}.inp.vs{flex:0;width:95px}
+.badd{padding:10px 18px;background:var(--text);color:#fff;border:none;border-radius:10px;font-size:11px;cursor:pointer;font-family:var(--body);font-weight:600;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap;transition:opacity .15s}
+.badd:hover{opacity:.8}
+.bg{background:var(--bg);color:var(--text2);border:0.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:10px;cursor:pointer;font-family:var(--body);font-weight:500;transition:all .1s}
+.bg:hover{border-color:var(--border-d);color:var(--text)}
+.bdel{background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px 4px;opacity:0;transition:opacity .15s}
+.tag{display:inline-block;font-size:9px;padding:3px 9px;border-radius:20px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-family:var(--body)}
+.tv{background:#111;color:#fff}.tc{background:var(--blue-l);color:var(--blue)}.tu{background:var(--bg);color:var(--text3);border:0.5px solid var(--border)}.tl{background:var(--bg);color:var(--text3);border:0.5px solid var(--border)}.tt{background:var(--green-l);color:var(--green)}.te{background:#111;color:#fff}.tvi{background:var(--blue-l);color:var(--blue)}.tf{background:var(--amber-l);color:var(--amber)}.tb2{background:var(--bg);color:var(--text3);border:0.5px solid var(--border)}.tp{background:var(--blue-l);color:var(--blue)}.tpend{background:var(--amber-l);color:var(--amber)}.tgood{background:var(--green-l);color:var(--green)}.tbad{background:var(--red-l);color:var(--red)}.tneut{background:var(--bg);color:var(--text3);border:0.5px solid var(--border)}
+.cgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.cc{background:var(--card);border:0.5px solid var(--border);border-radius:14px;padding:16px;position:relative;transition:border-color .15s,transform .15s}
+.cc:hover{border-color:var(--border-d);transform:translateY(-1px)}
+.cc:hover .bdel{opacity:1}
+.cct{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;line-height:1.3}
+.ccm{font-size:11px;color:var(--text3);margin-bottom:10px}
+.ccf{display:flex;align-items:center;justify-content:space-between}
+.stars{color:var(--amber);font-size:11px}
+.pr-row{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:0.5px solid var(--border)}
+.pr-row:last-child{border:none}
+.prn{flex:1;font-size:12px;color:var(--text);font-weight:500}
+.prv{font-family:var(--disp);font-size:22px;letter-spacing:.03em;color:var(--green);min-width:90px;text-align:right}
+.vc{background:var(--card);border:0.5px solid var(--border);border-radius:14px;padding:17px;margin-bottom:10px;transition:border-color .15s}
+.vc:hover{border-color:var(--border-d)}
+.vt{font-size:13px;font-weight:600;margin-bottom:3px}
+.vd{font-size:10px;color:var(--text3);margin-bottom:7px;font-family:var(--mono)}
+.vn{font-size:12px;color:var(--text2);margin-bottom:9px;line-height:1.55}
+.vf{display:flex;align-items:center;gap:8px}
+.dr{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border);font-size:12px}
+.dr:last-child{border:none}
+.dti{font-family:var(--mono);font-weight:600;width:100px;flex-shrink:0}
+.dco{font-size:9px;padding:2px 7px;border-radius:6px;background:var(--bg);color:var(--text3);font-weight:600;letter-spacing:.05em;border:0.5px solid var(--border)}
+.dfr{color:var(--text2);flex:1;margin-left:4px}
+.dy{color:var(--green);font-weight:700;min-width:45px;text-align:right;font-family:var(--mono)}
+.dan{color:var(--text);font-weight:600;min-width:80px;text-align:right;font-family:var(--mono)}
+.act{background:var(--card);border:0.5px solid var(--border);border-radius:14px;padding:17px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;transition:border-color .15s}
+.act:hover{border-color:var(--border-d)}
+.adot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.adot.r{background:var(--red)}.adot.am{background:var(--amber)}.adot.b{background:var(--blue)}
+.at{font-size:13px;font-weight:600;margin-bottom:4px}
+.as{font-size:11px;color:var(--text3);line-height:1.5}
+.ia{width:100%;padding:10px 14px;border:0.5px solid var(--border);border-radius:10px;font-size:12px;background:var(--bg);outline:none;font-family:var(--body);color:var(--text);resize:vertical;min-height:60px;transition:border-color .15s;font-weight:400}
+.ia:focus{border-color:var(--text);background:#fff}
+.empty{text-align:center;padding:52px 20px;color:var(--text3)}
+.ei{font-family:var(--disp);font-size:44px;color:var(--border-d);margin-bottom:10px;letter-spacing:.04em}
+.em{font-size:13px;color:var(--text3)}
+.mo{position:fixed;inset:0;background:rgba(17,17,16,.35);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.mo.on{display:flex}
+.md{background:var(--card);border:0.5px solid var(--border);border-radius:20px;padding:32px;width:420px;box-shadow:0 20px 70px rgba(0,0,0,.14)}
+.mdt{font-family:var(--disp);font-size:30px;letter-spacing:.04em;margin-bottom:20px}
+.mf{margin-bottom:13px}
+.ml{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600}
+.mbtns{display:flex;gap:8px;margin-top:20px}
+.mbtn{flex:1;padding:12px;border-radius:10px;border:none;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--body);letter-spacing:.08em;text-transform:uppercase;transition:opacity .15s}
+.mbtn.p{background:var(--text);color:#fff}.mbtn.p:hover{opacity:.8}
+.mbtn.g{background:var(--bg);color:var(--text2);border:0.5px solid var(--border)}
+.stp{display:flex;gap:6px;margin-top:6px}
+.stb{font-size:26px;cursor:pointer;background:none;border:none;padding:0;transition:transform .1s;line-height:1}
+.stb:hover{transform:scale(1.2)}
 </style>
 </head>
 <body>
 <div id="login-screen">
-  <div class="login-box">
-    <div class="login-logo">Hey<span>OS</span></div>
-    <div class="login-sub">Votre système de vie personnel</div>
-    <input class="login-input" type="password" id="pw-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')tryLogin()">
-    <button class="login-btn" onclick="tryLogin()">Accéder →</button>
-    <div class="login-err" id="login-err"></div>
+  <div class="lw">
+    <div class="lh">HEY<span>OS</span></div>
+    <div class="lb">
+      <div class="ll">Code d'accès</div>
+      <input class="li" type="password" id="pw" placeholder="••••" onkeydown="if(event.key==='Enter')tryLogin()">
+      <button class="lbtn" onclick="tryLogin()">Accéder</button>
+      <div class="lerr" id="lerr"></div>
+    </div>
   </div>
 </div>
 <div id="app">
   <nav class="sidebar">
-    <div class="sidebar-logo">Hey<span>OS</span></div>
-    <div class="nav-section">Vie</div>
-    <div class="nav-item active" onclick="nav('today',this)"><div class="nav-dot dot-green"></div>Aujourd'hui</div>
-    <div class="nav-section">Finances</div>
-    <div class="nav-item" onclick="nav('portfolio',this)"><div class="nav-dot dot-green"></div>Portfolio</div>
-    <div class="nav-item" onclick="nav('positions',this)"><div class="nav-dot dot-green"></div>Positions</div>
-    <div class="nav-item" onclick="nav('analyse',this)"><div class="nav-dot dot-green"></div>Analyse</div>
-    <div class="nav-item" onclick="nav('budget',this)"><div class="nav-dot dot-green"></div>Budget & Cash Flow</div>
-    <div class="nav-item" onclick="nav('dividendes',this)"><div class="nav-dot dot-teal"></div>Dividendes</div>
-    <div class="nav-item" onclick="nav('fiscal',this)"><div class="nav-dot dot-green"></div>Fiscal & REER</div>
-    <div class="nav-item" onclick="nav('fi',this)"><div class="nav-dot dot-blue"></div>Projection FI</div>
-    <div class="nav-item" onclick="nav('maison',this)"><div class="nav-dot dot-amber"></div>Maison 2030</div>
-    <div class="nav-section">Corps & Santé</div>
-    <div class="nav-item" onclick="nav('sante',this)"><div class="nav-dot dot-coral"></div>Entraînement</div>
-    <div class="nav-item" onclick="nav('nutrition',this)"><div class="nav-dot dot-coral"></div>Nutrition</div>
-    <div class="nav-section">Culture</div>
-    <div class="nav-item" onclick="nav('films',this)"><div class="nav-dot dot-purple"></div>Films & Séries</div>
-    <div class="nav-item" onclick="nav('livres',this)"><div class="nav-dot dot-purple"></div>Livres</div>
-    <div class="nav-item" onclick="nav('restaurants',this)"><div class="nav-dot dot-teal"></div>Restaurants</div>
-    <div class="nav-item" onclick="nav('voyages',this)"><div class="nav-dot dot-blue"></div>Voyages</div>
-    <div class="nav-section">Outils</div>
-    <div class="nav-item" onclick="nav('actions',this)"><div class="nav-dot dot-gray"></div>Actions requises<span class="nav-badge">3</span></div>
-    <div class="nav-item" onclick="nav('verdicts',this)"><div class="nav-dot dot-gray"></div>Verdicts J+30</div>
-    <div class="nav-item" onclick="nav('crash',this)"><div class="nav-dot dot-gray"></div>Crash Simulator</div>
+    <div class="slogo"><div class="sm">HEY<span>OS</span></div><div class="ss">v13 · Système de vie</div></div>
+    <div class="ns">Vie</div>
+    <div class="ni on" onclick="nav('today',this)"><span class="nd g"></span>Aujourd'hui</div>
+    <div class="ns">Finances</div>
+    <div class="ni" onclick="nav('portfolio',this)"><span class="nd g"></span>Portfolio</div>
+    <div class="ni" onclick="nav('positions',this)"><span class="nd g"></span>Positions</div>
+    <div class="ni" onclick="nav('analyse',this)"><span class="nd g"></span>Analyse</div>
+    <div class="ni" onclick="nav('budget',this)"><span class="nd g"></span>Budget & Cash Flow</div>
+    <div class="ni" onclick="nav('dividendes',this)"><span class="nd g"></span>Dividendes</div>
+    <div class="ni" onclick="nav('fiscal',this)"><span class="nd g"></span>Fiscal & REER</div>
+    <div class="ni" onclick="nav('fi',this)"><span class="nd b"></span>Projection FI</div>
+    <div class="ni" onclick="nav('maison',this)"><span class="nd am"></span>Maison 2030</div>
+    <div class="ns">Corps & Santé</div>
+    <div class="ni" onclick="nav('sante',this)"><span class="nd r"></span>Entraînement <span class="nw">NEW</span></div>
+    <div class="ni" onclick="nav('nutrition',this)"><span class="nd r"></span>Nutrition</div>
+    <div class="ns">Culture</div>
+    <div class="ni" onclick="nav('films',this)"><span class="nd p"></span>Films & Séries <span class="nw">NEW</span></div>
+    <div class="ni" onclick="nav('livres',this)"><span class="nd p"></span>Livres <span class="nw">NEW</span></div>
+    <div class="ni" onclick="nav('restaurants',this)"><span class="nd p"></span>Restaurants <span class="nw">NEW</span></div>
+    <div class="ni" onclick="nav('voyages',this)"><span class="nd b"></span>Voyages <span class="nw">NEW</span></div>
+    <div class="ns">Outils</div>
+    <div class="ni" onclick="nav('verdicts',this)"><span class="nd"></span>Verdicts J+30 <span class="nw">NEW</span></div>
+    <div class="ni" onclick="nav('crash',this)"><span class="nd"></span>Crash Simulator</div>
+    <div class="ni" onclick="nav('actions',this)"><span class="nd r"></span>Actions requises <span class="nb">3</span></div>
   </nav>
   <div class="main">
     <div class="topbar">
-      <div class="topbar-live"><div class="live-dot"></div><span id="topbar-status">Connexion…</span></div>
-      <div class="topbar-right">
-        <span class="topbar-info" id="usdcad-cell">USD/CAD —</span>
-        <span class="topbar-info" id="clock">—</span>
-        <label class="btn-sm" style="cursor:pointer;">JSON<input type="file" accept=".json" style="display:none" onchange="loadJSON(this)"></label>
-        <button class="btn-sm" onclick="fetchData()">↺</button>
+      <div class="tli"><div class="tld"></div><span id="ttxt">Connexion…</span></div>
+      <div class="trgt">
+        <span class="ts" id="fx-lbl">USD/CAD —</span>
+        <span class="ts" id="clk">—</span>
+        <label class="tb" style="cursor:pointer">JSON<input type="file" accept=".json" style="display:none" onchange="loadJSON(this)"></label>
+        <button class="tb" onclick="fetchData()">↺</button>
       </div>
     </div>
     <div class="content">
 
-      <div class="page active" id="page-today">
-        <div class="page-title">Aujourd'hui <span id="today-date"></span></div>
-        <div class="page-sub">Vue d'ensemble · HeyOS Life OS</div>
-        <div class="kpi-row">
-          <div class="kpi"><div class="kpi-label">Portfolio total</div><div class="kpi-val g" id="today-total">—</div><div class="kpi-sub" id="today-openpl">—</div></div>
-          <div class="kpi"><div class="kpi-label">Aujourd'hui</div><div class="kpi-val" id="today-daypl">—</div><div class="kpi-sub" id="today-mkt">—</div></div>
-          <div class="kpi"><div class="kpi-label">Maison 2030</div><div class="kpi-val am">17.7%</div><div class="kpi-sub">$17,669 / $100K</div></div>
-          <div class="kpi"><div class="kpi-label">Liberté financière</div><div class="kpi-val b" id="today-fi-pct">4.1%</div><div class="kpi-sub">$85K / $2.1M</div></div>
+      <div class="page on" id="page-today">
+        <div class="ey">Vue d'ensemble</div>
+        <div class="hl">AUJOURD'HUI <small id="tdate"></small></div>
+        <div class="krow">
+          <div class="kpi"><div class="kl">Portfolio total</div><div class="kv g" id="tt">—</div><div class="ks" id="tg">—</div></div>
+          <div class="kpi"><div class="kl">Aujourd'hui</div><div class="kv" id="td">—</div><div class="ks" id="tm">—</div></div>
+          <div class="kpi"><div class="kl">Maison 2030</div><div class="kv am">17.7%</div><div class="ks">$17,669 / $100K</div></div>
+          <div class="kpi"><div class="kl">Liberté FI</div><div class="kv b" id="tfi">4.1%</div><div class="ks" id="tfis">$85K / $2.1M</div></div>
         </div>
-        <div class="life-grid">
-          <div class="life-card" onclick="nav('portfolio',null)"><div class="life-icon">💼</div><div class="life-card-title">Portfolio</div><div class="life-card-stat g" id="lc-total">—</div><div class="life-card-sub" id="lc-sub">39 positions</div></div>
-          <div class="life-card" onclick="nav('maison',null)"><div class="life-icon">🏠</div><div class="life-card-title">Maison 2030</div><div class="life-card-stat am">$17,669</div><div class="life-card-sub">RAP + FHSA · 17.7% atteint</div></div>
-          <div class="life-card" onclick="nav('fi',null)"><div class="life-icon">📈</div><div class="life-card-title">Liberté financière</div><div class="life-card-stat b">~2040</div><div class="life-card-sub">$2.1M objectif · 8%/an</div></div>
-          <div class="life-card" onclick="nav('sante',null)"><div class="life-icon">🏋️</div><div class="life-card-title">Corps &amp; Santé</div><div class="life-card-stat">175 lbs</div><div class="life-card-sub">Objectif 190 lbs · PPL actif</div></div>
-          <div class="life-card" onclick="nav('films',null)"><div class="life-icon">🎬</div><div class="life-card-title">Culture</div><div class="life-card-stat" style="color:#7F77DD;">—</div><div class="life-card-sub">Films · Livres · Restaurants</div></div>
-          <div class="life-card" onclick="nav('actions',null)"><div class="life-icon">🚨</div><div class="life-card-title">Actions requises</div><div class="life-card-stat r">3</div><div class="life-card-sub">EQ Bank · Bénéficiaires · $12K</div></div>
+        <div class="lgrid">
+          <div class="lc" onclick="nav('portfolio',null)"><div class="li2">💼</div><div class="lt">Portfolio</div><div class="ln g" id="lct">—</div><div class="ld" id="lcs">39 positions · TFSA · FHSA · REER</div></div>
+          <div class="lc" onclick="nav('maison',null)"><div class="li2">🏠</div><div class="lt">Maison 2030</div><div class="ln am" id="lcm">$17,669</div><div class="ld">RAP + FHSA · 17.7% atteint</div></div>
+          <div class="lc" onclick="nav('fi',null)"><div class="li2">📈</div><div class="lt">Liberté financière</div><div class="ln b">~2040</div><div class="ld">$2.1M · 8%/an · 4.1% atteint</div></div>
+          <div class="lc" onclick="nav('sante',null)"><div class="li2">🏋️</div><div class="lt">Corps & Performance</div><div class="ln" id="lcp">175 lbs</div><div class="ld">PPL · BJJ Q2 2026 · Obj. 190 lbs</div></div>
+          <div class="lc" onclick="nav('films',null)"><div class="li2">🎬</div><div class="lt">Culture</div><div class="ln p" id="lcc">—</div><div class="ld">Films · Livres · Restaurants · Voyages</div></div>
+          <div class="lc" onclick="nav('actions',null)"><div class="li2">🚨</div><div class="lt">Actions requises</div><div class="ln r">3</div><div class="ld">EQ Bank · Bénéficiaires · $12K</div></div>
         </div>
       </div>
 
       <div class="page" id="page-portfolio">
-        <div class="page-title">Portfolio</div>
-        <div class="page-sub">Valeur live · TFSA · FHSA · REER</div>
-        <div class="kpi-row">
-          <div class="kpi"><div class="kpi-label">Valeur marché</div><div class="kpi-val g" id="pf-total">—</div></div>
-          <div class="kpi"><div class="kpi-label">Coût investi</div><div class="kpi-val" id="pf-cost">—</div></div>
-          <div class="kpi"><div class="kpi-label">Gain ouvert</div><div class="kpi-val g" id="pf-gain">—</div></div>
-          <div class="kpi"><div class="kpi-label">Rendement</div><div class="kpi-val g" id="pf-pct">—</div></div>
+        <div class="ey">Finances</div><div class="hl">PORTFOLIO</div>
+        <div class="krow">
+          <div class="kpi"><div class="kl">Valeur marché</div><div class="kv g" id="pft">—</div></div>
+          <div class="kpi"><div class="kl">Coût investi</div><div class="kv" id="pfc">—</div></div>
+          <div class="kpi"><div class="kl">Gain ouvert</div><div class="kv g" id="pfg">—</div></div>
+          <div class="kpi"><div class="kl">Rendement</div><div class="kv g" id="pfp">—</div></div>
         </div>
-        <div class="grid2" style="margin-bottom:22px;">
-          <div class="card"><div class="card-title">Par compte</div>
-            <div class="data-row"><span class="data-label">TFSA</span><span class="data-val g" id="acc-tfsa">—</span></div>
-            <div class="data-row"><span class="data-label">FHSA</span><span class="data-val b" id="acc-fhsa">—</span></div>
-            <div class="data-row"><span class="data-label">REER</span><span class="data-val" id="acc-reer">—</span></div>
-            <div class="data-row"><span class="data-label">ATH</span><span class="data-val">$87,252 · 10 mars</span></div>
+        <div class="g2">
+          <div class="card"><div class="cl">Par compte</div>
+            <div class="row"><span class="rl">TFSA</span><span class="rv g" id="at">—</span></div>
+            <div class="row"><span class="rl">FHSA</span><span class="rv b" id="af">—</span></div>
+            <div class="row"><span class="rl">REER</span><span class="rv" id="ar">—</span></div>
+            <div class="row"><span class="rl">ATH</span><span class="rv">$87,252 · 10 mars</span></div>
           </div>
-          <div class="card"><div class="card-title">Expositions</div>
-            <div class="data-row"><span class="data-label">USD</span><span class="data-val" id="exp-usd">~45%</span></div>
-            <div class="data-row"><span class="data-label">CAD</span><span class="data-val" id="exp-cad">~55%</span></div>
-            <div class="data-row"><span class="data-label">Positions T1</span><span class="data-val">9 titres</span></div>
-            <div class="data-row"><span class="data-label">Dividendes annuels</span><span class="data-val g">~$1,926</span></div>
+          <div class="card"><div class="cl">Expositions</div>
+            <div class="row"><span class="rl">USD</span><span class="rv" id="eu">~45%</span></div>
+            <div class="row"><span class="rl">CAD</span><span class="rv" id="ec">~55%</span></div>
+            <div class="row"><span class="rl">Positions T1</span><span class="rv">9 titres</span></div>
+            <div class="row"><span class="rl">Dividendes ann.</span><span class="rv g">~$1,926</span></div>
           </div>
         </div>
-        <div class="section-hdr">Top positions T1</div>
-        <table class="tbl"><thead><tr><th>Ticker</th><th>Compte</th><th>Valeur CAD</th><th>Gain $</th><th>Gain %</th></tr></thead><tbody id="tbl-top"></tbody></table>
+        <div class="sdiv">Top positions T1</div>
+        <div class="tw"><table><thead><tr><th>Ticker</th><th>Compte</th><th>Valeur CAD</th><th>Gain $</th><th>Gain %</th></tr></thead><tbody id="tt1"></tbody></table></div>
       </div>
 
       <div class="page" id="page-positions">
-        <div class="page-title">Positions <span id="pos-count-lbl"></span></div>
-        <div class="page-sub">Prix live depuis GitHub · Refresh auto 60s</div>
+        <div class="ey">Finances</div><div class="hl">POSITIONS <small id="pcount"></small></div>
         <div class="filters">
-          <button class="btn-sm" id="f-all" onclick="filterPos('ALL')" style="background:#1a1a1a;color:#fff;border-color:#1a1a1a;">Tous</button>
-          <button class="btn-sm" id="f-t1" onclick="filterPos('T1')">T1</button>
-          <button class="btn-sm" id="f-t2" onclick="filterPos('T2')">T2</button>
-          <button class="btn-sm" id="f-t3" onclick="filterPos('T3')">T3</button>
-          <button class="btn-sm" id="f-t4" onclick="filterPos('T4')">T4</button>
-          <button class="btn-sm" id="f-tfsa" onclick="filterPos('TFSA')">TFSA</button>
-          <button class="btn-sm" id="f-fhsa" onclick="filterPos('FHSA')">FHSA</button>
-          <button class="btn-sm" id="f-reer" onclick="filterPos('REER')">REER</button>
+          <button class="fb on" onclick="fp2('ALL',this)">Tous</button>
+          <button class="fb" onclick="fp2('T1',this)">T1</button><button class="fb" onclick="fp2('T2',this)">T2</button>
+          <button class="fb" onclick="fp2('T3',this)">T3</button><button class="fb" onclick="fp2('T4',this)">T4</button>
+          <button class="fb" onclick="fp2('TFSA',this)">TFSA</button><button class="fb" onclick="fp2('FHSA',this)">FHSA</button>
+          <button class="fb" onclick="fp2('REER',this)">REER</button>
         </div>
-        <table class="tbl"><thead><tr><th>Ticker</th><th>Nom</th><th>Compte</th><th>Tier</th><th>Qté</th><th>Prix moy.</th><th>Prix live</th><th>Valeur CAD</th><th>Gain $</th><th>Gain %</th></tr></thead><tbody id="tbl-positions"></tbody></table>
+        <div class="tw"><table><thead><tr><th>Ticker</th><th>Nom</th><th>Compte</th><th>Tier</th><th>Qté</th><th>Prix moy.</th><th>Prix live</th><th>Valeur CAD</th><th>Gain $</th><th>Gain %</th></tr></thead><tbody id="tpos"></tbody></table></div>
+      </div>
+
+      <div class="page" id="page-analyse">
+        <div class="ey">Finances</div><div class="hl">ANALYSE</div>
+        <div class="krow">
+          <div class="kpi"><div class="kl">Exposition IA</div><div class="kv" id="aia">—</div><div class="ks">Limite ≤45%</div></div>
+          <div class="kpi"><div class="kl">Exposition USD</div><div class="kv" id="ausd">—</div><div class="ks">Limite ≤65%</div></div>
+          <div class="kpi"><div class="kl">T1 positions</div><div class="kv b">9</div></div>
+          <div class="kpi"><div class="kl">Room FHSA</div><div class="kv am">~$9,700</div><div class="ks">Après $4K en transit</div></div>
+        </div>
+        <div class="g2">
+          <div class="card"><div class="cl">Par tier</div><div id="tbd"></div></div>
+          <div class="card"><div class="cl">Top 5</div><div id="t5bd"></div></div>
+        </div>
+        <div class="card"><div class="cl">Règles auto</div>
+          <div class="row"><span class="rl">USD ≤65%</span><span class="rv g" id="rusd">✓ OK</span></div>
+          <div class="row"><span class="rl">IA ≤45%</span><span class="rv g" id="ria">✓ OK</span></div>
+          <div class="row"><span class="rl">Room FHSA</span><span class="rv g">✓ ~$9,700</span></div>
+          <div class="row"><span class="rl">T.TO / MFC.TO</span><span class="rv">⛔ Jamais vendre</span></div>
+          <div class="row"><span class="rl">EQ Bank HISA</span><span class="rv r">🔴 Non ouvert</span></div>
+        </div>
       </div>
 
       <div class="page" id="page-budget">
-        <div class="page-title">Budget &amp; Cash Flow</div>
-        <div class="page-sub">Revenu net · Plan d'investissement · Taux d'épargne</div>
-        <div class="kpi-row">
-          <div class="kpi"><div class="kpi-label">Revenu net</div><div class="kpi-val">$7,950</div><div class="kpi-sub">/mois</div></div>
-          <div class="kpi"><div class="kpi-label">Dépenses</div><div class="kpi-val r">$1,182</div><div class="kpi-sub">/mois</div></div>
-          <div class="kpi"><div class="kpi-label">Investi structuré</div><div class="kpi-val b">$5,000</div><div class="kpi-sub">/mois</div></div>
-          <div class="kpi"><div class="kpi-label">Surplus libre</div><div class="kpi-val g">$1,768</div><div class="kpi-sub">/mois</div></div>
+        <div class="ey">Finances</div><div class="hl">BUDGET</div>
+        <div class="krow">
+          <div class="kpi"><div class="kl">Revenu net</div><div class="kv">$7,950</div><div class="ks">/mois</div></div>
+          <div class="kpi"><div class="kl">Dépenses</div><div class="kv r">$1,182</div><div class="ks">/mois</div></div>
+          <div class="kpi"><div class="kl">Investi</div><div class="kv b">$5,000</div><div class="ks">/mois</div></div>
+          <div class="kpi"><div class="kl">Surplus</div><div class="kv g">$1,768</div><div class="ks">/mois</div></div>
         </div>
-        <div class="grid2">
-          <div class="card"><div class="card-title">Plan $5,000/mois</div>
-            <div class="data-row"><span class="data-label">REER → SCHD</span><span class="data-val g">$2,000</span></div>
-            <div class="data-row"><span class="data-label">FHSA → VFV.TO</span><span class="data-val g">$1,000</span></div>
-            <div class="data-row"><span class="data-label">TFSA → AVGO (fractional)</span><span class="data-val g">$500</span></div>
-            <div class="data-row"><span class="data-label">EQ Bank HISA</span><span class="data-val warn">$1,500 🔴 non ouvert</span></div>
+        <div class="g2">
+          <div class="card"><div class="cl">Plan $5K/mois</div>
+            <div class="row"><span class="rl">REER → SCHD</span><span class="rv g">$2,000 ✅</span></div>
+            <div class="row"><span class="rl">FHSA → VFV.TO</span><span class="rv g">$1,000 ✅</span></div>
+            <div class="row"><span class="rl">TFSA → AVGO</span><span class="rv g">$500 ✅</span></div>
+            <div class="row"><span class="rl">EQ Bank HISA</span><span class="rv w">$1,500 🔴</span></div>
           </div>
-          <div class="card"><div class="card-title">Taux d'épargne</div>
-            <div class="data-row"><span class="data-label">Épargne / Revenu</span><span class="data-val g">85.1%</span></div>
-            <div class="data-row"><span class="data-label">Dépenses / Revenu</span><span class="data-val">14.9%</span></div>
-            <div class="data-row"><span class="data-label">Logement</span><span class="data-val">Fourni employeur ✅</span></div>
-            <div class="data-row"><span class="data-label">Nourriture</span><span class="data-val">Fournie employeur ✅</span></div>
+          <div class="card"><div class="cl">Taux d'épargne</div>
+            <div class="row"><span class="rl">Épargne / Revenu</span><span class="rv g">85.1%</span></div>
+            <div class="row"><span class="rl">Logement</span><span class="rv">Fourni ✅</span></div>
+            <div class="row"><span class="rl">Nourriture</span><span class="rv">Fournie ✅</span></div>
+            <div class="row"><span class="rl">Surplus libre</span><span class="rv g">$1,768</span></div>
           </div>
-        </div>
-      </div>
-
-      <div class="page" id="page-fiscal">
-        <div class="page-title">Fiscal &amp; REER</div>
-        <div class="page-sub">Snowball ARC · Room disponible · Optimisation</div>
-        <div class="kpi-row">
-          <div class="kpi"><div class="kpi-label">Taux marginal QC</div><div class="kpi-val r">52.98%</div></div>
-          <div class="kpi"><div class="kpi-label">Room FHSA 2026</div><div class="kpi-val b">~$9,700</div><div class="kpi-sub">après $4K en transit</div></div>
-          <div class="kpi"><div class="kpi-label">REER RAP cible</div><div class="kpi-val">$60,000</div></div>
-          <div class="kpi"><div class="kpi-label">Snowball mensuel</div><div class="kpi-val g">$1,060</div><div class="kpi-sub">remboursé par ARC</div></div>
-        </div>
-        <div class="card" style="max-width:500px;">
-          <div class="card-title">Stratégie REER snowball</div>
-          <div class="data-row"><span class="data-label">Cotisation mensuelle</span><span class="data-val">$2,000</span></div>
-          <div class="data-row"><span class="data-label">Remboursement ARC (52.98%)</span><span class="data-val g">+$1,060/mois</span></div>
-          <div class="data-row"><span class="data-label">Coût net réel</span><span class="data-val g">$940/mois</span></div>
-          <div class="data-row"><span class="data-label">FTQ éligibilité 2025</span><span class="data-val am">Vérification pendante</span></div>
-        </div>
-      </div>
-
-      <div class="page" id="page-fi">
-        <div class="page-title">Projection FI</div>
-        <div class="page-sub">Liberté financière · $2.1M référence plancher · FI = liberté, pas un arrêt</div>
-        <div class="kpi-row">
-          <div class="kpi"><div class="kpi-label">Objectif FI</div><div class="kpi-val b">$2,100,000</div></div>
-          <div class="kpi"><div class="kpi-label">Atteint</div><div class="kpi-val" id="fi-pct">—</div></div>
-          <div class="kpi"><div class="kpi-label">Date estimée</div><div class="kpi-val" id="fi-yr">~2040</div></div>
-          <div class="kpi"><div class="kpi-label">Revenu passif cible</div><div class="kpi-val g">$7,000/mois</div></div>
-        </div>
-        <div class="grid2" style="margin-bottom:12px;">
-          <div class="card"><div class="card-title">Scénario réaliste · 8%/an</div>
-            <div class="prog-row"><span id="fi-r-val">—</span><span>$2,100,000</span></div>
-            <div class="prog-bar"><div class="prog-fill" style="background:#378ADD;" id="fi-r-bar"></div></div>
-            <div style="font-size:12px;color:#aaa;" id="fi-r-sub">—</div>
-          </div>
-          <div class="card"><div class="card-title">Scénario optimiste · 10%/an</div>
-            <div class="prog-row"><span id="fi-o-val">—</span><span>$2,100,000</span></div>
-            <div class="prog-bar"><div class="prog-fill" style="background:#22c55e;" id="fi-o-bar"></div></div>
-            <div style="font-size:12px;color:#aaa;" id="fi-o-sub">—</div>
-          </div>
-        </div>
-        <div class="card"><div class="card-title">Simulateur interactif</div>
-          <div class="slider-row"><span class="slider-label">Rendement annuel</span><input type="range" min="4" max="15" step="0.5" value="8" id="fi-rate" oninput="updateFI()"><span class="slider-val"><span id="fi-rate-v">8.0</span>%</span></div>
-          <div class="slider-row"><span class="slider-label">Cotisation mensuelle</span><input type="range" min="1000" max="10000" step="250" value="5000" id="fi-contrib" oninput="updateFI()"><span class="slider-val">$<span id="fi-contrib-v">5,000</span></span></div>
-          <div class="sim-results">
-            <div class="sim-kpi"><div class="sim-kpi-label">Date liberté</div><div class="sim-kpi-val b" id="fi-sim-yr">—</div></div>
-            <div class="sim-kpi"><div class="sim-kpi-label">Portfolio à 55 ans</div><div class="sim-kpi-val g" id="fi-sim-55">—</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="page" id="page-maison">
-        <div class="page-title">Maison 2030+</div>
-        <div class="page-sub">RAP $60K + FHSA $40K = $100K mise de fonds · Solo</div>
-        <div class="kpi-row">
-          <div class="kpi"><div class="kpi-label">REER RAP</div><div class="kpi-val" id="m-reer">$2,771</div><div class="kpi-sub">/ $60,000 · 4.6%</div></div>
-          <div class="kpi"><div class="kpi-label">FHSA</div><div class="kpi-val b" id="m-fhsa">$14,898</div><div class="kpi-sub">/ $40,000 · 37.2%</div></div>
-          <div class="kpi"><div class="kpi-label">Mise de fonds</div><div class="kpi-val am" id="m-total">$17,669</div><div class="kpi-sub">/ $100,000 · 17.7%</div></div>
-          <div class="kpi"><div class="kpi-label">Date estimée</div><div class="kpi-val">2028–2030</div></div>
-        </div>
-        <div class="grid2" style="margin-bottom:12px;">
-          <div class="card"><div class="card-title">Progression détaillée</div>
-            <div class="prog-row"><span>REER RAP</span><span id="mp-reer-lbl">$2,771 / $60K</span></div>
-            <div class="prog-bar"><div class="prog-fill" style="background:#1a1a1a;width:4.6%;" id="mp-reer-bar"></div></div>
-            <div class="prog-row"><span>FHSA</span><span id="mp-fhsa-lbl">$14,898 / $40K</span></div>
-            <div class="prog-bar"><div class="prog-fill" style="background:#378ADD;width:37.2%;" id="mp-fhsa-bar"></div></div>
-            <div class="prog-row"><span>Mise de fonds totale</span><span id="mp-total-lbl">$17,669 / $100K</span></div>
-            <div class="prog-bar"><div class="prog-fill" style="background:#EF9F27;width:17.7%;" id="mp-total-bar"></div></div>
-          </div>
-          <div class="card"><div class="card-title">Simulateur hypothèque</div>
-            <div class="slider-row"><span class="slider-label">Prix propriété</span><input type="range" min="300000" max="900000" step="10000" value="550000" id="mort-price" oninput="updateMortgage()"><span class="slider-val">$<span id="mort-price-v">550K</span></span></div>
-            <div class="slider-row"><span class="slider-label">Taux hypothécaire</span><input type="range" min="2" max="8" step="0.25" value="5" id="mort-rate" oninput="updateMortgage()"><span class="slider-val"><span id="mort-rate-v">5.00</span>%</span></div>
-            <div class="sim-results">
-              <div class="sim-kpi"><div class="sim-kpi-label">Mensualité</div><div class="sim-kpi-val" id="mort-pmt">—</div></div>
-              <div class="sim-kpi"><div class="sim-kpi-label">Intérêts totaux</div><div class="sim-kpi-val r" id="mort-int">—</div></div>
-            </div>
-          </div>
-        </div>
-        <div class="card"><div class="card-title">Stratégie 2030</div>
-          <div class="data-row"><span class="data-label">✅ FHSA $1,000/mois → VFV.TO</span><span class="data-val">croissance + retraits libres impôt</span></div>
-          <div class="data-row"><span class="data-label">✅ REER $2,000/mois → SCHD</span><span class="data-val">RAP + snowball ARC</span></div>
-          <div class="data-row"><span class="data-label">✅ Achat solo sans co-emprunteur</span><span class="data-val">finances 100% séparées</span></div>
-          <div class="data-row"><span class="data-label">⚡ RAP retrait max $60K</span><span class="data-val">remboursement 15 ans</span></div>
-          <div class="data-row"><span class="data-label">⚡ FHSA retrait illimité</span><span class="data-val">aucune obligation remboursement</span></div>
         </div>
       </div>
 
       <div class="page" id="page-dividendes">
-        <div class="page-title">Dividendes</div>
-        <div class="page-sub">Revenus passifs · Calendrier · Projection</div>
-        <div class="kpi-row">
-          <div class="kpi"><div class="kpi-label">Annuel estimé</div><div class="kpi-val g">~$1,926</div></div>
-          <div class="kpi"><div class="kpi-label">Mensuel moyen</div><div class="kpi-val g">~$161</div></div>
-          <div class="kpi"><div class="kpi-label">Yield moyen</div><div class="kpi-val">~2.2%</div></div>
-          <div class="kpi"><div class="kpi-label">Positions div.</div><div class="kpi-val">12</div></div>
+        <div class="ey">Finances</div><div class="hl">DIVIDENDES</div>
+        <div class="krow">
+          <div class="kpi"><div class="kl">Annuel estimé</div><div class="kv g">~$1,926</div></div>
+          <div class="kpi"><div class="kl">Mensuel moyen</div><div class="kv g">~$161</div></div>
+          <div class="kpi"><div class="kl">Yield moyen</div><div class="kv">~2.2%</div></div>
+          <div class="kpi"><div class="kl">Positions div.</div><div class="kv">12</div></div>
         </div>
-        <div class="placeholder"><div class="placeholder-title">Calendrier dividendes à venir</div><div class="placeholder-sub">SCHD · ENB.TO · JEPI · REITs · Détail par ticker · À connecter S27+</div></div>
+        <div class="card"><div class="cl">Calendrier</div>
+          <div class="dr"><span class="dti">SCHD</span><span class="dco">REER</span><span class="dfr">Trimestriel · Mars Jun Sep Déc</span><span class="dy">3.5%</span><span class="dan">~$556/an</span></div>
+          <div class="dr"><span class="dti">JEPI</span><span class="dco">REER</span><span class="dfr">Mensuel</span><span class="dy">7.1%</span><span class="dan">~$87/an</span></div>
+          <div class="dr"><span class="dti">ENB.TO</span><span class="dco">TFSA</span><span class="dfr">Trimestriel · Mars Jun Sep Déc</span><span class="dy">6.8%</span><span class="dan">~$312/an</span></div>
+          <div class="dr"><span class="dti">XEI.TO</span><span class="dco">TFSA+FHSA</span><span class="dfr">Mensuel</span><span class="dy">4.9%</span><span class="dan">~$280/an</span></div>
+          <div class="dr"><span class="dti">SRU.UN.TO</span><span class="dco">TFSA+FHSA</span><span class="dfr">Mensuel</span><span class="dy">7.2%</span><span class="dan">~$350/an</span></div>
+          <div class="dr"><span class="dti">REI.UN.TO</span><span class="dco">FHSA</span><span class="dfr">Mensuel</span><span class="dy">6.9%</span><span class="dan">~$110/an</span></div>
+          <div class="dr"><span class="dti">TD.TO</span><span class="dco">TFSA+FHSA</span><span class="dfr">Trimestriel</span><span class="dy">5.1%</span><span class="dan">~$341/an</span></div>
+          <div class="dr"><span class="dti">ZRE.TO</span><span class="dco">TFSA</span><span class="dfr">Mensuel</span><span class="dy">4.5%</span><span class="dan">~$45/an</span></div>
+          <div class="dr"><span class="dti">H.TO</span><span class="dco">TFSA+FHSA</span><span class="dfr">Trimestriel</span><span class="dy">2.9%</span><span class="dan">~$95/an</span></div>
+          <div class="dr"><span class="dti">ZLB.TO</span><span class="dco">TFSA+FHSA</span><span class="dfr">Mensuel</span><span class="dy">2.2%</span><span class="dan">~$50/an</span></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-fiscal">
+        <div class="ey">Finances</div><div class="hl">FISCAL & REER</div>
+        <div class="krow">
+          <div class="kpi"><div class="kl">Taux marginal QC</div><div class="kv r">52.98%</div></div>
+          <div class="kpi"><div class="kl">Room FHSA 2026</div><div class="kv b">~$9,700</div></div>
+          <div class="kpi"><div class="kl">RAP REER cible</div><div class="kv">$60,000</div></div>
+          <div class="kpi"><div class="kl">Remboursement ARC</div><div class="kv g">$1,060/mois</div></div>
+        </div>
+        <div class="card" style="max-width:460px"><div class="cl">Snowball REER</div>
+          <div class="row"><span class="rl">Cotisation mensuelle</span><span class="rv">$2,000</span></div>
+          <div class="row"><span class="rl">Remboursement ARC (52.98%)</span><span class="rv g">+$1,060/mois</span></div>
+          <div class="row"><span class="rl">Coût net réel</span><span class="rv g">$940/mois</span></div>
+          <div class="row"><span class="rl">Ordre priorité</span><span class="rv" style="font-size:10px">FHSA→REER→TFSA→HISA</span></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-fi">
+        <div class="ey">Finances</div><div class="hl">LIBERTÉ FI</div>
+        <div class="krow">
+          <div class="kpi"><div class="kl">Objectif</div><div class="kv b">$2,100,000</div></div>
+          <div class="kpi"><div class="kl">Atteint</div><div class="kv" id="fip">—</div></div>
+          <div class="kpi"><div class="kl">Date estimée</div><div class="kv" id="fiyr">~2040</div></div>
+          <div class="kpi"><div class="kl">Revenu cible</div><div class="kv g">$7,000/mois</div></div>
+        </div>
+        <div class="g2">
+          <div class="card"><div class="cl">8%/an · réaliste</div><div class="prow"><span id="fir">—</span><span>$2,100,000</span></div><div class="pbar"><div class="pf" style="background:var(--blue)" id="firb"></div></div><div style="font-size:11px;color:var(--text3);font-family:var(--mono)" id="firs">—</div></div>
+          <div class="card"><div class="cl">10%/an · optimiste</div><div class="prow"><span id="fio">—</span><span>$2,100,000</span></div><div class="pbar"><div class="pf" style="background:var(--green)" id="fiob"></div></div><div style="font-size:11px;color:var(--text3);font-family:var(--mono)" id="fios">—</div></div>
+        </div>
+        <div class="card"><div class="cl">Simulateur</div>
+          <div class="sr"><span class="sl">Rendement annuel</span><input type="range" min="4" max="15" step="0.5" value="8" id="fir2" oninput="uFI()"><span class="sv"><span id="firv">8.0</span>%</span></div>
+          <div class="sr"><span class="sl">Cotisation mensuelle</span><input type="range" min="1000" max="10000" step="250" value="5000" id="fic" oninput="uFI()"><span class="sv">$<span id="ficv">5,000</span></span></div>
+          <div class="sg"><div class="sk"><div class="skl">Année liberté</div><div class="skv b" id="fisyr">—</div></div><div class="sk"><div class="skl">À 55 ans</div><div class="skv g" id="fis55">—</div></div></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-maison">
+        <div class="ey">Projet de vie</div><div class="hl">MAISON 2030</div>
+        <div class="krow">
+          <div class="kpi"><div class="kl">REER RAP</div><div class="kv" id="mr">$2,771</div><div class="ks">/ $60,000</div></div>
+          <div class="kpi"><div class="kl">FHSA</div><div class="kv b" id="mf">$14,898</div><div class="ks">/ $40,000</div></div>
+          <div class="kpi"><div class="kl">Mise de fonds</div><div class="kv am" id="mt">$17,669</div><div class="ks">/ $100,000</div></div>
+          <div class="kpi"><div class="kl">Date estimée</div><div class="kv">2028–2030</div></div>
+        </div>
+        <div class="g2">
+          <div class="card"><div class="cl">Progression</div>
+            <div class="prow"><span>REER RAP</span><span id="mrl">—</span></div><div class="pbar"><div class="pf" style="background:var(--text)" id="mrb"></div></div>
+            <div class="prow"><span>FHSA</span><span id="mfl">—</span></div><div class="pbar"><div class="pf" style="background:var(--blue)" id="mfb"></div></div>
+            <div class="prow"><span>Total</span><span id="mtl">—</span></div><div class="pbar"><div class="pf" style="background:var(--amber)" id="mtb"></div></div>
+          </div>
+          <div class="card"><div class="cl">Simulateur hypothèque</div>
+            <div class="sr"><span class="sl">Prix</span><input type="range" min="300000" max="900000" step="10000" value="550000" id="mp" oninput="uMort()"><span class="sv">$<span id="mpv">550K</span></span></div>
+            <div class="sr"><span class="sl">Taux</span><input type="range" min="2" max="8" step="0.25" value="5" id="mrt" oninput="uMort()"><span class="sv"><span id="mrtv">5.00</span>%</span></div>
+            <div class="sg"><div class="sk"><div class="skl">Mensualité</div><div class="skv" id="mpmt">—</div></div><div class="sk"><div class="skl">Intérêts</div><div class="skv r" id="mint">—</div></div></div>
+          </div>
+        </div>
       </div>
 
       <div class="page" id="page-sante">
-        <div class="page-title">Corps &amp; Santé</div>
-        <div class="page-sub">Entraînement · Nutrition · Objectifs physiques</div>
-        <div class="kpi-row">
-          <div class="kpi"><div class="kpi-label">Poids actuel</div><div class="kpi-val">175 lbs</div><div class="kpi-sub">Objectif 190 lbs</div></div>
-          <div class="kpi"><div class="kpi-label">Programme</div><div class="kpi-val">PPL</div><div class="kpi-sub">Push · Pull · Legs</div></div>
-          <div class="kpi"><div class="kpi-label">BJJ</div><div class="kpi-val b">Q2 2026</div><div class="kpi-sub">Retour prévu</div></div>
-          <div class="kpi"><div class="kpi-label">Running</div><div class="kpi-val g">Actif</div></div>
+        <div class="ey">Corps & Santé</div><div class="hl">ENTRAÎNEMENT</div>
+        <div class="krow">
+          <div class="kpi"><div class="kl">Poids</div><div class="kv" id="kpds">175 lbs</div><div class="ks">Objectif 190 lbs</div></div>
+          <div class="kpi"><div class="kl">Programme</div><div class="kv">PPL</div></div>
+          <div class="kpi"><div class="kl">BJJ</div><div class="kv b" id="kbjj">Q2 2026</div></div>
+          <div class="kpi"><div class="kl">Running</div><div class="kv g">Actif</div></div>
         </div>
-        <div class="grid2">
-          <div class="card"><div class="card-title">Programme — semaine type</div>
-            <div class="data-row"><span class="data-label">Lundi</span><span class="data-val">Push · Chest · Shoulders · Triceps</span></div>
-            <div class="data-row"><span class="data-label">Mardi</span><span class="data-val">Pull · Back · Biceps</span></div>
-            <div class="data-row"><span class="data-label">Mercredi</span><span class="data-val">Legs · Quads · Hamstrings</span></div>
-            <div class="data-row"><span class="data-label">Jeudi</span><span class="data-val">Cardio · Running</span></div>
-            <div class="data-row"><span class="data-label">Vendredi</span><span class="data-val">BJJ / Boxing</span></div>
-            <div class="data-row"><span class="data-label">Samedi</span><span class="data-val">Yoga · Mobilité</span></div>
+        <div class="g2">
+          <div class="card"><div class="cl" style="display:flex;align-items:center;justify-content:space-between">Personal Records <button class="bg" onclick="openPRM()">+ Modifier</button></div><div id="prlist"></div></div>
+          <div class="card"><div class="cl">Programme semaine</div>
+            <div class="row"><span class="rl">Push</span><span class="rv">Chest · Shoulders · Tris</span></div>
+            <div class="row"><span class="rl">Pull</span><span class="rv">Back · Biceps</span></div>
+            <div class="row"><span class="rl">Legs</span><span class="rv">Quads · Ham · Calves</span></div>
+            <div class="row"><span class="rl">Cardio</span><span class="rv">Running · Zone 2</span></div>
+            <div class="row"><span class="rl">BJJ</span><span class="rv b">Retour Q2 2026</span></div>
+            <div class="row"><span class="rl">Yoga</span><span class="rv">Mobilité · Récup</span></div>
           </div>
-          <div class="placeholder" style="display:flex;flex-direction:column;justify-content:center;min-height:200px;"><div class="placeholder-title">Suivi PRs &amp; poids</div><div class="placeholder-sub">Bench · Squat · Deadlift · Poids corporel · À connecter S27+</div></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-nutrition">
+        <div class="ey">Corps & Santé</div><div class="hl">NUTRITION</div>
+        <div class="krow">
+          <div class="kpi"><div class="kl">Calories/jour</div><div class="kv" id="ncal">3,200 kcal</div></div>
+          <div class="kpi"><div class="kl">Protéines</div><div class="kv" id="nprot">190g</div></div>
+          <div class="kpi"><div class="kl">Poids cible</div><div class="kv">190 lbs</div></div>
+          <div class="kpi"><div class="kl">Phase</div><div class="kv am">Bulk propre</div></div>
+        </div>
+        <div class="card" style="max-width:460px"><div class="cl" style="display:flex;align-items:center;justify-content:space-between">Objectifs <button class="bg" onclick="openNM()">Modifier</button></div>
+          <div class="row"><span class="rl">Calories/jour</span><span class="rv" id="ndcal">3,200 kcal</span></div>
+          <div class="row"><span class="rl">Protéines</span><span class="rv" id="ndprot">190g / jour</span></div>
+          <div class="row"><span class="rl">Glucides</span><span class="rv" id="ndgluc">380g / jour</span></div>
+          <div class="row"><span class="rl">Lipides</span><span class="rv" id="ndlip">90g / jour</span></div>
+          <div class="row"><span class="rl">Eau</span><span class="rv" id="ndeau">3.5L / jour</span></div>
         </div>
       </div>
 
       <div class="page" id="page-films">
-        <div class="page-title">Films &amp; Séries</div>
-        <div class="page-sub">Liste à voir · En cours · Favoris</div>
-        <div class="placeholder"><div class="placeholder-title">Ta liste de films &amp; séries</div><div class="placeholder-sub">Films à voir · Séries en cours · Notes · À construire S27+</div></div>
+        <div class="ey">Culture</div><div class="hl">FILMS & SÉRIES</div>
+        <div class="ir"><input class="inp" id="fi" placeholder="Titre…"><input class="inp sm" id="fy" placeholder="Année"><select class="inp sm" id="fs"><option>À voir</option><option>En cours</option><option>Vu</option></select><button class="badd" onclick="aFilm()">+ Ajouter</button></div>
+        <div class="filters" id="fff"><button class="fb on" onclick="fFilm('tous',this)">Tous</button><button class="fb" onclick="fFilm('À voir',this)">À voir</button><button class="fb" onclick="fFilm('En cours',this)">En cours</button><button class="fb" onclick="fFilm('Vu',this)">Vu</button></div>
+        <div class="cgrid" id="fgrid"></div>
       </div>
 
       <div class="page" id="page-livres">
-        <div class="page-title">Livres</div>
-        <div class="page-sub">En cours · À lire · Complétés</div>
-        <div class="placeholder"><div class="placeholder-title">Ta liste de lecture</div><div class="placeholder-sub">Livres en cours · Wishlist · Notes de lecture · À construire S27+</div></div>
+        <div class="ey">Culture</div><div class="hl">LIVRES</div>
+        <div class="ir"><input class="inp" id="li2" placeholder="Titre…"><input class="inp sm" id="lau" placeholder="Auteur…"><select class="inp sm" id="lst"><option>À lire</option><option>En cours</option><option>Terminé</option></select><button class="badd" onclick="aLivre()">+ Ajouter</button></div>
+        <div class="filters" id="lff"><button class="fb on" onclick="fLivre('tous',this)">Tous</button><button class="fb" onclick="fLivre('À lire',this)">À lire</button><button class="fb" onclick="fLivre('En cours',this)">En cours</button><button class="fb" onclick="fLivre('Terminé',this)">Terminé</button></div>
+        <div class="cgrid" id="lgrid"></div>
       </div>
 
       <div class="page" id="page-restaurants">
-        <div class="page-title">Restaurants</div>
-        <div class="page-sub">À essayer · Favoris · Par ville</div>
-        <div class="placeholder"><div class="placeholder-title">Ta liste de restaurants</div><div class="placeholder-sub">Montréal · Québec · Autres villes · Cuisine · À construire S27+</div></div>
+        <div class="ey">Culture</div><div class="hl">RESTAURANTS</div>
+        <div class="ir"><input class="inp" id="rn" placeholder="Nom…"><input class="inp sm" id="rci" placeholder="Ville…"><input class="inp sm" id="rcu" placeholder="Cuisine…"><select class="inp vs" id="rst"><option>À essayer</option><option>Visité</option><option>Favori ⭐</option></select><button class="badd" onclick="aResto()">+ Ajouter</button></div>
+        <div class="filters" id="rff"><button class="fb on" onclick="fResto('tous',this)">Tous</button><button class="fb" onclick="fResto('À essayer',this)">À essayer</button><button class="fb" onclick="fResto('Visité',this)">Visité</button><button class="fb" onclick="fResto('Favori',this)">Favoris ⭐</button></div>
+        <div class="cgrid" id="rgrid"></div>
       </div>
 
       <div class="page" id="page-voyages">
-        <div class="page-title">Voyages</div>
-        <div class="page-sub">Destinations · Bucket list · Planification</div>
-        <div class="placeholder"><div class="placeholder-title">Tes destinations</div><div class="placeholder-sub">Bucket list · Voyages planifiés · Pays visités · À construire S27+</div></div>
-      </div>
-
-      <div class="page" id="page-nutrition">
-        <div class="page-title">Nutrition</div>
-        <div class="page-sub">Alimentation · Objectifs · Suivi</div>
-        <div class="placeholder"><div class="placeholder-title">Suivi nutritionnel</div><div class="placeholder-sub">Macros · Objectifs caloriques · Habitudes · À construire S27+</div></div>
-      </div>
-
-      <div class="page" id="page-actions">
-        <div class="page-title">Actions requises</div>
-        <div class="page-sub">3 urgences en attente</div>
-        <div class="action-item"><div class="action-dot red"></div><div><div class="action-title">🔴 EQ Bank HISA — Ouvrir maintenant</div><div class="action-sub">$1,500/mois qui dort · Taux ~4% · eqbank.ca · 15 minutes</div></div></div>
-        <div class="action-item"><div class="action-dot red"></div><div><div class="action-title">🔴 Bénéficiaires Questrade — 5 minutes</div><div class="action-sub">$85,683 sans bénéficiaires · My Account → Beneficiaries</div></div></div>
-        <div class="action-item"><div class="action-dot amber"></div><div><div class="action-title">🟡 Analyse $12K rétroactivité</div><div class="action-sub">Room FHSA ~$9,700 · Allocation pendante · avec Claude</div></div></div>
-        <div class="action-item"><div class="action-dot blue"></div><div><div class="action-title">📅 BdC 18 mars — Dans 5 jours</div><div class="action-sub">Décision taux directeur · Impact FHSA et hypothèque 2030</div></div></div>
+        <div class="ey">Culture</div><div class="hl">VOYAGES</div>
+        <div class="ir"><input class="inp" id="vd" placeholder="Destination…"><input class="inp sm" id="vy" placeholder="Année"><select class="inp sm" id="vst"><option>Bucket list</option><option>Planifié</option><option>Visité ✓</option></select><button class="badd" onclick="aVoyage()">+ Ajouter</button></div>
+        <div class="filters" id="vff"><button class="fb on" onclick="fVoyage('tous',this)">Tous</button><button class="fb" onclick="fVoyage('Bucket list',this)">Bucket list</button><button class="fb" onclick="fVoyage('Planifié',this)">Planifié</button><button class="fb" onclick="fVoyage('Visité',this)">Visité</button></div>
+        <div class="cgrid" id="vgrid"></div>
       </div>
 
       <div class="page" id="page-verdicts">
-        <div class="page-title">Verdicts J+30</div>
-        <div class="page-sub">Décisions passées · Résultats · Apprentissages</div>
-        <div class="placeholder"><div class="placeholder-title">Journal de décisions</div><div class="placeholder-sub">Historique des achats · Verdicts 30 jours après · À construire S27+</div></div>
+        <div class="ey">Outils</div><div class="hl">VERDICTS J+30</div>
+        <div class="card" style="margin-bottom:16px"><div class="cl">Documenter</div>
+          <div class="ir" style="margin-bottom:10px"><input class="inp" id="vdt" placeholder="Décision… ex: Achat AVGO $335"></div>
+          <textarea class="ia" id="vdn" placeholder="Raisonnement, contexte…"></textarea>
+          <div style="margin-top:10px;display:flex;gap:8px"><select class="inp" style="flex:0;width:150px" id="vds"><option value="pending">⏳ En attente</option><option value="good">✓ Bon move</option><option value="bad">✗ À revoir</option><option value="neutral">— Neutre</option></select><button class="badd" onclick="aVerdict()">+ Documenter</button></div>
+        </div>
+        <div id="vlist"></div>
       </div>
 
       <div class="page" id="page-crash">
-        <div class="page-title">Crash Simulator</div>
-        <div class="page-sub">Scénarios de stress · COVID 2020 comme ancrage de conviction</div>
-        <div class="card" style="max-width:520px;">
-          <div class="card-title">Simuler une correction</div>
-          <div class="slider-row"><span class="slider-label">Correction marché</span><input type="range" min="5" max="60" step="5" value="20" id="crash-pct" oninput="updateCrash()"><span class="slider-val">-<span id="crash-pct-v">20</span>%</span></div>
-          <div class="sim-results">
-            <div class="sim-kpi"><div class="sim-kpi-label">Portfolio après crash</div><div class="sim-kpi-val r" id="crash-after">—</div></div>
-            <div class="sim-kpi"><div class="sim-kpi-label">Perte en $</div><div class="sim-kpi-val r" id="crash-loss">—</div></div>
-            <div class="sim-kpi"><div class="sim-kpi-label">Récupération à 8%/an</div><div class="sim-kpi-val" id="crash-rec">—</div></div>
-            <div class="sim-kpi"><div class="sim-kpi-label">Opportunité DCA</div><div class="sim-kpi-val g" id="crash-dca">—</div></div>
+        <div class="ey">Outils</div><div class="hl">CRASH SIMULATOR</div>
+        <div class="card" style="max-width:520px"><div class="cl">Scénario correction</div>
+          <div class="sr"><span class="sl">Correction marché</span><input type="range" min="5" max="60" step="5" value="20" id="crp" oninput="uCrash()"><span class="sv">-<span id="crpv">20</span>%</span></div>
+          <div class="sg">
+            <div class="sk"><div class="skl">Portfolio après</div><div class="skv r" id="cra">—</div></div>
+            <div class="sk"><div class="skl">Perte en $</div><div class="skv r" id="crl">—</div></div>
+            <div class="sk"><div class="skl">Récup. 8%/an</div><div class="skv" id="crr">—</div></div>
+            <div class="sk"><div class="skl">DCA opportunité</div><div class="skv g">$5K/mois</div></div>
           </div>
         </div>
+      </div>
+
+      <div class="page" id="page-actions">
+        <div class="ey">Outils</div><div class="hl">ACTIONS REQUISES</div>
+        <div class="act"><div class="adot r"></div><div><div class="at">🔴 EQ Bank HISA — Ouvrir maintenant</div><div class="as">$1,500/mois qui dort · ~4% · eqbank.ca · 15 minutes</div></div></div>
+        <div class="act"><div class="adot r"></div><div><div class="at">🔴 Bénéficiaires Questrade — 5 minutes</div><div class="as">$85,683 sans bénéficiaires · My Account → Beneficiaries</div></div></div>
+        <div class="act"><div class="adot am"></div><div><div class="at">🟡 Analyse $12K rétroactivité</div><div class="as">Room FHSA ~$9,700 · Allocation pendante · avec Claude</div></div></div>
+        <div class="act"><div class="adot b"></div><div><div class="at">📅 BdC 18 mars — Dans 5 jours</div><div class="as">Décision taux directeur · Impact FHSA et hypothèque 2030</div></div></div>
       </div>
 
     </div>
   </div>
 </div>
+
+<div class="mo" id="mpr"><div class="md"><div class="mdt">PERSONAL RECORDS</div><div id="prfields"></div><div class="mbtns"><button class="mbtn g" onclick="cM('mpr')">Annuler</button><button class="mbtn p" onclick="savePR()">Sauvegarder</button></div></div></div>
+<div class="mo" id="mnt"><div class="md"><div class="mdt">NUTRITION</div><div class="mf"><div class="ml">Calories/jour</div><input class="inp" id="mnc"></div><div class="mf"><div class="ml">Protéines (g)</div><input class="inp" id="mnp"></div><div class="mf"><div class="ml">Glucides (g)</div><input class="inp" id="mng"></div><div class="mf"><div class="ml">Lipides (g)</div><input class="inp" id="mnl"></div><div class="mf"><div class="ml">Eau (L)</div><input class="inp" id="mne"></div><div class="mbtns"><button class="mbtn g" onclick="cM('mnt')">Annuler</button><button class="mbtn p" onclick="saveNut()">OK</button></div></div></div>
+<div class="mo" id="mrt2"><div class="md"><div class="mdt">NOTER</div><div class="stp" id="stp"></div><div class="mbtns"><button class="mbtn g" onclick="cM('mrt2')">Annuler</button><button class="mbtn p" onclick="saveRating()">OK</button></div></div></div>
+
 <script>
-const PW_HASH='c838df5335c1eba2532f32090cd555d17c9e218289d99ecaf55525d7b199aa88';
+const H='c838df5335c1eba2532f32090cd555d17c9e218289d99ecaf55525d7b199aa88';
 async function sha256(s){const b=new TextEncoder().encode(s);const h=await crypto.subtle.digest('SHA-256',b);return Array.from(new Uint8Array(h)).map(x=>x.toString(16).padStart(2,'0')).join('');}
-async function tryLogin(){const pw=document.getElementById('pw-input').value;if(await sha256(pw)===PW_HASH){sessionStorage.setItem('heyos_auth','1');document.getElementById('login-screen').style.display='none';document.getElementById('app').classList.add('visible');init();}else{document.getElementById('login-err').textContent='Code incorrect';document.getElementById('pw-input').value='';}}
-if(sessionStorage.getItem('heyos_auth')==='1'){document.getElementById('login-screen').style.display='none';document.getElementById('app').classList.add('visible');}
-const DATA_URL='https://raw.githubusercontent.com/Lemiwinks007/heyos-dashboard/main/data.json';
-let USDCAD=1.3559,TOTAL_CAD=85683,COST_BASE=71776.46,_lc={},_pf='ALL';
-let POSITIONS=[
-{ticker:'VFV.TO',nom:'Vanguard S&P 500',tier:'T1',compte:'TFSA',qty:84,prixMoy:119.9246,dev:'CAD'},
-{ticker:'GOOG',nom:'Alphabet',tier:'T1',compte:'TFSA',qty:6,prixMoy:90.6059,dev:'USD'},
-{ticker:'AVGO',nom:'Broadcom',tier:'T1',compte:'TFSA',qty:16.5743,prixMoy:342.1593,dev:'USD'},
-{ticker:'AMZN',nom:'Amazon',tier:'T1',compte:'TFSA',qty:7.4817,prixMoy:113.7377,dev:'USD'},
-{ticker:'SMH',nom:'VanEck Semis',tier:'T1',compte:'TFSA',qty:19.2266,prixMoy:393.5653,dev:'USD'},
-{ticker:'META',nom:'Meta Platforms',tier:'T1',compte:'TFSA',qty:1,prixMoy:637.7698,dev:'USD'},
-{ticker:'ENB.TO',nom:'Enbridge',tier:'T1',compte:'TFSA',qty:9,prixMoy:49.62,dev:'CAD'},
-{ticker:'GEV',nom:'GE Vernova',tier:'T1',compte:'TFSA',qty:2.4431,prixMoy:831.9907,dev:'USD'},
-{ticker:'MSFT',nom:'Microsoft',tier:'T2',compte:'TFSA',qty:2,prixMoy:312.5938,dev:'USD'},
-{ticker:'NVDA',nom:'NVIDIA',tier:'T2',compte:'TFSA',qty:4,prixMoy:128.59,dev:'USD'},
-{ticker:'TSLA',nom:'Tesla',tier:'T2',compte:'TFSA',qty:1.8645,prixMoy:303.5644,dev:'USD'},
-{ticker:'QQQM',nom:'Invesco Nasdaq 100',tier:'T2',compte:'TFSA',qty:4.4515,prixMoy:247.1068,dev:'USD'},
-{ticker:'XEQT.TO',nom:'iShares Core Equity',tier:'T2',compte:'TFSA',qty:25,prixMoy:39.97,dev:'CAD'},
-{ticker:'SPGI',nom:'S&P Global',tier:'T2',compte:'TFSA',qty:0.9996,prixMoy:443.2458,dev:'USD'},
-{ticker:'TD.TO',nom:'TD Bank',tier:'T3',compte:'TFSA',qty:87,prixMoy:79.8348,dev:'CAD'},
-{ticker:'ZLB.TO',nom:'BMO Low Volatility',tier:'T3',compte:'TFSA',qty:37,prixMoy:58.1416,dev:'CAD'},
-{ticker:'H.TO',nom:'Hydro One',tier:'T3',compte:'TFSA',qty:22,prixMoy:52.8663,dev:'CAD'},
-{ticker:'T.TO',nom:'TELUS',tier:'T3',compte:'TFSA',qty:32,prixMoy:22.04,dev:'CAD'},
-{ticker:'QTUM',nom:'Defiance Quantum',tier:'T3',compte:'TFSA',qty:5,prixMoy:120.81,dev:'USD'},
-{ticker:'HURA.TO',nom:'Global X Uranium',tier:'T3',compte:'TFSA',qty:6,prixMoy:55.25,dev:'CAD'},
-{ticker:'XEI.TO',nom:'iShares High Div',tier:'T4',compte:'TFSA',qty:51,prixMoy:30.6811,dev:'CAD'},
-{ticker:'SRU.UN.TO',nom:'SmartCentres REIT',tier:'T4',compte:'TFSA',qty:57,prixMoy:25.2543,dev:'CAD'},
-{ticker:'XIC.TO',nom:'iShares Core TSX',tier:'T4',compte:'TFSA',qty:21,prixMoy:40.4066,dev:'CAD'},
-{ticker:'ZRE.TO',nom:'BMO Equal REITs',tier:'T4',compte:'TFSA',qty:19,prixMoy:20.83,dev:'CAD'},
-{ticker:'MFC.TO',nom:'Manulife',tier:'T4',compte:'TFSA',qty:8,prixMoy:51.7,dev:'CAD'},
-{ticker:'VDU.TO',nom:'Vanguard Dev Markets',tier:'T4',compte:'TFSA',qty:6,prixMoy:43.75,dev:'CAD'},
-{ticker:'VFV.TO',nom:'Vanguard S&P 500',tier:'T1',compte:'FHSA',qty:16,prixMoy:157.3812,dev:'CAD'},
-{ticker:'AMZN',nom:'Amazon',tier:'T1',compte:'FHSA',qty:7,prixMoy:154.9418,dev:'USD'},
-{ticker:'QQQM',nom:'Invesco Nasdaq 100',tier:'T2',compte:'FHSA',qty:5.311,prixMoy:247.4064,dev:'USD'},
-{ticker:'XEQT.TO',nom:'iShares Core Equity',tier:'T2',compte:'FHSA',qty:15,prixMoy:40.06,dev:'CAD'},
-{ticker:'TD.TO',nom:'TD Bank',tier:'T3',compte:'FHSA',qty:15,prixMoy:82.29,dev:'CAD'},
-{ticker:'H.TO',nom:'Hydro One',tier:'T3',compte:'FHSA',qty:10,prixMoy:51.78,dev:'CAD'},
-{ticker:'ZLB.TO',nom:'BMO Low Volatility',tier:'T3',compte:'FHSA',qty:3,prixMoy:59.0666,dev:'CAD'},
-{ticker:'SRU.UN.TO',nom:'SmartCentres REIT',tier:'T4',compte:'FHSA',qty:63,prixMoy:23.61,dev:'CAD'},
-{ticker:'REI.UN.TO',nom:'RioCan REIT',tier:'T4',compte:'FHSA',qty:80,prixMoy:18.73,dev:'CAD'},
-{ticker:'XIC.TO',nom:'iShares Core TSX',tier:'T4',compte:'FHSA',qty:19,prixMoy:48.3705,dev:'CAD'},
-{ticker:'XEI.TO',nom:'iShares High Div',tier:'T4',compte:'FHSA',qty:26,prixMoy:32.6111,dev:'CAD'},
-{ticker:'SCHD',nom:'Schwab US Dividend',tier:'T1',compte:'REER',qty:64.3053,prixMoy:25.5008,dev:'USD'},
-{ticker:'JEPI',nom:'JPMorgan Premium Income',tier:'T2',compte:'REER',qty:1,prixMoy:54.52,dev:'USD'},
-];
-function fc(v){return '$'+Math.abs(v).toLocaleString('fr-CA',{maximumFractionDigits:0});}
-function fp(v){return(v>=0?'+':'')+v.toFixed(2)+'%';}
-function gr(v){return v>=0?'g':'r';}
-function compute(){POSITIONS.forEach(p=>{p.cout=p.dev==='CAD'?p.qty*p.prixMoy:p.qty*p.prixMoy*USDCAD;if(!p.prixLive)p.prixLive=p.prixMoy;p.val=p.dev==='CAD'?p.qty*p.prixLive:p.qty*p.prixLive*USDCAD;p.gain=p.val-p.cout;p.pct=p.gain/p.cout*100;if(!p.todayPL)p.todayPL=0;});}
+async function tryLogin(){const pw=document.getElementById('pw').value;if(await sha256(pw)===H){sessionStorage.setItem('h','1');document.getElementById('login-screen').style.display='none';document.getElementById('app').classList.add('on');init();}else{document.getElementById('lerr').textContent='Code incorrect';document.getElementById('pw').value='';}}
+if(sessionStorage.getItem('h')==='1'){document.getElementById('login-screen').style.display='none';document.getElementById('app').classList.add('on');}
+const S={g:(k,d)=>{try{const v=localStorage.getItem('h13_'+k);return v?JSON.parse(v):d;}catch{return d;}},s:(k,v)=>{try{localStorage.setItem('h13_'+k,JSON.stringify(v));}catch{}}};
+const URL='https://raw.githubusercontent.com/Lemiwinks007/heyos-dashboard/main/data.json';
+let FX=1.3559,TOT=85683,CST=71776.46,LC={},PF='ALL';
+let POS=[{t:'VFV.TO',n:'Vanguard S&P 500',tier:'T1',c:'TFSA',q:84,avg:119.9246,fx:'CAD'},{t:'GOOG',n:'Alphabet',tier:'T1',c:'TFSA',q:6,avg:90.6059,fx:'USD'},{t:'AVGO',n:'Broadcom',tier:'T1',c:'TFSA',q:16.5743,avg:342.1593,fx:'USD'},{t:'AMZN',n:'Amazon',tier:'T1',c:'TFSA',q:7.4817,avg:113.7377,fx:'USD'},{t:'SMH',n:'VanEck Semis',tier:'T1',c:'TFSA',q:19.2266,avg:393.5653,fx:'USD'},{t:'META',n:'Meta',tier:'T1',c:'TFSA',q:1,avg:637.7698,fx:'USD'},{t:'ENB.TO',n:'Enbridge',tier:'T1',c:'TFSA',q:9,avg:49.62,fx:'CAD'},{t:'GEV',n:'GE Vernova',tier:'T1',c:'TFSA',q:2.4431,avg:831.9907,fx:'USD'},{t:'MSFT',n:'Microsoft',tier:'T2',c:'TFSA',q:2,avg:312.5938,fx:'USD'},{t:'NVDA',n:'NVIDIA',tier:'T2',c:'TFSA',q:4,avg:128.59,fx:'USD'},{t:'TSLA',n:'Tesla',tier:'T2',c:'TFSA',q:1.8645,avg:303.5644,fx:'USD'},{t:'QQQM',n:'Invesco QQQ',tier:'T2',c:'TFSA',q:4.4515,avg:247.1068,fx:'USD'},{t:'XEQT.TO',n:'iShares Core Eq.',tier:'T2',c:'TFSA',q:25,avg:39.97,fx:'CAD'},{t:'SPGI',n:'S&P Global',tier:'T2',c:'TFSA',q:0.9996,avg:443.2458,fx:'USD'},{t:'TD.TO',n:'TD Bank',tier:'T3',c:'TFSA',q:87,avg:79.8348,fx:'CAD'},{t:'ZLB.TO',n:'BMO Low Vol',tier:'T3',c:'TFSA',q:37,avg:58.1416,fx:'CAD'},{t:'H.TO',n:'Hydro One',tier:'T3',c:'TFSA',q:22,avg:52.8663,fx:'CAD'},{t:'T.TO',n:'TELUS',tier:'T3',c:'TFSA',q:32,avg:22.04,fx:'CAD'},{t:'QTUM',n:'Defiance Quantum',tier:'T3',c:'TFSA',q:5,avg:120.81,fx:'USD'},{t:'HURA.TO',n:'Global X Uranium',tier:'T3',c:'TFSA',q:6,avg:55.25,fx:'CAD'},{t:'XEI.TO',n:'iShares High Div',tier:'T4',c:'TFSA',q:51,avg:30.6811,fx:'CAD'},{t:'SRU.UN.TO',n:'SmartCentres REIT',tier:'T4',c:'TFSA',q:57,avg:25.2543,fx:'CAD'},{t:'XIC.TO',n:'iShares TSX',tier:'T4',c:'TFSA',q:21,avg:40.4066,fx:'CAD'},{t:'ZRE.TO',n:'BMO REITs',tier:'T4',c:'TFSA',q:19,avg:20.83,fx:'CAD'},{t:'MFC.TO',n:'Manulife',tier:'T4',c:'TFSA',q:8,avg:51.7,fx:'CAD'},{t:'VDU.TO',n:'Vanguard Dev',tier:'T4',c:'TFSA',q:6,avg:43.75,fx:'CAD'},{t:'VFV.TO',n:'Vanguard S&P 500',tier:'T1',c:'FHSA',q:16,avg:157.3812,fx:'CAD'},{t:'AMZN',n:'Amazon',tier:'T1',c:'FHSA',q:7,avg:154.9418,fx:'USD'},{t:'QQQM',n:'Invesco QQQ',tier:'T2',c:'FHSA',q:5.311,avg:247.4064,fx:'USD'},{t:'XEQT.TO',n:'iShares Core Eq.',tier:'T2',c:'FHSA',q:15,avg:40.06,fx:'CAD'},{t:'TD.TO',n:'TD Bank',tier:'T3',c:'FHSA',q:15,avg:82.29,fx:'CAD'},{t:'H.TO',n:'Hydro One',tier:'T3',c:'FHSA',q:10,avg:51.78,fx:'CAD'},{t:'ZLB.TO',n:'BMO Low Vol',tier:'T3',c:'FHSA',q:3,avg:59.0666,fx:'CAD'},{t:'SRU.UN.TO',n:'SmartCentres REIT',tier:'T4',c:'FHSA',q:63,avg:23.61,fx:'CAD'},{t:'REI.UN.TO',n:'RioCan REIT',tier:'T4',c:'FHSA',q:80,avg:18.73,fx:'CAD'},{t:'XIC.TO',n:'iShares TSX',tier:'T4',c:'FHSA',q:19,avg:48.3705,fx:'CAD'},{t:'XEI.TO',n:'iShares High Div',tier:'T4',c:'FHSA',q:26,avg:32.6111,fx:'CAD'},{t:'SCHD',n:'Schwab Div.',tier:'T1',c:'REER',q:64.3053,avg:25.5008,fx:'USD'},{t:'JEPI',n:'JPM Premium Inc.',tier:'T2',c:'REER',q:1,avg:54.52,fx:'USD'}];
+const fc=v=>'$'+Math.abs(v).toLocaleString('fr-CA',{maximumFractionDigits:0});
+const fp=v=>(v>=0?'+':'')+v.toFixed(2)+'%';
+const gr=v=>v>=0?'g':'r';
+const se=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+const sh=(id,v)=>{const e=document.getElementById(id);if(e)e.innerHTML=v;};
+function compute(){POS.forEach(p=>{p.cout=p.fx==='CAD'?p.q*p.avg:p.q*p.avg*FX;if(!p.live)p.live=p.avg;p.val=p.fx==='CAD'?p.q*p.live:p.q*p.live*FX;p.gain=p.val-p.cout;p.pct=p.gain/p.cout*100;if(!p.dayPL)p.dayPL=0;});}
 async function fetchData(){
-  try{const r=await fetch(DATA_URL+'?t='+Date.now());if(!r.ok)throw new Error();const d=await r.json();
-  const V=['T1','T2','T3','T4'];
-  if(d.positions&&Array.isArray(d.positions)){POSITIONS=d.positions.filter(p=>p.ticker&&p.tier&&V.includes(String(p.tier).trim())&&parseFloat(p.qty)>0).map(p=>({...p,qty:parseFloat(p.qty),prixMoy:parseFloat(p.prixMoy)||0}));}
-  if(d.usdcad)USDCAD=d.usdcad;if(d.total_cad&&d.total_cad>0)TOTAL_CAD=d.total_cad;if(d.totalCAD&&d.totalCAD>0)TOTAL_CAD=d.totalCAD;if(d.costBase)COST_BASE=d.costBase;
-  if(d.positions)d.positions.forEach(dp=>POSITIONS.forEach(p=>{if(p.ticker===dp.ticker&&p.compte===dp.compte&&dp.prixLive)_lc[p.ticker+'_'+p.compte]={price:dp.prixLive,prev:dp.prixPrev||dp.prixLive};}));
-  const raw=d.date||'';let dh=raw;try{const dd=new Date(raw);dh=dd.toLocaleString('fr-CA',{timeZone:'America/Toronto',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false})+' HNE';}catch(e){}
-  setStatus('Live · '+POSITIONS.length+' positions · '+fc(TOTAL_CAD)+' CAD · '+dh);
-  }catch(e){setStatus('Données locales · '+POSITIONS.length+' positions');}
-  applyLive();compute();renderAll();
+  try{const r=await fetch(URL+'?t='+Date.now());if(!r.ok)throw 0;const d=await r.json();
+  if(d.positions&&Array.isArray(d.positions)){POS=d.positions.filter(p=>p.ticker&&['T1','T2','T3','T4'].includes(String(p.tier||'').trim())&&parseFloat(p.qty)>0).map(p=>({t:p.ticker,n:p.nom||p.ticker,tier:p.tier,c:p.compte||p.account,q:parseFloat(p.qty),avg:parseFloat(p.prixMoy)||0,fx:p.dev||'CAD'}));}
+  if(d.usdcad)FX=d.usdcad;if(d.total_cad&&d.total_cad>0)TOT=d.total_cad;if(d.totalCAD&&d.totalCAD>0)TOT=d.totalCAD;if(d.costBase)CST=d.costBase;
+  if(d.positions)d.positions.forEach(dp=>POS.forEach(p=>{if(p.t===dp.ticker&&p.c===dp.compte&&dp.prixLive)LC[p.t+'_'+p.c]={price:dp.prixLive,prev:dp.prixPrev||dp.prixLive};}));
+  let dh='';try{const dd=new Date(d.date||'');dh=dd.toLocaleString('fr-CA',{timeZone:'America/Toronto',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false})+' HNE';}catch{}
+  se('ttxt','Live · '+POS.length+' positions · '+fc(TOT)+' · '+dh);}
+  catch{se('ttxt','Données locales · '+POS.length+' positions');}
+  applyLive();compute();rAll();
 }
-function applyLive(){let td=0;POSITIONS.forEach(p=>{const l=_lc[p.ticker+'_'+p.compte]||_lc[p.ticker];if(l){p.prixLive=l.price;p.val=p.dev==='CAD'?p.qty*l.price:p.qty*l.price*USDCAD;p.cout=p.dev==='CAD'?p.qty*p.prixMoy:p.qty*p.prixMoy*USDCAD;p.gain=p.val-p.cout;p.pct=p.gain/p.cout*100;const pv=p.dev==='CAD'?p.qty*l.prev:p.qty*l.prev*USDCAD;p.todayPL=p.val-pv;}td+=p.todayPL||0;});const lt=POSITIONS.reduce((s,p)=>s+(p.val||0),0);if(lt>0)TOTAL_CAD=lt;}
-function setStatus(t){document.getElementById('topbar-status').textContent=t;}
-function renderAll(){document.getElementById('usdcad-cell').textContent='USD/CAD '+USDCAD.toFixed(4);renderToday();renderPortfolio();renderPositions();renderFI();renderMaison();updateMortgage();updateCrash();}
-function renderToday(){
-  const op=TOTAL_CAD-COST_BASE,opP=op/COST_BASE*100,td=POSITIONS.reduce((s,p)=>s+(p.todayPL||0),0);
-  document.getElementById('today-total').textContent=fc(TOTAL_CAD);
-  document.getElementById('today-openpl').textContent=(op>=0?'+':'-')+fc(op)+' ('+fp(opP)+') depuis début';
-  const tde=document.getElementById('today-daypl');tde.textContent=(td>=0?'+':'-')+fc(td);tde.className='kpi-val '+gr(td);
-  document.getElementById('today-mkt').textContent=td===0?'Marché fermé':'Variation du jour';
-  document.getElementById('today-fi-pct').textContent=(TOTAL_CAD/2100000*100).toFixed(1)+'%';
-  document.getElementById('lc-total').textContent=fc(TOTAL_CAD);
-  document.getElementById('lc-sub').textContent=POSITIONS.length+' positions · '+fp(opP);
-  const d=new Date().toLocaleDateString('fr-CA',{timeZone:'America/Toronto',weekday:'long',day:'numeric',month:'long'});
-  document.getElementById('today-date').textContent='· '+d;
-}
-function renderPortfolio(){
-  const op=TOTAL_CAD-COST_BASE;
-  document.getElementById('pf-total').textContent=fc(TOTAL_CAD);
-  document.getElementById('pf-cost').textContent=fc(COST_BASE);
-  const ge=document.getElementById('pf-gain');ge.textContent=(op>=0?'+':'')+fc(op);ge.className='kpi-val '+gr(op);
-  const pe=document.getElementById('pf-pct');pe.textContent=fp(op/COST_BASE*100);pe.className='kpi-val '+gr(op);
-  const ba={TFSA:0,FHSA:0,REER:0};
-  POSITIONS.forEach(p=>{if(ba[p.compte]!==undefined)ba[p.compte]+=(p.val||p.cout||0);});
-  document.getElementById('acc-tfsa').textContent=fc(ba.TFSA);
-  document.getElementById('acc-fhsa').textContent=fc(ba.FHSA);
-  document.getElementById('acc-reer').textContent=fc(ba.REER);
-  const uv=POSITIONS.filter(p=>p.dev==='USD').reduce((s,p)=>s+(p.val||p.cout||0),0);
-  const up=(uv/TOTAL_CAD*100).toFixed(0);
-  document.getElementById('exp-usd').textContent='~'+up+'%';
-  document.getElementById('exp-cad').textContent='~'+(100-parseInt(up))+'%';
-  const t1=POSITIONS.filter(p=>p.tier==='T1').sort((a,b)=>(b.val||0)-(a.val||0)).slice(0,6);
-  document.getElementById('tbl-top').innerHTML=t1.map(p=>'<tr><td><strong>'+p.ticker+'</strong></td><td>'+p.compte+'</td><td>'+fc(p.val||0)+'</td><td class="'+gr(p.gain||0)+'">'+(p.gain>=0?'+':'-')+fc(p.gain||0)+'</td><td class="'+gr(p.pct||0)+'">'+fp(p.pct||0)+'</td></tr>').join('');
-}
-function renderPositions(){
-  const f=_pf==='ALL'?POSITIONS:['T1','T2','T3','T4'].includes(_pf)?POSITIONS.filter(p=>p.tier===_pf):POSITIONS.filter(p=>p.compte===_pf);
-  document.getElementById('pos-count-lbl').textContent='('+f.length+')';
-  document.getElementById('tbl-positions').innerHTML=f.map(p=>'<tr><td><strong>'+p.ticker+'</strong></td><td>'+p.nom+'</td><td style="font-size:11px;color:#aaa;">'+p.compte+'</td><td><span class="tier-pill '+p.tier.toLowerCase()+'">'+p.tier+'</span></td><td>'+p.qty.toFixed(2)+'</td><td>$'+p.prixMoy.toFixed(2)+'</td><td>$'+(p.prixLive||p.prixMoy).toFixed(2)+'</td><td>'+fc(p.val||p.cout||0)+'</td><td class="'+gr(p.gain||0)+'">'+(p.gain>=0?'+':'-')+fc(p.gain||0)+'</td><td class="'+gr(p.pct||0)+'">'+fp(p.pct||0)+'</td></tr>').join('');
-}
-function filterPos(f){_pf=f;['ALL','T1','T2','T3','T4','TFSA','FHSA','REER'].forEach(k=>{const el=document.getElementById('f-'+k.toLowerCase());if(el){el.style.background=k===f?'#1a1a1a':'#fff';el.style.color=k===f?'#fff':'#555';el.style.borderColor=k===f?'#1a1a1a':'#ddd';}});renderPositions();}
-function renderFI(){const p=(TOTAL_CAD/2100000*100);document.getElementById('fi-pct').textContent=p.toFixed(1)+'%';document.getElementById('fi-r-val').textContent=fc(TOTAL_CAD);document.getElementById('fi-o-val').textContent=fc(TOTAL_CAD);document.getElementById('fi-r-bar').style.width=Math.min(p,100)+'%';document.getElementById('fi-o-bar').style.width=Math.min(p,100)+'%';updateFI();}
-function updateFI(){
-  const rate=parseFloat(document.getElementById('fi-rate').value)/100,contrib=parseFloat(document.getElementById('fi-contrib').value);
-  document.getElementById('fi-rate-v').textContent=parseFloat(document.getElementById('fi-rate').value).toFixed(1);
-  document.getElementById('fi-contrib-v').textContent=contrib.toLocaleString('fr-CA');
-  let v=TOTAL_CAD,y=0;while(v<2100000&&y<50){v=v*(1+rate)+contrib*12;y++;}
-  const yr=new Date().getFullYear()+y;
-  document.getElementById('fi-sim-yr').textContent=y<50?yr.toString():'50+ ans';
-  document.getElementById('fi-yr').textContent='~'+yr;
-  let v55=TOTAL_CAD;for(let i=0;i<21;i++)v55=v55*(1+rate)+contrib*12;
-  document.getElementById('fi-sim-55').textContent=fc(v55);
-  function cy(r){let vv=TOTAL_CAD,yy=0;while(vv<2100000&&yy<50){vv=vv*(1+r/100)+5000*12;yy++;}return yy;}
-  const ry=new Date().getFullYear()+cy(8),oy=new Date().getFullYear()+cy(10);
-  document.getElementById('fi-r-sub').textContent='~'+ry+' · '+(ry-new Date().getFullYear())+' ans à 8%/an';
-  document.getElementById('fi-o-sub').textContent='~'+oy+' · '+(oy-new Date().getFullYear())+' ans à 10%/an';
-}
-function renderMaison(){
-  const rv=POSITIONS.filter(p=>p.compte==='REER').reduce((s,p)=>s+(p.val||p.cout||0),0);
-  const fv=POSITIONS.filter(p=>p.compte==='FHSA').reduce((s,p)=>s+(p.val||p.cout||0),0);
-  document.getElementById('m-reer').textContent=fc(rv);document.getElementById('m-fhsa').textContent=fc(fv);document.getElementById('m-total').textContent=fc(rv+fv);
-  const rp=(rv/60000*100).toFixed(1),fp2=(fv/40000*100).toFixed(1),tp=((rv+fv)/100000*100).toFixed(1);
-  document.getElementById('mp-reer-bar').style.width=Math.min(rp,100)+'%';document.getElementById('mp-fhsa-bar').style.width=Math.min(fp2,100)+'%';document.getElementById('mp-total-bar').style.width=Math.min(tp,100)+'%';
-  document.getElementById('mp-reer-lbl').textContent=fc(rv)+' / $60K · '+rp+'%';document.getElementById('mp-fhsa-lbl').textContent=fc(fv)+' / $40K · '+fp2+'%';document.getElementById('mp-total-lbl').textContent=fc(rv+fv)+' / $100K · '+tp+'%';
-  updateMortgage();
-}
-function updateMortgage(){const price=parseFloat(document.getElementById('mort-price').value),rate=parseFloat(document.getElementById('mort-rate').value)/100/12,n=300,principal=price-100000,pmt=rate>0?principal*(rate*Math.pow(1+rate,n))/(Math.pow(1+rate,n)-1):principal/n;document.getElementById('mort-price-v').textContent=(price/1000).toFixed(0)+'K';document.getElementById('mort-rate-v').textContent=parseFloat(document.getElementById('mort-rate').value).toFixed(2);document.getElementById('mort-pmt').textContent=fc(pmt)+'/mois';document.getElementById('mort-int').textContent=fc(pmt*n-principal);}
-function updateCrash(){const pct=parseInt(document.getElementById('crash-pct').value);document.getElementById('crash-pct-v').textContent=pct;const after=TOTAL_CAD*(1-pct/100),loss=TOTAL_CAD-after;let v=after,y=0;while(v<TOTAL_CAD&&y<20){v=v*1.08+5000*12;y++;}document.getElementById('crash-after').textContent=fc(after);document.getElementById('crash-loss').textContent='-'+fc(loss);document.getElementById('crash-rec').textContent=y<20?y+' ans':'20+ ans';document.getElementById('crash-dca').textContent='$5,000/mois · buy the dip';}
-function loadJSON(input){const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(d.positions)POSITIONS=d.positions.map(p=>({...p,qty:parseFloat(p.qty),prixMoy:parseFloat(p.prixMoy)||0}));if(d.usdcad)USDCAD=d.usdcad;if(d.total_cad)TOTAL_CAD=d.total_cad;if(d.totalCAD)TOTAL_CAD=d.totalCAD;if(d.costBase)COST_BASE=d.costBase;compute();renderAll();setStatus('JSON local · '+POSITIONS.length+' positions');}catch(err){alert('Erreur JSON');}};r.readAsText(f);}
-function nav(page,el){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));const pg=document.getElementById('page-'+page);if(pg)pg.classList.add('active');if(el)el.classList.add('active');else document.querySelectorAll('.nav-item').forEach(n=>{if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+page+"'"))n.classList.add('active');});}
-function updateClock(){const t=new Date().toLocaleString('fr-CA',{timeZone:'America/Toronto',hour:'2-digit',minute:'2-digit',hour12:false});document.getElementById('clock').textContent=t+' HNE';}
+function applyLive(){POS.forEach(p=>{const l=LC[p.t+'_'+p.c]||LC[p.t];if(l){p.live=l.price;p.val=p.fx==='CAD'?p.q*l.price:p.q*l.price*FX;p.cout=p.fx==='CAD'?p.q*p.avg:p.q*p.avg*FX;p.gain=p.val-p.cout;p.pct=p.gain/p.cout*100;const pv=p.fx==='CAD'?p.q*l.prev:p.q*l.prev*FX;p.dayPL=p.val-pv;}});const lt=POS.reduce((s,p)=>s+(p.val||0),0);if(lt>0)TOT=lt;}
+function rAll(){se('fx-lbl','USD/CAD '+FX.toFixed(4));rToday();rPortfolio();rPositions();rAnalyse();rFI();rMaison();uMort();uCrash();}
+function isMktOpen(){const n=new Date(),e=new Date(n.toLocaleString('en-US',{timeZone:'America/Toronto'})),d=e.getDay(),t=e.getHours()*60+e.getMinutes();return d>0&&d<6&&t>=570&&t<960;}
+function rToday(){const op=TOT-CST,opP=op/CST*100,td=POS.reduce((s,p)=>s+(p.dayPL||0),0);se('tt',fc(TOT));se('tg',(op>=0?'+':'')+fc(op)+' ('+fp(opP)+')');if(isMktOpen()){se('td',(td>=0?'+':'')+fc(td));const e=document.getElementById('td');if(e)e.className='kv '+gr(td);se('tm','Variation du jour');}else{se('td','Fermé');const e=document.getElementById('td');if(e)e.className='kv';se('tm','Rouvre lun 9h30 HNE');}se('tfi',(TOT/2100000*100).toFixed(1)+'%');se('tfis',fc(TOT)+' / $2.1M');se('lct',fc(TOT));se('lcs',POS.length+' positions · '+fp(opP));se('tdate',new Date().toLocaleDateString('fr-CA',{timeZone:'America/Toronto',weekday:'long',day:'numeric',month:'long'}));const films=S.g('films',[]),livres=S.g('livres',[]),restos=S.g('restaurants',[]),voyages=S.g('voyages',[]);se('lcc',(films.length+livres.length+restos.length+voyages.length)||'—');}
+function rPortfolio(){const op=TOT-CST;se('pft',fc(TOT));se('pfc',fc(CST));const ge=document.getElementById('pfg');if(ge){ge.textContent=(op>=0?'+':'')+fc(op);ge.className='kv '+gr(op);}const pe=document.getElementById('pfp');if(pe){pe.textContent=fp(op/CST*100);pe.className='kv '+gr(op);}const ba={TFSA:0,FHSA:0,REER:0};POS.forEach(p=>{if(ba[p.c]!==undefined)ba[p.c]+=(p.val||p.cout);});se('at',fc(ba.TFSA));se('af',fc(ba.FHSA));se('ar',fc(ba.REER));const uv=POS.filter(p=>p.fx==='USD').reduce((s,p)=>s+(p.val||p.cout),0),up=(uv/TOT*100).toFixed(0);se('eu','~'+up+'%');se('ec','~'+(100-parseInt(up))+'%');sh('tt1',[...POS].filter(p=>p.tier==='T1').sort((a,b)=>(b.val||0)-(a.val||0)).slice(0,6).map(p=>`<tr><td><strong>${p.t}</strong></td><td>${p.c}</td><td>${fc(p.val||0)}</td><td class="${gr(p.gain||0)}">${(p.gain||0)>=0?'+':'-'}${fc(Math.abs(p.gain||0))}</td><td class="${gr(p.pct||0)}">${fp(p.pct||0)}</td></tr>`).join(''));}
+function rPositions(){const f=PF==='ALL'?POS:['T1','T2','T3','T4'].includes(PF)?POS.filter(p=>p.tier===PF):POS.filter(p=>p.c===PF);se('pcount','('+f.length+')');sh('tpos',f.map(p=>`<tr><td><strong>${p.t}</strong></td><td style="font-family:var(--body);color:var(--text2);font-size:11px">${p.n}</td><td style="font-size:10px;color:var(--text3)">${p.c}</td><td><span class="tier ${p.tier.toLowerCase()}">${p.tier}</span></td><td>${p.q.toFixed(2)}</td><td>$${p.avg.toFixed(2)}</td><td><strong>$${(p.live||p.avg).toFixed(2)}</strong></td><td>${fc(p.val||p.cout)}</td><td class="${gr(p.gain||0)}">${(p.gain||0)>=0?'+':'-'}${fc(Math.abs(p.gain||0))}</td><td class="${gr(p.pct||0)}">${fp(p.pct||0)}</td></tr>`).join(''));}
+function fp2(f,el){PF=f;document.querySelectorAll('.filters .fb').forEach(b=>b.classList.remove('on'));if(el)el.classList.add('on');rPositions();}
+function rAnalyse(){const uv=POS.filter(p=>p.fx==='USD').reduce((s,p)=>s+(p.val||p.cout),0),up=(uv/TOT*100).toFixed(1);const iaTk=['AVGO','SMH','NVDA','MSFT','GOOG','META','AMZN','QQQM'],iav=POS.filter(p=>iaTk.includes(p.t)).reduce((s,p)=>s+(p.val||0),0),iap=(iav/TOT*100).toFixed(1);const ue=document.getElementById('ausd');if(ue){ue.textContent='~'+up+'%';ue.className='kv '+(parseFloat(up)>65?'r':'');}const ie=document.getElementById('aia');if(ie){ie.textContent='~'+iap+'%';ie.className='kv '+(parseFloat(iap)>45?'r':'am');}se('rusd',parseFloat(up)<=65?'✓ OK — '+up+'%':'⚠ '+up+'% > 65%');const re=document.getElementById('rusd');if(re)re.className='rv '+(parseFloat(up)<=65?'g':'r');se('ria',parseFloat(iap)<=45?'✓ OK — '+iap+'%':'⚠ '+iap+'% > 45%');const ri=document.getElementById('ria');if(ri)ri.className='rv '+(parseFloat(iap)<=45?'g':'am');const tiers={T1:0,T2:0,T3:0,T4:0};POS.forEach(p=>{if(tiers[p.tier]!==undefined)tiers[p.tier]+=(p.val||0);});sh('tbd',Object.entries(tiers).map(([t,v])=>`<div class="row"><span class="rl"><span class="tier ${t.toLowerCase()}">${t}</span></span><span class="rv">${fc(v)} · ${(v/TOT*100).toFixed(1)}%</span></div>`).join(''));sh('t5bd',[...POS].sort((a,b)=>(b.val||0)-(a.val||0)).slice(0,5).map(p=>`<div class="row"><span class="rl">${p.t} <span style="font-size:10px;color:var(--text3)">${p.c}</span></span><span class="rv">${fc(p.val||0)} · ${((p.val||0)/TOT*100).toFixed(1)}%</span></div>`).join(''));}
+function rFI(){const p=TOT/2100000*100;se('fip',p.toFixed(1)+'%');se('fir',fc(TOT));se('fio',fc(TOT));document.getElementById('firb').style.width=Math.min(p,100)+'%';document.getElementById('fiob').style.width=Math.min(p,100)+'%';uFI();}
+function uFI(){const rate=parseFloat(document.getElementById('fir2').value)/100,contrib=parseFloat(document.getElementById('fic').value);se('firv',parseFloat(document.getElementById('fir2').value).toFixed(1));se('ficv',contrib.toLocaleString('fr-CA'));let v=TOT,y=0;while(v<2100000&&y<50){v=v*(1+rate)+contrib*12;y++;}const yr=2026+y;se('fisyr',y<50?yr.toString():'50+');se('fiyr','~'+yr);let v55=TOT;for(let i=0;i<21;i++)v55=v55*(1+rate)+contrib*12;se('fis55',fc(v55));function cy(r){let vv=TOT,yy=0;while(vv<2100000&&yy<50){vv=vv*(1+r/100)+5000*12;yy++;}return yy;}se('firs','~'+(2026+cy(8))+' · '+cy(8)+' ans à 8%/an');se('fios','~'+(2026+cy(10))+' · '+cy(10)+' ans à 10%/an');}
+function rMaison(){const rv=POS.filter(p=>p.c==='REER').reduce((s,p)=>s+(p.val||p.cout),0),fv=POS.filter(p=>p.c==='FHSA').reduce((s,p)=>s+(p.val||p.cout),0);se('mr',fc(rv));se('mf',fc(fv));se('mt',fc(rv+fv));se('lcm',fc(rv+fv));const rp=(rv/60000*100).toFixed(1),fp2=(fv/40000*100).toFixed(1),tp=((rv+fv)/100000*100).toFixed(1);document.getElementById('mrb').style.width=Math.min(rp,100)+'%';document.getElementById('mfb').style.width=Math.min(fp2,100)+'%';document.getElementById('mtb').style.width=Math.min(tp,100)+'%';se('mrl',fc(rv)+' / $60K · '+rp+'%');se('mfl',fc(fv)+' / $40K · '+fp2+'%');se('mtl',fc(rv+fv)+' / $100K · '+tp+'%');}
+function uMort(){const price=parseFloat(document.getElementById('mp').value),rate=parseFloat(document.getElementById('mrt').value)/100/12,n=300,pr=price-100000,pmt=rate>0?pr*(rate*Math.pow(1+rate,n))/(Math.pow(1+rate,n)-1):pr/n;se('mpv',(price/1000).toFixed(0)+'K');se('mrtv',parseFloat(document.getElementById('mrt').value).toFixed(2));se('mpmt',fc(pmt)+'/mois');se('mint',fc(pmt*n-pr));}
+function uCrash(){const pct=parseInt(document.getElementById('crp').value);se('crpv',pct);const after=TOT*(1-pct/100),loss=TOT-after;let v=after,y=0;while(v<TOT&&y<20){v=v*1.08+5000*12;y++;}se('cra',fc(after));se('crl','-'+fc(loss));se('crr',y<20?y+' ans':'20+ ans');}
+function tCls(s){const m={'À voir':'tv','En cours':'tc','Vu':'tu','À lire':'tl','Terminé':'tt','À essayer':'te','Visité':'tvi','Visité ✓':'tvi','Favori ⭐':'tf','Favori':'tf','Bucket list':'tb2','Planifié':'tp'};return m[s]||'tneut';}
+function strs(r){return r?'★'.repeat(r)+'☆'.repeat(5-r):'';}
+let _ff2='tous',_lf='tous',_rf='tous',_vf='tous';
+function rFilms(){const data=S.g('films',[]),f=_ff2==='tous'?data:data.filter(x=>x.status===_ff2);const g=document.getElementById('fgrid');if(!g)return;if(!f.length){g.innerHTML='<div class="empty"><div class="ei">FILMS</div><div class="em">Ajoute ton premier film ou série</div></div>';return;}g.innerHTML=f.map(x=>`<div class="cc"><div class="cct">${x.title}</div><div class="ccm">${x.year||''}${x.year?' · ':''}${x.genre||''}</div><div class="ccf"><span class="tag ${tCls(x.status)}">${x.status}</span>${x.rating?`<span class="stars">${strs(x.rating)}</span>`:`<button class="bg" onclick="oRating('films',${data.indexOf(x)})">noter</button>`}</div><button class="bdel" onclick="dItem('films',${data.indexOf(x)},rFilms)">✕</button></div>`).join('');}
+function aFilm(){const t=document.getElementById('fi').value.trim();if(!t)return;const d=S.g('films',[]);d.unshift({title:t,year:document.getElementById('fy').value.trim(),status:document.getElementById('fs').value,rating:0});S.s('films',d);document.getElementById('fi').value='';document.getElementById('fy').value='';rFilms();rToday();}
+function fFilm(f,el){_ff2=f;document.querySelectorAll('#fff .fb').forEach(b=>b.classList.remove('on'));if(el)el.classList.add('on');rFilms();}
+function rLivres(){const data=S.g('livres',[]),f=_lf==='tous'?data:data.filter(x=>x.status===_lf);const g=document.getElementById('lgrid');if(!g)return;if(!f.length){g.innerHTML='<div class="empty"><div class="ei">LIVRES</div><div class="em">Ajoute ton premier livre</div></div>';return;}g.innerHTML=f.map(x=>`<div class="cc"><div class="cct">${x.title}</div><div class="ccm">${x.author||''}</div><div class="ccf"><span class="tag ${tCls(x.status)}">${x.status}</span></div><button class="bdel" onclick="dItem('livres',${data.indexOf(x)},rLivres)">✕</button></div>`).join('');}
+function aLivre(){const t=document.getElementById('li2').value.trim();if(!t)return;const d=S.g('livres',[]);d.unshift({title:t,author:document.getElementById('lau').value.trim(),status:document.getElementById('lst').value});S.s('livres',d);document.getElementById('li2').value='';document.getElementById('lau').value='';rLivres();rToday();}
+function fLivre(f,el){_lf=f;document.querySelectorAll('#lff .fb').forEach(b=>b.classList.remove('on'));if(el)el.classList.add('on');rLivres();}
+function rRestos(){const data=S.g('restaurants',[]),f=_rf==='tous'?data:data.filter(x=>x.status===_rf||x.status===_rf+' ⭐'||x.status.startsWith(_rf));const g=document.getElementById('rgrid');if(!g)return;if(!f.length){g.innerHTML='<div class="empty"><div class="ei">RESTOS</div><div class="em">Ajoute ton premier restaurant</div></div>';return;}g.innerHTML=f.map(x=>`<div class="cc"><div class="cct">${x.name}</div><div class="ccm">${x.city||''}${x.city&&x.cuisine?' · ':''}${x.cuisine||''}</div><div class="ccf"><span class="tag ${tCls(x.status)}">${x.status}</span>${x.rating?`<span class="stars">${strs(x.rating)}</span>`:`<button class="bg" onclick="oRating('restaurants',${data.indexOf(x)})">noter</button>`}</div><button class="bdel" onclick="dItem('restaurants',${data.indexOf(x)},rRestos)">✕</button></div>`).join('');}
+function aResto(){const t=document.getElementById('rn').value.trim();if(!t)return;const d=S.g('restaurants',[]);d.unshift({name:t,city:document.getElementById('rci').value.trim(),cuisine:document.getElementById('rcu').value.trim(),status:document.getElementById('rst').value,rating:0});S.s('restaurants',d);document.getElementById('rn').value='';document.getElementById('rci').value='';document.getElementById('rcu').value='';rRestos();rToday();}
+function fResto(f,el){_rf=f;document.querySelectorAll('#rff .fb').forEach(b=>b.classList.remove('on'));if(el)el.classList.add('on');rRestos();}
+function rVoyages(){const data=S.g('voyages',[]),f=_vf==='tous'?data:data.filter(x=>x.status===_vf||x.status===_vf+' ✓');const g=document.getElementById('vgrid');if(!g)return;if(!f.length){g.innerHTML='<div class="empty"><div class="ei">VOYAGES</div><div class="em">Ajoute ta première destination</div></div>';return;}g.innerHTML=f.map(x=>`<div class="cc"><div class="cct">${x.dest}</div><div class="ccm">${x.year||''}</div><div class="ccf"><span class="tag ${tCls(x.status)}">${x.status}</span></div><button class="bdel" onclick="dItem('voyages',${data.indexOf(x)},rVoyages)">✕</button></div>`).join('');}
+function aVoyage(){const t=document.getElementById('vd').value.trim();if(!t)return;const d=S.g('voyages',[]);d.unshift({dest:t,year:document.getElementById('vy').value.trim(),status:document.getElementById('vst').value});S.s('voyages',d);document.getElementById('vd').value='';document.getElementById('vy').value='';rVoyages();rToday();}
+function fVoyage(f,el){_vf=f;document.querySelectorAll('#vff .fb').forEach(b=>b.classList.remove('on'));if(el)el.classList.add('on');rVoyages();}
+function dItem(k,i,fn){const d=S.g(k,[]);d.splice(i,1);S.s(k,d);fn();rToday();}
+let _rc={key:'',idx:0,val:0};
+function oRating(key,idx){_rc={key,idx,val:0};document.getElementById('stp').innerHTML=[1,2,3,4,5].map(n=>`<button class="stb" id="s${n}" onclick="setStar(${n})">☆</button>`).join('');document.getElementById('mrt2').classList.add('on');}
+function setStar(n){_rc.val=n;[1,2,3,4,5].forEach(i=>document.getElementById('s'+i).textContent=i<=n?'★':'☆');}
+function saveRating(){if(!_rc.val){cM('mrt2');return;}const d=S.g(_rc.key,[]);if(d[_rc.idx])d[_rc.idx].rating=_rc.val;S.s(_rc.key,d);cM('mrt2');if(_rc.key==='films')rFilms();if(_rc.key==='restaurants')rRestos();}
+const DP=[{label:'🏋️ Bench press',key:'bench',val:'205 lbs'},{label:'🦵 Squat',key:'squat',val:'275 lbs'},{label:'⬆️ Deadlift',key:'dead',val:'315 lbs'},{label:'🏃 5km',key:'run5',val:'24:30'},{label:'💪 Overhead press',key:'ohp',val:'135 lbs'},{label:'⚖️ Poids',key:'poids',val:'175 lbs'},{label:'🥋 BJJ',key:'bjj',val:'Q2 2026'}];
+function rPRs(){const d=S.g('prs',DP);sh('prlist',d.map(p=>`<div class="pr-row"><div class="prn">${p.label}</div><div class="prv">${p.val}</div></div>`).join(''));const pw=d.find(p=>p.key==='poids');if(pw){se('kpds',pw.val);se('lcp',pw.val);}const bj=d.find(p=>p.key==='bjj');if(bj)se('kbjj',bj.val);}
+function openPRM(){const d=S.g('prs',DP);sh('prfields',d.map(p=>`<div class="mf"><div class="ml">${p.label}</div><input class="inp" id="prf${p.key}" value="${p.val}"></div>`).join(''));document.getElementById('mpr').classList.add('on');}
+function savePR(){const d=S.g('prs',DP);d.forEach(p=>{const e=document.getElementById('prf'+p.key);if(e&&e.value.trim())p.val=e.value.trim();});S.s('prs',d);cM('mpr');rPRs();}
+const DN={cal:'3,200 kcal',prot:'190g / jour',gluc:'380g / jour',lip:'90g / jour',eau:'3.5L / jour'};
+function rNut(){const d=S.g('nut',DN);se('ndcal',d.cal);se('ndprot',d.prot);se('ndgluc',d.gluc);se('ndlip',d.lip);se('ndeau',d.eau);se('ncal',d.cal);se('nprot',d.prot);}
+function openNM(){const d=S.g('nut',DN);['cal','prot','gluc','lip','eau'].forEach(k=>document.getElementById('mn'+k).value=d[k]);document.getElementById('mnt').classList.add('on');}
+function saveNut(){const d={};['cal','prot','gluc','lip','eau'].forEach(k=>d[k]=document.getElementById('mn'+k).value||DN[k]);S.s('nut',d);cM('mnt');rNut();}
+function rVerdicts(){const data=S.g('verdicts',[]);const el=document.getElementById('vlist');if(!el)return;if(!data.length){el.innerHTML='<div class="empty"><div class="ei">VERDICTS</div><div class="em">Documente ta première décision</div></div>';return;}const sm={pending:'tpend',good:'tgood',bad:'tbad',neutral:'tneut'};const lm={pending:'⏳ J+30 : ',good:'✓ Bon move',bad:'✗ À revoir',neutral:'— Neutre'};el.innerHTML=data.map((v,i)=>`<div class="vc"><div class="vt">${v.title}</div><div class="vd">${v.date}${v.due?' · J+30 : '+v.due:''}</div>${v.note?`<div class="vn">${v.note}</div>`:''}<div class="vf"><span class="tag ${sm[v.status]||'tpend'}">${v.status==='pending'?(lm.pending+(v.due||'')):(lm[v.status]||'⏳')}</span>${v.status==='pending'?`<select class="inp" style="width:150px;padding:5px 10px;font-size:11px;margin-left:8px" onchange="uVerdict(${i},this.value)"><option value="pending">⏳ En attente</option><option value="good">✓ Bon move</option><option value="bad">✗ À revoir</option><option value="neutral">— Neutre</option></select>`:''}<button class="bdel" style="opacity:1;margin-left:auto" onclick="dItem('verdicts',${i},rVerdicts)">✕</button></div></div>`).join('');}
+function aVerdict(){const t=document.getElementById('vdt').value.trim();if(!t)return;const today=new Date().toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'});const d30=new Date();d30.setDate(d30.getDate()+30);const data=S.g('verdicts',[]);data.unshift({title:t,note:document.getElementById('vdn').value.trim(),date:today,due:d30.toLocaleDateString('fr-CA',{day:'numeric',month:'long'}),status:document.getElementById('vds').value});S.s('verdicts',data);document.getElementById('vdt').value='';document.getElementById('vdn').value='';rVerdicts();}
+function uVerdict(i,val){const d=S.g('verdicts',[]);if(d[i])d[i].status=val;S.s('verdicts',d);rVerdicts();}
+function cM(id){document.getElementById(id).classList.remove('on');}
+document.querySelectorAll('.mo').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('on');}));
+function nav(pg,el){document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));const p=document.getElementById('page-'+pg);if(p)p.classList.add('on');if(el)el.classList.add('on');else document.querySelectorAll('.ni').forEach(n=>{if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+pg+"'"))n.classList.add('on');});const rs={films:rFilms,livres:rLivres,restaurants:rRestos,voyages:rVoyages,verdicts:rVerdicts,sante:rPRs,nutrition:rNut};if(rs[pg])rs[pg]();}
+function updateClock(){se('clk',new Date().toLocaleString('fr-CA',{timeZone:'America/Toronto',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})+' HNE');}
 setInterval(updateClock,1000);updateClock();
-function init(){compute();renderAll();fetchData();setInterval(fetchData,60000);}
-if(sessionStorage.getItem('heyos_auth')==='1')init();
+function loadJSON(input){const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(d.positions)POS=d.positions.map(p=>({t:p.ticker,n:p.nom||p.ticker,tier:p.tier,c:p.compte,q:parseFloat(p.qty),avg:parseFloat(p.prixMoy)||0,fx:p.dev||'CAD'}));if(d.usdcad)FX=d.usdcad;if(d.total_cad)TOT=d.total_cad;if(d.totalCAD)TOT=d.totalCAD;if(d.costBase)CST=d.costBase;compute();rAll();se('ttxt','JSON local · '+POS.length+' positions');}catch{alert('Erreur JSON');}};r.readAsText(f);}
+function init(){compute();rAll();rPRs();rNut();rVerdicts();fetchData();setInterval(fetchData,60000);}
+if(sessionStorage.getItem('h')==='1')init();
 </script>
 </body>
 </html>
