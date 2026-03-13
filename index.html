@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HeyOS</title>
+<title>HeyOS v14</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -171,6 +171,10 @@ tbody tr:hover td{background:var(--bg)}
 .stp{display:flex;gap:6px;margin-top:6px}
 .stb{font-size:26px;cursor:pointer;background:none;border:none;padding:0;transition:transform .1s;line-height:1}
 .stb:hover{transform:scale(1.2)}
+.ptab{padding:10px 18px;font-size:11px;font-weight:600;color:var(--text2);border-bottom:2px solid transparent;cursor:pointer;letter-spacing:.06em;white-space:nowrap;text-transform:uppercase;transition:all .12s}
+.ptab:hover{color:var(--text)}
+.ptab.on{color:var(--text);border-bottom:2px solid var(--text)}
+
 </style>
 </head>
 <body>
@@ -187,7 +191,7 @@ tbody tr:hover td{background:var(--bg)}
 </div>
 <div id="app">
   <nav class="sidebar">
-    <div class="slogo"><div class="sm">HEY<span>OS</span></div><div class="ss">v13 · Système de vie</div></div>
+    <div class="slogo"><div class="sm">HEY<span>OS</span></div><div class="ss">v14 · Mind and Body OS</div></div>
     <div class="ns">Vie</div>
     <div class="ni on" onclick="nav('today',this)"><span class="nd g"></span>Aujourd'hui</div>
     <div class="ns">Finances</div>
@@ -222,24 +226,76 @@ tbody tr:hover td{background:var(--bg)}
         <button class="tb" onclick="fetchData()">↺</button>
       </div>
     </div>
+    <div id="pillartabs" style="background:var(--card);border-bottom:0.5px solid var(--border);display:flex;padding:0 20px;gap:0;flex-shrink:0;overflow-x:auto">
+      <div class="ptab on" onclick="navPillar('finances',this)">💼 Finances</div>
+      <div class="ptab" onclick="navPillar('corps',this)">🏋️ Corps</div>
+      <div class="ptab" onclick="navPillar('culture',this)">🎬 Culture</div>
+      <div class="ptab" onclick="navPillar('vie',this)">🎯 Projet de vie</div>
+      <div class="ptab" onclick="navPillar('outils',this)">⚙️ Outils</div>
+    </div>
     <div class="content">
 
       <div class="page on" id="page-today">
-        <div class="ey">Vue d'ensemble</div>
+        <div class="ey">Mind and Body OS — Vue d'ensemble</div>
         <div class="hl">AUJOURD'HUI <small id="tdate"></small></div>
         <div class="krow">
           <div class="kpi"><div class="kl">Portfolio total</div><div class="kv g" id="tt">—</div><div class="ks" id="tg">—</div></div>
           <div class="kpi"><div class="kl">Aujourd'hui</div><div class="kv" id="td">—</div><div class="ks" id="tm">—</div></div>
-          <div class="kpi"><div class="kl">Maison 2030</div><div class="kv am">17.7%</div><div class="ks">$17,669 / $100K</div></div>
+          <div class="kpi"><div class="kl">Maison 2030</div><div class="kv am">17.5%</div><div class="ks">$17,544 / $100K</div></div>
           <div class="kpi"><div class="kl">Liberté FI</div><div class="kv b" id="tfi">4.1%</div><div class="ks" id="tfis">$85K / $2.1M</div></div>
         </div>
-        <div class="lgrid">
-          <div class="lc" onclick="nav('portfolio',null)"><div class="li2">💼</div><div class="lt">Portfolio</div><div class="ln g" id="lct">—</div><div class="ld" id="lcs">39 positions · TFSA · FHSA · REER</div></div>
-          <div class="lc" onclick="nav('maison',null)"><div class="li2">🏠</div><div class="lt">Maison 2030</div><div class="ln am" id="lcm">$17,669</div><div class="ld">RAP + FHSA · 17.7% atteint</div></div>
-          <div class="lc" onclick="nav('fi',null)"><div class="li2">📈</div><div class="lt">Liberté financière</div><div class="ln b">~2040</div><div class="ld">$2.1M · 8%/an · 4.1% atteint</div></div>
-          <div class="lc" onclick="nav('sante',null)"><div class="li2">🏋️</div><div class="lt">Corps & Performance</div><div class="ln" id="lcp">175 lbs</div><div class="ld">PPL · BJJ Q2 2026 · Obj. 190 lbs</div></div>
-          <div class="lc" onclick="nav('films',null)"><div class="li2">🎬</div><div class="lt">Culture</div><div class="ln p" id="lcc">—</div><div class="ld">Films · Livres · Restaurants · Voyages</div></div>
-          <div class="lc" onclick="nav('actions',null)"><div class="li2">🚨</div><div class="lt">Actions requises</div><div class="ln r">3</div><div class="ld">EQ Bank · Bénéficiaires · $12K</div></div>
+        <div class="g3">
+          <div class="card" style="cursor:pointer" onclick="nav('portfolio',null)">
+            <div class="cl" style="display:flex;align-items:center;justify-content:space-between">💼 Finances <span style="font-size:9px;padding:2px 8px;border-radius:10px;background:var(--green-l);color:var(--green);font-weight:700;letter-spacing:.05em">Actif ✓</span></div>
+            <div class="row"><span class="rl">TFSA</span><span class="rv g" id="lct2">—</span></div>
+            <div class="row"><span class="rl">FHSA</span><span class="rv b" id="lcf2">—</span></div>
+            <div class="row"><span class="rl">REER</span><span class="rv" id="lcr2">—</span></div>
+            <div class="row"><span class="rl">USD expo</span><span class="rv g" id="lcusd2">44.7% ✓</span></div>
+          </div>
+          <div class="card" style="cursor:pointer" onclick="nav('sante',null)">
+            <div class="cl" style="display:flex;align-items:center;justify-content:space-between">🏋️ Corps <span style="font-size:9px;padding:2px 8px;border-radius:10px;background:var(--amber-l);color:var(--amber);font-weight:700;letter-spacing:.05em">En cours</span></div>
+            <div class="row"><span class="rl">Bench</span><span class="rv">205 → <span style="color:var(--text3)">225 lbs</span></span></div>
+            <div class="row"><span class="rl">Squat</span><span class="rv">275 → <span style="color:var(--text3)">315 lbs</span></span></div>
+            <div class="row"><span class="rl">Deadlift</span><span class="rv">315 → <span style="color:var(--text3)">365 lbs</span></span></div>
+            <div class="row"><span class="rl">5km</span><span class="rv">24:30 → <span style="color:var(--text3)">22:00</span></span></div>
+          </div>
+          <div class="card" style="cursor:pointer" onclick="nav('films',null)">
+            <div class="cl" style="display:flex;align-items:center;justify-content:space-between">🎬 Culture <span style="font-size:9px;padding:2px 8px;border-radius:10px;background:var(--amber-l);color:var(--amber);font-weight:700;letter-spacing:.05em">À nourrir</span></div>
+            <div class="row"><span class="rl">Films / Séries</span><span class="rv" id="lcfilm">—</span></div>
+            <div class="row"><span class="rl">Livres</span><span class="rv" id="lclivre">—</span></div>
+            <div class="row"><span class="rl">Restaurants</span><span class="rv" id="lcrest">—</span></div>
+            <div class="row"><span class="rl">Gaming</span><span class="rv am">Actif · S32</span></div>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="card">
+            <div class="cl">🎯 Projet de vie · Progression</div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+              <div>
+                <div class="prow"><span>Maison 2030 · RAP+FHSA</span><span id="mov-pct">17.5%</span></div>
+                <div class="pbar"><div class="pf" style="background:var(--amber);width:17.5%"></div></div>
+              </div>
+              <div>
+                <div class="prow"><span>FI $2.1M · 2043</span><span id="fi-pct-ov">—</span></div>
+                <div class="pbar"><div class="pf" style="background:var(--blue)" id="fi-bar-ov"></div></div>
+              </div>
+              <div>
+                <div class="prow"><span>Corps · 190 lbs lean</span><span>~89%</span></div>
+                <div class="pbar"><div class="pf" style="background:#7c3aed;width:89%"></div></div>
+              </div>
+              <div>
+                <div class="prow"><span>BJJ · Retour Q2 2026</span><span style="color:var(--amber)">Planifié</span></div>
+                <div class="pbar"><div class="pf" style="background:#7c3aed;width:5%"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="cursor:pointer" onclick="nav('actions',null)">
+            <div class="cl" style="display:flex;align-items:center;justify-content:space-between">🚨 Actions requises <span style="font-size:9px;padding:2px 8px;border-radius:10px;background:var(--red-l);color:var(--red);font-weight:700">2 critiques</span></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border)"><div class="adot r" style="margin-top:4px"></div><div><div style="font-size:12px;font-weight:600;margin-bottom:2px">EQ Bank HISA — Non ouvert</div><div style="font-size:11px;color:var(--text3)">$1,000/mois qui dort · eqbank.ca · 15 min</div></div></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border)"><div class="adot r" style="margin-top:4px"></div><div><div style="font-size:12px;font-weight:600;margin-bottom:2px">Bénéficiaires Questrade</div><div style="font-size:11px;color:var(--text3)">$85K sans bénéficiaires · 5 min</div></div></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border)"><div class="adot am" style="margin-top:4px"></div><div><div style="font-size:12px;font-weight:600;margin-bottom:2px">Analyse $12K rétroactivité</div><div style="font-size:11px;color:var(--text3)">Room FHSA ~$9,700 · Priorité S33</div></div></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:9px 0"><div class="adot b" style="margin-top:4px"></div><div><div style="font-size:12px;font-weight:600;margin-bottom:2px">BdC décision taux</div><div style="font-size:11px;color:var(--text3)">18 mars · Impact hypothèque 2030</div></div></div>
+          </div>
         </div>
       </div>
 
@@ -311,11 +367,11 @@ tbody tr:hover td{background:var(--bg)}
           <div class="kpi"><div class="kl">Surplus</div><div class="kv g">$1,768</div><div class="ks">/mois</div></div>
         </div>
         <div class="g2">
-          <div class="card"><div class="cl">Plan $5K/mois</div>
-            <div class="row"><span class="rl">REER → SCHD</span><span class="rv g">$2,000 ✅</span></div>
+          <div class="card"><div class="cl">Plan $4K/mois · S32</div>
+            <div class="row"><span class="rl">REER → SCHD</span><span class="rv g">$1,500 ✅</span></div>
             <div class="row"><span class="rl">FHSA → VFV.TO</span><span class="rv g">$1,000 ✅</span></div>
             <div class="row"><span class="rl">TFSA → AVGO</span><span class="rv g">$500 ✅</span></div>
-            <div class="row"><span class="rl">EQ Bank HISA</span><span class="rv w">$1,500 🔴</span></div>
+            <div class="row"><span class="rl">EQ Bank HISA</span><span class="rv w">$1,000 🔴</span></div>
           </div>
           <div class="card"><div class="cl">Taux d'épargne</div>
             <div class="row"><span class="rl">Épargne / Revenu</span><span class="rv g">85.1%</span></div>
@@ -538,7 +594,15 @@ async function fetchData(){
 function applyLive(){POS.forEach(p=>{const l=LC[p.t+'_'+p.c]||LC[p.t];if(l){p.live=l.price;p.val=p.fx==='CAD'?p.q*l.price:p.q*l.price*FX;p.cout=p.fx==='CAD'?p.q*p.avg:p.q*p.avg*FX;p.gain=p.val-p.cout;p.pct=p.gain/p.cout*100;const pv=p.fx==='CAD'?p.q*l.prev:p.q*l.prev*FX;p.dayPL=p.val-pv;}});const lt=POS.reduce((s,p)=>s+(p.val||0),0);if(lt>0)TOT=lt;}
 function rAll(){se('fx-lbl','USD/CAD '+FX.toFixed(4));rToday();rPortfolio();rPositions();rAnalyse();rFI();rMaison();uMort();uCrash();}
 function isMktOpen(){const n=new Date(),e=new Date(n.toLocaleString('en-US',{timeZone:'America/Toronto'})),d=e.getDay(),t=e.getHours()*60+e.getMinutes();return d>0&&d<6&&t>=570&&t<960;}
-function rToday(){const op=TOT-CST,opP=op/CST*100,td=POS.reduce((s,p)=>s+(p.dayPL||0),0);se('tt',fc(TOT));se('tg',(op>=0?'+':'')+fc(op)+' ('+fp(opP)+')');if(isMktOpen()){se('td',(td>=0?'+':'')+fc(td));const e=document.getElementById('td');if(e)e.className='kv '+gr(td);se('tm','Variation du jour');}else{se('td','Fermé');const e=document.getElementById('td');if(e)e.className='kv';se('tm','Rouvre lun 9h30 HNE');}se('tfi',(TOT/2100000*100).toFixed(1)+'%');se('tfis',fc(TOT)+' / $2.1M');se('lct',fc(TOT));se('lcs',POS.length+' positions · '+fp(opP));se('tdate',new Date().toLocaleDateString('fr-CA',{timeZone:'America/Toronto',weekday:'long',day:'numeric',month:'long'}));const films=S.g('films',[]),livres=S.g('livres',[]),restos=S.g('restaurants',[]),voyages=S.g('voyages',[]);se('lcc',(films.length+livres.length+restos.length+voyages.length)||'—');}
+function rToday(){const op=TOT-CST,opP=op/CST*100,td=POS.reduce((s,p)=>s+(p.dayPL||0),0);se('tt',fc(TOT));se('tg',(op>=0?'+':'')+fc(op)+' ('+fp(opP)+')');if(isMktOpen()){se('td',(td>=0?'+':'')+fc(td));const e=document.getElementById('td');if(e)e.className='kv '+gr(td);se('tm','Variation du jour');}else{se('td','Fermé');const e=document.getElementById('td');if(e)e.className='kv';se('tm','Rouvre lun 9h30 HNE');}se('tfi',(TOT/2100000*100).toFixed(1)+'%');se('tfis',fc(TOT)+' / $2.1M');
+  const ba={TFSA:0,FHSA:0,REER:0};POS.forEach(p=>{if(ba[p.c]!==undefined)ba[p.c]+=(p.val||p.cout);});
+  se('lct2',fc(ba.TFSA));se('lcf2',fc(ba.FHSA));se('lcr2',fc(ba.REER));
+  const uv2=POS.filter(p=>p.fx==='USD').reduce((s,p)=>s+(p.val||p.cout),0),up2=(uv2/TOT*100).toFixed(1);se('lcusd2','~'+up2+'% ✓');
+  const fiPct=(TOT/2100000*100);se('fi-pct-ov',fiPct.toFixed(1)+'%');const fb=document.getElementById('fi-bar-ov');if(fb)fb.style.width=Math.min(fiPct,100)+'%';
+  se('tdate',new Date().toLocaleDateString('fr-CA',{timeZone:'America/Toronto',weekday:'long',day:'numeric',month:'long'}));
+  const films=S.g('films',[]),livres=S.g('livres',[]),restos=S.g('restaurants',[]),voyages=S.g('voyages',[]);
+  se('lcfilm',films.length||'—');se('lclivre',livres.length||'—');se('lcrest',restos.length||'—');
+}
 function rPortfolio(){const op=TOT-CST;se('pft',fc(TOT));se('pfc',fc(CST));const ge=document.getElementById('pfg');if(ge){ge.textContent=(op>=0?'+':'')+fc(op);ge.className='kv '+gr(op);}const pe=document.getElementById('pfp');if(pe){pe.textContent=fp(op/CST*100);pe.className='kv '+gr(op);}const ba={TFSA:0,FHSA:0,REER:0};POS.forEach(p=>{if(ba[p.c]!==undefined)ba[p.c]+=(p.val||p.cout);});se('at',fc(ba.TFSA));se('af',fc(ba.FHSA));se('ar',fc(ba.REER));const uv=POS.filter(p=>p.fx==='USD').reduce((s,p)=>s+(p.val||p.cout),0),up=(uv/TOT*100).toFixed(0);se('eu','~'+up+'%');se('ec','~'+(100-parseInt(up))+'%');sh('tt1',[...POS].filter(p=>p.tier==='T1').sort((a,b)=>(b.val||0)-(a.val||0)).slice(0,6).map(p=>`<tr><td><strong>${p.t}</strong></td><td>${p.c}</td><td>${fc(p.val||0)}</td><td class="${gr(p.gain||0)}">${(p.gain||0)>=0?'+':'-'}${fc(Math.abs(p.gain||0))}</td><td class="${gr(p.pct||0)}">${fp(p.pct||0)}</td></tr>`).join(''));}
 function rPositions(){const f=PF==='ALL'?POS:['T1','T2','T3','T4'].includes(PF)?POS.filter(p=>p.tier===PF):POS.filter(p=>p.c===PF);se('pcount','('+f.length+')');sh('tpos',f.map(p=>`<tr><td><strong>${p.t}</strong></td><td style="font-family:var(--body);color:var(--text2);font-size:11px">${p.n}</td><td style="font-size:10px;color:var(--text3)">${p.c}</td><td><span class="tier ${p.tier.toLowerCase()}">${p.tier}</span></td><td>${p.q.toFixed(2)}</td><td>$${p.avg.toFixed(2)}</td><td><strong>$${(p.live||p.avg).toFixed(2)}</strong></td><td>${fc(p.val||p.cout)}</td><td class="${gr(p.gain||0)}">${(p.gain||0)>=0?'+':'-'}${fc(Math.abs(p.gain||0))}</td><td class="${gr(p.pct||0)}">${fp(p.pct||0)}</td></tr>`).join(''));}
 function fp2(f,el){PF=f;document.querySelectorAll('.filters .fb').forEach(b=>b.classList.remove('on'));if(el)el.classList.add('on');rPositions();}
@@ -581,7 +645,30 @@ function aVerdict(){const t=document.getElementById('vdt').value.trim();if(!t)re
 function uVerdict(i,val){const d=S.g('verdicts',[]);if(d[i])d[i].status=val;S.s('verdicts',d);rVerdicts();}
 function cM(id){document.getElementById(id).classList.remove('on');}
 document.querySelectorAll('.mo').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('on');}));
-function nav(pg,el){document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));const p=document.getElementById('page-'+pg);if(p)p.classList.add('on');if(el)el.classList.add('on');else document.querySelectorAll('.ni').forEach(n=>{if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+pg+"'"))n.classList.add('on');});const rs={films:rFilms,livres:rLivres,restaurants:rRestos,voyages:rVoyages,verdicts:rVerdicts,sante:rPRs,nutrition:rNut};if(rs[pg])rs[pg]();}
+function navPillar(pillar,el){
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('on'));
+  if(el)el.classList.add('on');
+  const map={
+    finances:['today','portfolio','positions','analyse','budget','dividendes','fiscal','fi','maison'],
+    corps:['sante','nutrition'],
+    culture:['films','livres','restaurants','voyages'],
+    vie:['maison','fi'],
+    outils:['verdicts','crash','actions']
+  };
+  const pages=map[pillar]||['today'];
+  nav(pages[0],null);
+  const sidebar=document.querySelector('.sidebar');
+  if(sidebar){
+    const smap={finances:['today','portfolio','positions','analyse','budget','dividendes','fiscal','fi','maison'],corps:['sante','nutrition'],culture:['films','livres','restaurants','voyages'],vie:['maison','fi'],outils:['verdicts','crash','actions']};
+    document.querySelectorAll('.ni').forEach(n=>{
+      const oc=n.getAttribute('onclick')||'';
+      const pg=oc.match(/'([^']+)'/)?.[1];
+      if(pg){const inPillar=Object.values(smap).some(arr=>arr.includes(pg));n.style.display=inPillar?'':'flex';}
+    });
+  }
+  if(pillar==='finances'){document.querySelectorAll('.ni').forEach(n=>n.style.display='');}
+}
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));const p=document.getElementById('page-'+pg);if(p)p.classList.add('on');if(el)el.classList.add('on');else document.querySelectorAll('.ni').forEach(n=>{if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+pg+"'"))n.classList.add('on');});const rs={films:rFilms,livres:rLivres,restaurants:rRestos,voyages:rVoyages,verdicts:rVerdicts,sante:rPRs,nutrition:rNut};if(rs[pg])rs[pg]();}
 function updateClock(){se('clk',new Date().toLocaleString('fr-CA',{timeZone:'America/Toronto',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})+' HNE');}
 setInterval(updateClock,1000);updateClock();
 function loadJSON(input){const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(d.positions)POS=d.positions.map(p=>({t:p.ticker,n:p.nom||p.ticker,tier:p.tier,c:p.compte,q:parseFloat(p.qty),avg:parseFloat(p.prixMoy)||0,fx:p.dev||'CAD'}));if(d.usdcad)FX=d.usdcad;if(d.total_cad)TOT=d.total_cad;if(d.totalCAD)TOT=d.totalCAD;if(d.costBase)CST=d.costBase;compute();rAll();se('ttxt','JSON local · '+POS.length+' positions');}catch{alert('Erreur JSON');}};r.readAsText(f);}
