@@ -3,2174 +3,553 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HeyOS · Portfolio v11</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<title>HeyOS v12</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:       #0a0a0a;
-  --bg2:      #111111;
-  --bg3:      #181818;
-  --bg4:      #222222;
-  --border:   #2a2a2a;
-  --border2:  #333333;
-
-  --text:     #f0f0f0;
-  --text2:    #a0a0a0;
-  --text3:    #666666;
-
-  --green:    #00d26a;
-  --green-dim:#001f0f;
-  --green-mid:#00b05a;
-  --red:      #ff4d4d;
-  --red-dim:  #1a0000;
-  --amber:    #f59e0b;
-  --amber-dim:#1a1100;
-  --blue:     #3b82f6;
-  --blue-dim: #0a1628;
-  --violet:   #8b5cf6;
-  --violet-dim:#110a20;
-
-  --nav-w:    220px;
-  --hdr-h:    52px;
-  --r:        10px;
-  --r-sm:     6px;
-  --r-lg:     14px;
-
-  --font:    'Inter', system-ui, sans-serif;
-  --display: 'Syne', sans-serif;
-  --mono:    'IBM Plex Mono', monospace;
-
-  --shadow:  0 4px 24px rgba(0,0,0,.6);
-  --shadow-sm: 0 1px 8px rgba(0,0,0,.4);
-}
-
-*, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
-html { font-size:14px; }
-body { font-family:var(--font); background:var(--bg); color:var(--text); line-height:1.5; -webkit-font-smoothing:antialiased; }
-button { font-family:var(--font); cursor:pointer; border:none; background:none; }
-input { font-family:var(--font); }
-a { color:inherit; text-decoration:none; }
-::-webkit-scrollbar { width:4px; height:4px; }
-::-webkit-scrollbar-track { background:var(--bg2); }
-::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
-
-/* ── LOGIN ── */
-#login-screen {
-  position:fixed; inset:0; z-index:9999;
-  background:var(--bg);
-  display:flex; align-items:center; justify-content:center;
-}
-#login-screen::before {
-  content:'';
-  position:absolute; inset:0;
-  background:
-    radial-gradient(ellipse 60% 50% at 25% 60%, rgba(0,210,106,.07) 0%, transparent 65%),
-    radial-gradient(ellipse 40% 40% at 80% 25%, rgba(59,130,246,.05) 0%, transparent 60%);
-  pointer-events:none;
-}
-.login-box {
-  position:relative; z-index:1;
-  width:420px;
-  background:var(--bg2);
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:2.5rem;
-  box-shadow:var(--shadow), 0 0 60px rgba(0,210,106,.04);
-}
-.login-logo {
-  font-family:var(--display); font-size:1.6rem; font-weight:800;
-  color:var(--text); letter-spacing:-.05em; margin-bottom:.25rem;
-}
-.login-logo span { color:var(--green); }
-.login-tag {
-  font-size:.65rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--text3); margin-bottom:2rem;
-}
-.login-stats {
-  display:flex; flex-direction:column; gap:.5rem; margin-bottom:2rem;
-  padding:1rem; background:var(--bg3); border-radius:var(--r); border:1px solid var(--border);
-}
-.login-stat { display:flex; justify-content:space-between; align-items:center; }
-.login-stat-lbl { font-size:.7rem; color:var(--text3); }
-.login-stat-val { font-family:var(--mono); font-size:.75rem; color:var(--text2); }
-.login-stat-val.g { color:var(--green); }
-.login-field { margin-bottom:1rem; }
-.login-field label { display:block; font-size:.65rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--text3); margin-bottom:.4rem; }
-.login-input {
-  width:100%; background:var(--bg3); border:1px solid var(--border);
-  border-radius:var(--r-sm); padding:.75rem 1rem;
-  color:var(--text); font-family:var(--mono); font-size:.9rem; letter-spacing:.12em;
-  outline:none; transition:border-color .2s, box-shadow .2s;
-}
-.login-input:focus { border-color:rgba(0,210,106,.5); box-shadow:0 0 0 3px rgba(0,210,106,.08); }
-.login-input::placeholder { color:var(--text3); font-size:.75rem; letter-spacing:.04em; }
-.login-btn {
-  width:100%; background:var(--green); color:#000; border-radius:var(--r-sm);
-  padding:.85rem; font-size:.85rem; font-weight:700; letter-spacing:.02em;
-  transition:background .2s, transform .1s;
-  margin-bottom:.75rem;
-}
-.login-btn:hover { background:var(--green-mid); }
-.login-btn:active { transform:scale(.98); }
-.login-error { font-size:.72rem; color:var(--red); text-align:center; opacity:0; transition:opacity .2s; }
-#login-screen.hidden { display:none; }
-
-/* ── TOPBAR ── */
-.topbar {
-  position:fixed; top:0; left:0; right:0; height:var(--hdr-h);
-  background:var(--bg2); border-bottom:1px solid var(--border);
-  display:flex; align-items:center; padding:0 1.25rem 0 calc(var(--nav-w) + 1.25rem);
-  gap:.75rem; z-index:100;
-}
-.topbar-search {
-  flex:1; max-width:340px;
-  display:flex; align-items:center; gap:.5rem;
-  background:var(--bg3); border:1px solid var(--border);
-  border-radius:7px; padding:.35rem .85rem;
-}
-.topbar-search svg { color:var(--text3); flex-shrink:0; }
-.topbar-search input {
-  border:none; background:transparent; font-size:.78rem;
-  color:var(--text2); width:100%; outline:none;
-}
-.topbar-search input::placeholder { color:var(--text3); }
-.topbar-right { margin-left:auto; display:flex; align-items:center; gap:.5rem; }
-.topbar-chip {
-  display:flex; align-items:center; gap:.35rem;
-  background:var(--bg3); border:1px solid var(--border);
-  border-radius:6px; padding:.3rem .65rem;
-  font-size:.68rem; color:var(--text3); font-family:var(--mono);
-}
-.pulse-dot { width:6px; height:6px; border-radius:50%; background:var(--green); animation:pulse 2.5s ease-in-out infinite; }
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(.7)} }
-.topbar-btn {
-  display:flex; align-items:center; gap:.35rem;
-  background:var(--bg3); border:1px solid var(--border);
-  border-radius:6px; padding:.3rem .65rem;
-  font-size:.72rem; font-weight:500; color:var(--text2);
-  transition:all .15s;
-}
-.topbar-btn:hover { border-color:var(--border2); color:var(--text); }
-.topbar-btn.primary { background:var(--green); color:#000; border-color:var(--green); font-weight:700; }
-.topbar-btn.primary:hover { background:var(--green-mid); }
-
-/* ── SIDEBAR ── */
-.sidebar {
-  position:fixed; top:var(--hdr-h); left:0; bottom:0; width:var(--nav-w);
-  background:var(--bg2); border-right:1px solid var(--border);
-  display:flex; flex-direction:column;
-  padding:1rem 0; overflow-y:auto; z-index:90;
-}
-.sidebar-logo {
-  padding:.25rem 1.25rem .85rem;
-  font-family:var(--display); font-size:1.05rem; font-weight:800;
-  color:var(--text); letter-spacing:-.05em;
-  border-bottom:1px solid var(--border); margin-bottom:.75rem;
-}
-.sidebar-logo span { color:var(--green); }
-.nav-label {
-  padding:.1rem 1.25rem .35rem;
-  font-size:.58rem; font-weight:700; letter-spacing:.12em;
-  text-transform:uppercase; color:var(--text3); margin-top:.5rem;
-}
-.nav-item {
-  display:flex; align-items:center; gap:.6rem;
-  padding:.5rem 1rem; margin:0 .4rem;
-  border-radius:var(--r-sm); cursor:pointer;
-  font-size:.8rem; font-weight:450; color:var(--text3);
-  transition:all .12s;
-}
-.nav-item:hover { background:var(--bg3); color:var(--text2); }
-.nav-item.active { background:var(--bg3); color:var(--text); border:1px solid var(--border); }
-.nav-item.active .nav-ico { opacity:1; color:var(--green); }
-.nav-ico { width:14px; height:14px; flex-shrink:0; opacity:.5; }
-.nav-badge {
-  margin-left:auto; background:var(--red); color:#fff;
-  font-size:.58rem; font-weight:700; padding:.1rem .35rem;
-  border-radius:20px; font-family:var(--mono);
-}
-.nav-ext {
-  display:flex; align-items:center; gap:.6rem; padding:.5rem 1rem; margin:0 .4rem;
-  border-radius:var(--r-sm); cursor:pointer; font-size:.78rem; color:var(--text3);
-  transition:all .12s; border-top:1px solid var(--border); margin-top:auto; padding-top:1rem;
-}
-.nav-ext:hover { color:var(--blue); }
-
-/* ── MAIN ── */
-.main {
-  margin-top:var(--hdr-h);
-  margin-left:var(--nav-w);
-  padding:1.5rem;
-  min-height:calc(100vh - var(--hdr-h));
-}
-.page { display:none; animation:fadeUp .2s ease; }
-.page.active { display:block; }
-@keyframes fadeUp { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
-
-/* ── PAGE HEADER ── */
-.page-hdr { margin-bottom:1.25rem; }
-.page-title { font-family:var(--display); font-size:1.3rem; font-weight:800; letter-spacing:-.04em; color:var(--text); }
-.page-title span { color:var(--text3); font-weight:400; }
-.page-sub { font-size:.72rem; color:var(--text3); margin-top:.15rem; }
-
-/* ── DATA BANNER ── */
-.data-banner {
-  display:flex; align-items:center; gap:.6rem;
-  background:var(--green-dim); border:1px solid rgba(0,210,106,.15);
-  border-radius:var(--r-sm); padding:.4rem .85rem;
-  font-size:.7rem; color:var(--green); font-weight:500;
-  margin-bottom:1.25rem; opacity:0; transition:opacity .3s;
-}
-.data-banner.show { opacity:1; }
-
-/* ── GRID ── */
-.g2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
-.g3 { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
-.g4 { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; }
-.g21 { display:grid; grid-template-columns:1fr .45fr; gap:1rem; align-items:start; }
-
-/* ── CARDS ── */
-.card {
-  background:var(--bg2); border:1px solid var(--border);
-  border-radius:var(--r-lg); box-shadow:var(--shadow-sm);
-}
-.card-hdr {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:.85rem 1.1rem; border-bottom:1px solid var(--border);
-}
-.card-title { font-size:.82rem; font-weight:600; color:var(--text); }
-.card-sub { font-size:.68rem; color:var(--text3); }
-.card-body { padding:.85rem 1.1rem; }
-
-/* ── KPI ── */
-.kpi {
-  background:var(--bg2); border:1px solid var(--border);
-  border-radius:var(--r-lg); padding:1rem 1.1rem;
-  border-top:2px solid var(--kpi-accent, var(--border));
-  box-shadow:var(--shadow-sm);
-}
-.kpi-label { font-size:.68rem; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:.35rem; font-weight:600; }
-.kpi-val { font-family:var(--display); font-size:1.35rem; font-weight:800; letter-spacing:-.04em; color:var(--text); }
-.kpi-val.g { color:var(--green); }
-.kpi-val.r { color:var(--red); }
-.kpi-val.b { color:var(--blue); }
-.kpi-val.a { color:var(--amber); }
-.kpi-val.v { color:var(--violet); }
-.kpi-sub { font-size:.65rem; color:var(--text3); margin-top:.2rem; }
-
-/* ── HERO CARD ── */
-.hero-card {
-  background:var(--bg2); border:1px solid var(--border);
-  border-radius:var(--r-lg); overflow:hidden; box-shadow:var(--shadow);
-  position:relative;
-}
-.hero-card::before {
-  content:'';
-  position:absolute; top:0; left:0; right:0; height:3px;
-  background:linear-gradient(90deg, var(--green), rgba(0,210,106,.2));
-}
-.hero-inner { padding:1.5rem 1.5rem .75rem; }
-.hero-label { font-size:.65rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--text3); margin-bottom:.4rem; }
-.hero-value { font-family:var(--display); font-size:3.2rem; font-weight:800; letter-spacing:-.06em; color:var(--text); line-height:1; margin-bottom:.4rem; }
-.hero-perf { font-size:.72rem; color:var(--text3); margin-bottom:1rem; }
-.hero-perf strong { color:var(--green); }
-.hero-row {
-  display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;
-  padding:.75rem 0; border-top:1px solid var(--border);
-}
-.hero-stat { display:flex; flex-direction:column; gap:.1rem; }
-.hero-stat-lbl { font-size:.6rem; color:var(--text3); text-transform:uppercase; letter-spacing:.08em; font-weight:600; }
-.hero-stat-val { font-family:var(--mono); font-size:.85rem; font-weight:600; color:var(--text); }
-.hero-stat-val.g { color:var(--green); }
-.hero-stat-val.r { color:var(--red); }
-.hero-actions { margin-left:auto; display:flex; gap:.5rem; }
-.hero-btn {
-  padding:.4rem .85rem; border-radius:var(--r-sm); font-size:.75rem; font-weight:600;
-  cursor:pointer; border:none; transition:all .15s;
-}
-.hero-btn.primary { background:var(--green); color:#000; }
-.hero-btn.primary:hover { background:var(--green-mid); }
-.hero-btn.ghost { background:var(--bg3); color:var(--text2); border:1px solid var(--border); }
-.hero-btn.ghost:hover { border-color:var(--border2); }
-.chart-filters { display:flex; gap:.25rem; padding:0 1.5rem .5rem; }
-.cf { padding:.25rem .6rem; border-radius:5px; font-size:.65rem; font-weight:600; color:var(--text3); cursor:pointer; transition:all .12s; }
-.cf:hover { color:var(--text2); background:var(--bg3); }
-.cf.active { background:var(--bg3); color:var(--green); border:1px solid rgba(0,210,106,.2); }
-.chart-wrap { height:130px; position:relative; }
-.chart-wrap canvas { width:100% !important; height:100% !important; }
-
-/* ── PILLS ── */
-.pill { display:inline-flex; align-items:center; padding:.16rem .5rem; border-radius:20px; font-size:.65rem; font-weight:600; font-family:var(--mono); white-space:nowrap; }
-.pill.g { background:var(--green-dim); color:var(--green); border:1px solid rgba(0,210,106,.15); }
-.pill.r { background:var(--red-dim); color:var(--red); border:1px solid rgba(255,77,77,.15); }
-.pill.a { background:var(--amber-dim); color:var(--amber); border:1px solid rgba(245,158,11,.15); }
-.pill.b { background:var(--blue-dim); color:var(--blue); border:1px solid rgba(59,130,246,.15); }
-.pill.dim { background:var(--bg3); color:var(--text3); border:1px solid var(--border); }
-
-.tier-badge { display:inline-flex; align-items:center; padding:.13rem .42rem; border-radius:4px; font-size:.62rem; font-weight:700; font-family:var(--mono); letter-spacing:.04em; }
-.tier-T1 { background:rgba(0,210,106,.12); color:var(--green); }
-.tier-T2 { background:rgba(59,130,246,.12); color:var(--blue); }
-.tier-T3 { background:rgba(245,158,11,.12); color:var(--amber); }
-.tier-T4 { background:var(--bg3); color:var(--text3); }
-
-/* ── TABLES ── */
-.tbl-wrap { background:var(--bg2); border:1px solid var(--border); border-radius:var(--r-lg); overflow:hidden; }
-.tbl-tabs { display:flex; border-bottom:1px solid var(--border); background:var(--bg3); padding:0 .5rem; }
-.tbl-tab { padding:.55rem .8rem; font-size:.73rem; font-weight:500; color:var(--text3); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; transition:all .12s; }
-.tbl-tab:hover { color:var(--text2); }
-.tbl-tab.active { color:var(--text); border-bottom-color:var(--green); font-weight:600; }
-.tbl-toolbar { display:flex; align-items:center; gap:.5rem; padding:.55rem .85rem; border-bottom:1px solid var(--border); flex-wrap:wrap; }
-.tbl-search { display:flex; align-items:center; gap:.4rem; background:var(--bg3); border:1px solid var(--border); border-radius:6px; padding:.3rem .65rem; flex:1; max-width:200px; }
-.tbl-search input { border:none; background:transparent; font-size:.73rem; color:var(--text2); outline:none; width:100%; }
-.tbl-search input::placeholder { color:var(--text3); }
-table { width:100%; border-collapse:collapse; font-size:.75rem; }
-thead th { padding:.55rem .85rem; text-align:left; background:var(--bg3); font-size:.62rem; font-weight:700; color:var(--text3); letter-spacing:.06em; text-transform:uppercase; border-bottom:1px solid var(--border); cursor:pointer; white-space:nowrap; user-select:none; transition:color .12s; }
-thead th:hover { color:var(--text2); }
-thead th.sorted { color:var(--green); }
-tbody tr { border-bottom:1px solid var(--border); transition:background .1s; cursor:pointer; }
-tbody tr:last-child { border-bottom:none; }
-tbody tr:hover { background:var(--bg3); }
-tbody td { padding:.6rem .85rem; color:var(--text2); vertical-align:middle; }
-td.num { font-family:var(--mono); font-size:.73rem; text-align:right; }
-.ticker-cell { font-family:var(--mono); font-weight:700; font-size:.78rem; color:var(--text); }
-.ticker-sub { display:block; font-family:var(--font); font-size:.65rem; font-weight:400; color:var(--text3); margin-top:.08rem; }
-.sort-arr { margin-left:.2rem; font-size:.55rem; color:var(--green); }
-.filter-btn { padding:.26rem .6rem; border-radius:5px; font-size:.68rem; font-weight:600; color:var(--text3); border:1px solid var(--border); background:var(--bg3); cursor:pointer; transition:all .12s; }
-.filter-btn:hover { border-color:var(--border2); color:var(--text2); }
-.filter-btn.active { background:var(--green); color:#000; border-color:var(--green); }
-.row-detail { background:var(--bg3) !important; }
-.detail-inner { display:flex; flex-wrap:wrap; gap:1.25rem; padding:.75rem 1rem; }
-.detail-cell { display:flex; flex-direction:column; gap:.12rem; }
-.detail-label { font-size:.6rem; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; }
-.detail-val { font-size:.78rem; font-weight:600; color:var(--text); font-family:var(--mono); }
-
-/* ── PROGRESS BAR ── */
-.bar-track { background:var(--bg3); border-radius:20px; height:4px; overflow:hidden; }
-.bar-fill { height:100%; border-radius:20px; transition:width .6s cubic-bezier(.4,0,.2,1); }
-.bar-g { background:var(--green); }
-.bar-b { background:var(--blue); }
-.bar-a { background:var(--amber); }
-.bar-r { background:var(--red); }
-.bar-dim { background:var(--text3); }
-.tier-strip { display:flex; height:5px; border-radius:20px; overflow:hidden; gap:1px; }
-.tier-seg { height:100%; }
-
-/* ── ACCT TABS ── */
-.acct-tabs { display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:1.1rem; }
-.acct-tab { display:flex; align-items:center; gap:.4rem; padding:.38rem .85rem; border-radius:7px; font-size:.73rem; font-weight:500; cursor:pointer; border:1px solid var(--border); background:var(--bg2); color:var(--text3); transition:all .12s; }
-.acct-tab:hover { border-color:var(--border2); color:var(--text2); }
-.acct-tab.active { background:var(--bg3); color:var(--text); border-color:var(--border2); }
-.acct-tab.warn { border-color:rgba(255,77,77,.3); color:var(--red); }
-.acct-tab.warn.active { background:rgba(255,77,77,.1); }
-.acct-dot { width:5px; height:5px; border-radius:50%; background:var(--red); animation:pulse 2s infinite; }
-.acct-tag { font-size:.6rem; opacity:.6; }
-
-/* ── CONTRIB ROW ── */
-.contrib-row { display:flex; align-items:center; justify-content:space-between; padding:.7rem .85rem; border-radius:var(--r-sm); border:1px solid var(--border); margin-bottom:.5rem; }
-.contrib-name { font-size:.78rem; font-weight:600; color:var(--text); }
-.contrib-sub { font-size:.65rem; color:var(--text3); margin-top:.1rem; }
-
-/* ── SIGNAL BOX ── */
-.signal-box { padding:.85rem; border-radius:var(--r-sm); }
-.signal-box.g { background:var(--green-dim); border-left:3px solid var(--green); }
-.signal-box.a { background:var(--amber-dim); border-left:3px solid var(--amber); }
-.signal-box.r { background:var(--red-dim); border-left:3px solid var(--red); }
-.signal-lbl { font-size:.58rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; margin-bottom:.3rem; }
-.signal-box.g .signal-lbl { color:var(--green); }
-.signal-box.a .signal-lbl { color:var(--amber); }
-.signal-box.r .signal-lbl { color:var(--red); }
-.signal-val { font-size:.78rem; color:var(--text2); line-height:1.6; }
-
-/* ── HOUSE CARD ── */
-.house-col { padding:1rem; border-radius:var(--r-sm); border:1px solid var(--border); }
-.house-col-lbl { font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; margin-bottom:.25rem; }
-.house-col-val { font-family:var(--display); font-size:1.35rem; font-weight:800; letter-spacing:-.04em; margin-bottom:.1rem; }
-.house-col-sub { font-size:.65rem; color:var(--text3); margin-bottom:.6rem; }
-
-/* ── ACTION ITEM ── */
-.action-item { display:flex; align-items:center; gap:.85rem; padding:.85rem 1.1rem; border-bottom:1px solid var(--border); }
-.action-item:last-child { border-bottom:none; }
-.action-icon { width:34px; height:34px; border-radius:9px; display:grid; place-items:center; font-size:.9rem; flex-shrink:0; }
-.action-title { font-size:.8rem; font-weight:600; color:var(--text); }
-.action-desc { font-size:.67rem; color:var(--text3); margin-top:.1rem; line-height:1.4; }
-.action-section-lbl { font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:.4rem 0; color:var(--text3); }
-
-/* ── RULE ITEM ── */
-.rule-item { display:flex; align-items:flex-start; gap:.75rem; padding:.7rem 0; border-bottom:1px solid var(--border); }
-.rule-item:last-child { border-bottom:none; }
-.rule-icon { width:30px; height:30px; border-radius:8px; display:grid; place-items:center; font-size:.82rem; flex-shrink:0; }
-.rule-title { font-size:.77rem; font-weight:600; color:var(--text); }
-.rule-sub { font-size:.65rem; color:var(--text3); margin-top:.1rem; }
-
-/* ── VERDICTS ── */
-.verdict-input { background:var(--bg3); border:1px solid var(--border); border-radius:5px; padding:.3rem .5rem; color:var(--text2); font-family:var(--mono); font-size:.73rem; width:80px; outline:none; }
-.verdict-input:focus { border-color:rgba(0,210,106,.4); }
-
-/* ── CRASH SLIDER ── */
-.crash-slider { width:100%; -webkit-appearance:none; height:4px; border-radius:2px; background:var(--bg4); outline:none; }
-.crash-slider::-webkit-slider-thumb { -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--red); cursor:pointer; box-shadow:0 0 8px rgba(255,77,77,.4); }
-
-/* ── EVENT ROW ── */
-.event-row { display:flex; align-items:center; gap:.85rem; padding:.6rem 0; border-bottom:1px solid var(--border); }
-.event-row:last-child { border-bottom:none; }
-.event-date { width:36px; height:36px; border-radius:8px; background:var(--bg3); display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0; border:1px solid var(--border); }
-.event-day { font-family:var(--display); font-size:.82rem; font-weight:800; color:var(--text); line-height:1; }
-.event-mon { font-size:.5rem; font-weight:700; color:var(--text3); letter-spacing:.05em; text-transform:uppercase; }
-.event-title { font-size:.77rem; font-weight:500; color:var(--text); }
-.event-sub { font-size:.67rem; color:var(--text3); margin-top:.08rem; }
-
-/* ── MODAL ── */
-.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.7); display:none; align-items:center; justify-content:center; z-index:1000; backdrop-filter:blur(4px); }
-.modal-overlay.show { display:flex; }
-.modal { background:var(--bg2); border:1px solid var(--border); border-radius:var(--r-lg); padding:2rem; width:460px; max-width:95vw; box-shadow:var(--shadow); }
-.modal h3 { font-family:var(--display); font-size:1.1rem; font-weight:700; margin-bottom:.5rem; }
-.modal p { font-size:.78rem; color:var(--text3); line-height:1.6; margin-bottom:1.25rem; }
-.drop-zone { border:2px dashed var(--border2); border-radius:var(--r); padding:2rem; text-align:center; cursor:pointer; transition:all .2s; margin-bottom:1.25rem; }
-.drop-zone:hover, .drop-zone.drag-over { border-color:var(--green); background:var(--green-dim); }
-.modal-actions { display:flex; gap:.5rem; justify-content:flex-end; }
-.modal-btn { padding:.5rem 1.1rem; border-radius:var(--r-sm); font-size:.78rem; font-weight:600; cursor:pointer; transition:all .15s; }
-.modal-btn.outline { background:transparent; border:1px solid var(--border); color:var(--text2); }
-.modal-btn.outline:hover { border-color:var(--border2); }
-
-/* ── BUDGET SPECIFIC ── */
-.budget-row { display:flex; align-items:center; justify-content:space-between; padding:.6rem 0; border-bottom:1px solid var(--border); }
-.budget-row:last-child { border-bottom:none; }
-.budget-label { font-size:.78rem; color:var(--text2); }
-.budget-val { font-family:var(--mono); font-size:.78rem; font-weight:600; color:var(--text); }
-
-/* ── DIVS SPECIFIC ── */
-.div-row { display:flex; align-items:center; justify-content:space-between; padding:.6rem 0; border-bottom:1px solid var(--border); }
-.div-row:last-child { border-bottom:none; }
-.div-ticker { font-family:var(--mono); font-weight:700; font-size:.78rem; color:var(--text); width:90px; }
-.div-name { font-size:.68rem; color:var(--text3); }
-.div-freq { font-size:.65rem; color:var(--text3); padding:.12rem .4rem; background:var(--bg3); border-radius:4px; border:1px solid var(--border); }
-.div-amount { font-family:var(--mono); font-weight:700; font-size:.78rem; }
-
-/* ── FISCAL SPECIFIC ── */
-.fiscal-row { display:flex; align-items:center; justify-content:space-between; padding:.7rem 0; border-bottom:1px solid var(--border); }
-.fiscal-row:last-child { border-bottom:none; }
-.fiscal-label { font-size:.78rem; color:var(--text2); }
-.fiscal-val { font-family:var(--mono); font-size:.82rem; font-weight:700; color:var(--green); }
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:'Inter',sans-serif;background:#f5f4f0;color:#1a1a1a;font-size:14px;}
+#login-screen{position:fixed;inset:0;background:#f5f4f0;display:flex;align-items:center;justify-content:center;z-index:999;}
+.login-box{background:#fff;border:0.5px solid #e0ddd6;border-radius:16px;padding:40px;width:320px;text-align:center;}
+.login-logo{font-size:26px;font-weight:600;margin-bottom:8px;letter-spacing:-.03em;}
+.login-logo span{color:#22c55e;}
+.login-sub{font-size:12px;color:#999;margin-bottom:28px;}
+.login-input{width:100%;padding:11px 14px;border:0.5px solid #ddd;border-radius:8px;font-size:15px;background:#fafaf8;outline:none;text-align:center;letter-spacing:.2em;}
+.login-input:focus{border-color:#aaa;}
+.login-btn{width:100%;margin-top:12px;padding:11px;background:#1a1a1a;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;}
+.login-btn:hover{background:#333;}
+.login-err{color:#e24b4a;font-size:12px;margin-top:8px;min-height:18px;}
+#app{display:none;height:100vh;overflow:hidden;flex-direction:row;}
+#app.visible{display:flex;}
+.sidebar{width:215px;min-width:215px;background:#fff;border-right:0.5px solid #e0ddd6;display:flex;flex-direction:column;overflow-y:auto;padding-bottom:20px;}
+.sidebar::-webkit-scrollbar{width:3px;}.sidebar::-webkit-scrollbar-thumb{background:#eee;}
+.sidebar-logo{padding:22px 18px 18px;border-bottom:0.5px solid #e0ddd6;font-size:22px;font-weight:600;letter-spacing:-.04em;flex-shrink:0;}
+.sidebar-logo span{color:#22c55e;}
+.nav-section{padding:16px 18px 4px;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#bbb;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 18px;cursor:pointer;font-size:13px;color:#666;transition:background .1s,color .1s;}
+.nav-item:hover{background:#f5f4f0;color:#1a1a1a;}
+.nav-item.active{background:#f5f4f0;color:#1a1a1a;font-weight:500;}
+.nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.dot-green{background:#22c55e;}.dot-blue{background:#378ADD;}.dot-amber{background:#EF9F27;}
+.dot-purple{background:#7F77DD;}.dot-coral{background:#D85A30;}.dot-teal{background:#1D9E75;}.dot-gray{background:#ccc;}
+.nav-badge{margin-left:auto;background:#e24b4a;color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;font-weight:600;}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{height:46px;background:#fff;border-bottom:0.5px solid #e0ddd6;display:flex;align-items:center;padding:0 22px;gap:12px;flex-shrink:0;}
+.topbar-live{display:flex;align-items:center;gap:7px;font-size:12px;color:#555;}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:14px;}
+.topbar-info{font-size:12px;color:#aaa;}
+.btn-sm{padding:5px 12px;border:0.5px solid #ddd;border-radius:6px;font-size:12px;background:#fff;cursor:pointer;color:#555;font-family:'Inter',sans-serif;}
+.btn-sm:hover{background:#f5f4f0;}
+.content{flex:1;overflow-y:auto;padding:26px;}
+.content::-webkit-scrollbar{width:4px;}.content::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px;}
+.page{display:none;}.page.active{display:block;}
+.page-title{font-size:22px;font-weight:600;letter-spacing:-.04em;margin-bottom:4px;}
+.page-title span{color:#aaa;font-weight:400;}
+.page-sub{font-size:12px;color:#aaa;margin-bottom:22px;}
+.kpi-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:22px;}
+.kpi{background:#fff;border:0.5px solid #e0ddd6;border-radius:12px;padding:16px 18px;}
+.kpi-label{font-size:11px;color:#aaa;font-weight:500;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em;}
+.kpi-val{font-size:20px;font-weight:600;color:#1a1a1a;letter-spacing:-.03em;}
+.kpi-val.g{color:#16a34a;}.kpi-val.r{color:#e24b4a;}.kpi-val.b{color:#378ADD;}.kpi-val.am{color:#d97706;}
+.kpi-sub{font-size:11px;color:#aaa;margin-top:4px;}
+.life-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+.life-card{background:#fff;border:0.5px solid #e0ddd6;border-radius:12px;padding:20px;cursor:pointer;transition:border-color .15s,box-shadow .15s;}
+.life-card:hover{border-color:#ccc;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+.life-icon{font-size:22px;margin-bottom:10px;}
+.life-card-title{font-size:13px;font-weight:500;color:#1a1a1a;margin-bottom:6px;}
+.life-card-stat{font-size:21px;font-weight:600;letter-spacing:-.03em;margin-bottom:3px;}
+.life-card-sub{font-size:11px;color:#aaa;}
+.section-hdr{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#aaa;margin:22px 0 10px;}
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{text-align:left;font-size:11px;font-weight:500;color:#aaa;padding:6px 10px;border-bottom:0.5px solid #e0ddd6;text-transform:uppercase;letter-spacing:.04em;}
+.tbl td{padding:10px;border-bottom:0.5px solid #f0ede8;font-size:13px;color:#1a1a1a;vertical-align:middle;}
+.tbl tr:hover td{background:#fafaf8;}
+.tier-pill{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;}
+.t1{background:#dcfce7;color:#15803d;}.t2{background:#dbeafe;color:#1d4ed8;}
+.t3{background:#fef3c7;color:#92400e;}.t4{background:#f3f4f6;color:#4b5563;}
+.g{color:#16a34a;}.r{color:#e24b4a;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.card{background:#fff;border:0.5px solid #e0ddd6;border-radius:12px;padding:18px;}
+.card-title{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#aaa;margin-bottom:14px;}
+.prog-row{display:flex;justify-content:space-between;font-size:12px;color:#666;margin-bottom:5px;}
+.prog-bar{height:6px;background:#f0ede8;border-radius:3px;overflow:hidden;margin-bottom:14px;}
+.prog-fill{height:100%;border-radius:3px;transition:width .5s;}
+.data-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid #f5f2ed;font-size:13px;}
+.data-row:last-child{border-bottom:none;}
+.data-label{color:#666;}.data-val{font-weight:500;color:#1a1a1a;}
+.data-val.g{color:#16a34a;}.data-val.r{color:#e24b4a;}.data-val.warn{color:#e24b4a;}
+.action-item{background:#fff;border:0.5px solid #e0ddd6;border-radius:10px;padding:16px;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px;}
+.action-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.action-dot.red{background:#e24b4a;}.action-dot.amber{background:#EF9F27;}.action-dot.blue{background:#378ADD;}
+.action-title{font-size:13px;font-weight:500;color:#1a1a1a;margin-bottom:3px;}
+.action-sub{font-size:12px;color:#aaa;}
+.placeholder{background:#fafaf8;border:0.5px dashed #ddd;border-radius:12px;padding:48px;text-align:center;}
+.placeholder-title{font-size:14px;font-weight:500;margin-bottom:6px;color:#888;}
+.placeholder-sub{font-size:12px;color:#bbb;}
+.slider-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.slider-label{font-size:12px;color:#666;width:130px;flex-shrink:0;}
+.slider-row input[type=range]{flex:1;}
+.slider-val{font-size:13px;font-weight:500;color:#1a1a1a;width:80px;text-align:right;}
+.sim-results{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;}
+.sim-kpi{background:#f5f4f0;border-radius:8px;padding:12px;}
+.sim-kpi-label{font-size:11px;color:#aaa;margin-bottom:4px;}
+.sim-kpi-val{font-size:17px;font-weight:600;letter-spacing:-.02em;color:#1a1a1a;}
+.filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
 </style>
 </head>
 <body>
-
-<!-- ════ LOGIN ════ -->
 <div id="login-screen">
   <div class="login-box">
     <div class="login-logo">Hey<span>OS</span></div>
-    <div class="login-tag">Portfolio Intelligence · v11</div>
-    <div class="login-stats">
-      <div class="login-stat">
-        <span class="login-stat-lbl">Portfolio total</span>
-        <span class="login-stat-val g">~$86,869 CAD</span>
-      </div>
-      <div class="login-stat">
-        <span class="login-stat-lbl">Open P&L</span>
-        <span class="login-stat-val g">+20.6% · +$15,093</span>
-      </div>
-      <div class="login-stat">
-        <span class="login-stat-lbl">Positions</span>
-        <span class="login-stat-val">39 · TFSA · FHSA · REER</span>
-      </div>
-      <div class="login-stat">
-        <span class="login-stat-lbl">Objectif FI</span>
-        <span class="login-stat-val">$2.1M · ~2040</span>
-      </div>
-    </div>
-    <div class="login-field">
-      <label>Mot de passe</label>
-      <input type="password" class="login-input" id="pw-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')tryLogin()">
-    </div>
-    <button class="login-btn" onclick="tryLogin()">Accéder au dashboard →</button>
-    <div class="login-error" id="login-error">Mot de passe incorrect</div>
+    <div class="login-sub">Votre système de vie personnel</div>
+    <input class="login-input" type="password" id="pw-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')tryLogin()">
+    <button class="login-btn" onclick="tryLogin()">Accéder →</button>
+    <div class="login-err" id="login-err"></div>
   </div>
 </div>
-
-<!-- ════ TOPBAR ════ -->
-<header class="topbar">
-  <div class="topbar-search">
-    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input type="text" placeholder="Rechercher ticker ou position…" id="global-search" oninput="globalSearch(this.value)">
-  </div>
-  <div class="topbar-right">
-    <div class="topbar-chip"><div class="pulse-dot"></div><span id="clock">—</span></div>
-    <div class="topbar-chip" id="usdcad-cell">USD/CAD 1.3559</div>
-    <button class="topbar-btn" onclick="showImport()">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      JSON
-    </button>
-    <button class="topbar-btn primary" onclick="savePageToFile()">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Sauvegarder
-    </button>
-  </div>
-</header>
-
-<!-- ════ SIDEBAR ════ -->
-<nav class="sidebar">
-  <div class="sidebar-logo">Hey<span>OS</span></div>
-  <div class="nav-label">Portfolio</div>
-  <div class="nav-item active" onclick="nav('summary')">
-    <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-    Vue d'ensemble
-  </div>
-  <div class="nav-item" onclick="nav('positions')">
-    <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-    Positions
-  </div>
-  <div class="nav-item" onclick="nav('analyse')">
-    <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-    Analyse & Allocations
-  </div>
-  <div class="nav-label">Stratégie</div>
-  <div class="nav-item" onclick="nav('budget')">
-    <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-    Budget & Cash Flow
-  </div>
-  <div class="nav-item" onclick="nav('dividendes')">
-    <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><line x1="12" y1="6" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="18"/></svg>
-    Dividendes
-  </div>
-  <div class="nav-item" onclick="nav('fiscal')">
-    <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-    Fiscal & REER
-  </div>
-  <div class="nav-item" onclick="nav('fi')">
-    <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-    Projection FI
-  </div>
-  <div class="nav-item" onclick="nav('maison')">
-    <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    Maison 2030
-  </div>
-  <div class="nav-label">Outils</div>
-  <div class="nav-item" onclick="nav('actions')">
-    <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-    Actions requises
-    <span class="nav-badge" id="actions-badge">3</span>
-  </div>
-  <div class="nav-item" onclick="nav('verdicts')">
-    <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-    Verdicts J+30
-  </div>
-  <div class="nav-item" onclick="nav('crash')">
-    <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-    Crash Simulator
-  </div>
-  <div class="nav-ext" onclick="window.open('https://docs.google.com/spreadsheets/d/1LamFoKULSVfOWCUizBTVabBbuAyPOhLuvuk0fzBgJZA','_blank')">
-    <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
-    Google Sheets ↗
-  </div>
-</nav>
-
-<!-- ════ IMPORT MODAL ════ -->
-<div class="modal-overlay" id="import-overlay">
-  <div class="modal">
-    <h3>📂 Charger les données portfolio</h3>
-    <p>Exporte le JSON depuis ton Google Sheets (Apps Script → pushToGitHub), puis glisse le fichier ici. <strong>Aucune donnée ne quitte ton appareil.</strong></p>
-    <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()"
-      ondragover="event.preventDefault();this.classList.add('drag-over')"
-      ondragleave="this.classList.remove('drag-over')"
-      ondrop="handleDrop(event)">
-      <div style="font-size:1.8rem;margin-bottom:.5rem">📄</div>
-      <div style="font-size:.82rem;font-weight:600;color:var(--text2)">Glisser portfolio.json ici</div>
-      <div style="font-size:.7rem;color:var(--text3);margin-top:.25rem">ou cliquer pour parcourir</div>
-    </div>
-    <input type="file" id="file-input" accept=".json" style="display:none" onchange="handleFileInput(event)">
-    <div class="modal-actions">
-      <button class="modal-btn outline" onclick="hideImport()">Annuler</button>
-    </div>
-  </div>
-</div>
-
-<!-- ════ MAIN ════ -->
-<main class="main">
-
-<div class="data-banner" id="data-banner">
-  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-  <span id="data-banner-text">Connexion…</span>
-</div>
-
-<!-- ══ PAGE: SUMMARY ══ -->
-<div class="page active" id="page-summary">
-  <div class="acct-tabs">
-    <div class="acct-tab active" onclick="setAcct('all',this)">Tous les comptes</div>
-    <div class="acct-tab" onclick="setAcct('TFSA',this)">TFSA <span class="acct-tag">Croissance</span></div>
-    <div class="acct-tab" onclick="setAcct('REER',this)">REER <span class="acct-tag">Retraite</span></div>
-    <div class="acct-tab" onclick="setAcct('FHSA',this)">FHSA <span class="acct-tag">Maison</span></div>
-    <div class="acct-tab warn" onclick="nav('actions')"><span class="acct-dot"></span> Actions <span class="acct-tag" id="actions-count">3</span></div>
-  </div>
-
-  <div class="g21" style="align-items:start">
-    <div style="display:flex;flex-direction:column;gap:1rem">
-      <!-- Hero -->
-      <div class="hero-card">
-        <div class="hero-inner">
-          <div class="hero-label">Équité totale · CAD combiné</div>
-          <div class="hero-value" id="equity-value">$86,869</div>
-          <div class="hero-perf">Open P&L <strong id="open-pl-pct">+20.6%</strong> · ATH $87,252 · 10 mars 2026</div>
-          <div class="hero-row">
-            <div class="hero-stat">
-              <div class="hero-stat-lbl">Today's P&L</div>
-              <div class="hero-stat-val g" id="today-pl-hero">Calcul…</div>
-            </div>
-            <div class="hero-stat">
-              <div class="hero-stat-lbl">Open P&L</div>
-              <div class="hero-stat-val g" id="open-pl-hero">+$15,093</div>
-            </div>
-            <div class="hero-stat">
-              <div class="hero-stat-lbl">USD/CAD</div>
-              <div class="hero-stat-val" id="usdcad-hero">1.3559</div>
-            </div>
-            <div class="hero-stat">
-              <div class="hero-stat-lbl">Positions</div>
-              <div class="hero-stat-val" id="pos-count-hero">39</div>
-            </div>
-            <div class="hero-actions">
-              <button class="hero-btn primary" onclick="nav('positions')">Positions →</button>
-              <button class="hero-btn ghost" onclick="nav('actions')">🔴 Actions</button>
-            </div>
-          </div>
-        </div>
-        <div class="chart-filters">
-          <div class="cf" onclick="setChartFilter(this,'15D')">15J</div>
-          <div class="cf" onclick="setChartFilter(this,'1M')">1M</div>
-          <div class="cf" onclick="setChartFilter(this,'3M')">3M</div>
-          <div class="cf" onclick="setChartFilter(this,'6M')">6M</div>
-          <div class="cf" onclick="setChartFilter(this,'YTD')">YTD</div>
-          <div class="cf active" onclick="setChartFilter(this,'1Y')">1A</div>
-          <div class="cf" onclick="setChartFilter(this,'ALL')">Tout</div>
-        </div>
-        <div class="chart-wrap"><canvas id="main-chart"></canvas></div>
-      </div>
-
-      <!-- Mini positions -->
-      <div class="tbl-wrap">
-        <div class="tbl-tabs">
-          <div class="tbl-tab active">Top positions</div>
-          <div class="tbl-tab" onclick="nav('positions')">Voir toutes →</div>
-        </div>
-        <div id="mini-positions-table"></div>
+<div id="app">
+  <nav class="sidebar">
+    <div class="sidebar-logo">Hey<span>OS</span></div>
+    <div class="nav-section">Vie</div>
+    <div class="nav-item active" onclick="nav('today',this)"><div class="nav-dot dot-green"></div>Aujourd'hui</div>
+    <div class="nav-section">Finances</div>
+    <div class="nav-item" onclick="nav('portfolio',this)"><div class="nav-dot dot-green"></div>Portfolio</div>
+    <div class="nav-item" onclick="nav('positions',this)"><div class="nav-dot dot-green"></div>Positions</div>
+    <div class="nav-item" onclick="nav('analyse',this)"><div class="nav-dot dot-green"></div>Analyse</div>
+    <div class="nav-item" onclick="nav('budget',this)"><div class="nav-dot dot-green"></div>Budget & Cash Flow</div>
+    <div class="nav-item" onclick="nav('dividendes',this)"><div class="nav-dot dot-teal"></div>Dividendes</div>
+    <div class="nav-item" onclick="nav('fiscal',this)"><div class="nav-dot dot-green"></div>Fiscal & REER</div>
+    <div class="nav-item" onclick="nav('fi',this)"><div class="nav-dot dot-blue"></div>Projection FI</div>
+    <div class="nav-item" onclick="nav('maison',this)"><div class="nav-dot dot-amber"></div>Maison 2030</div>
+    <div class="nav-section">Corps & Santé</div>
+    <div class="nav-item" onclick="nav('sante',this)"><div class="nav-dot dot-coral"></div>Entraînement</div>
+    <div class="nav-item" onclick="nav('nutrition',this)"><div class="nav-dot dot-coral"></div>Nutrition</div>
+    <div class="nav-section">Culture</div>
+    <div class="nav-item" onclick="nav('films',this)"><div class="nav-dot dot-purple"></div>Films & Séries</div>
+    <div class="nav-item" onclick="nav('livres',this)"><div class="nav-dot dot-purple"></div>Livres</div>
+    <div class="nav-item" onclick="nav('restaurants',this)"><div class="nav-dot dot-teal"></div>Restaurants</div>
+    <div class="nav-item" onclick="nav('voyages',this)"><div class="nav-dot dot-blue"></div>Voyages</div>
+    <div class="nav-section">Outils</div>
+    <div class="nav-item" onclick="nav('actions',this)"><div class="nav-dot dot-gray"></div>Actions requises<span class="nav-badge">3</span></div>
+    <div class="nav-item" onclick="nav('verdicts',this)"><div class="nav-dot dot-gray"></div>Verdicts J+30</div>
+    <div class="nav-item" onclick="nav('crash',this)"><div class="nav-dot dot-gray"></div>Crash Simulator</div>
+  </nav>
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-live"><div class="live-dot"></div><span id="topbar-status">Connexion…</span></div>
+      <div class="topbar-right">
+        <span class="topbar-info" id="usdcad-cell">USD/CAD —</span>
+        <span class="topbar-info" id="clock">—</span>
+        <label class="btn-sm" style="cursor:pointer;">JSON<input type="file" accept=".json" style="display:none" onchange="loadJSON(this)"></label>
+        <button class="btn-sm" onclick="fetchData()">↺</button>
       </div>
     </div>
+    <div class="content">
 
-    <!-- Right column -->
-    <div style="display:flex;flex-direction:column;gap:1rem">
-      <div class="g2" style="gap:.65rem">
-        <div class="kpi" style="--kpi-accent:var(--green)">
-          <div class="kpi-label">Total</div>
-          <div class="kpi-val g" id="kpi-total-mini">$86.9K</div>
-          <div class="kpi-sub">ATH $87.3K</div>
+      <div class="page active" id="page-today">
+        <div class="page-title">Aujourd'hui <span id="today-date"></span></div>
+        <div class="page-sub">Vue d'ensemble · HeyOS Life OS</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-label">Portfolio total</div><div class="kpi-val g" id="today-total">—</div><div class="kpi-sub" id="today-openpl">—</div></div>
+          <div class="kpi"><div class="kpi-label">Aujourd'hui</div><div class="kpi-val" id="today-daypl">—</div><div class="kpi-sub" id="today-mkt">—</div></div>
+          <div class="kpi"><div class="kpi-label">Maison 2030</div><div class="kpi-val am">17.7%</div><div class="kpi-sub">$17,669 / $100K</div></div>
+          <div class="kpi"><div class="kpi-label">Liberté financière</div><div class="kpi-val b" id="today-fi-pct">4.1%</div><div class="kpi-sub">$85K / $2.1M</div></div>
         </div>
-        <div class="kpi" style="--kpi-accent:var(--blue)">
-          <div class="kpi-label">Objectif FI</div>
-          <div class="kpi-val b">4.14%</div>
-          <div class="kpi-sub">$2.1M · ~2040</div>
-        </div>
-        <div class="kpi" style="--kpi-accent:var(--amber)">
-          <div class="kpi-label">Expo USD</div>
-          <div class="kpi-val a">44.8%</div>
-          <div class="kpi-sub">Seuil 65% ✅</div>
-        </div>
-        <div class="kpi" style="--kpi-accent:var(--violet)">
-          <div class="kpi-label">Conc. IA</div>
-          <div class="kpi-val v">35.1%</div>
-          <div class="kpi-sub">Seuil 45% ✅</div>
+        <div class="life-grid">
+          <div class="life-card" onclick="nav('portfolio',null)"><div class="life-icon">💼</div><div class="life-card-title">Portfolio</div><div class="life-card-stat g" id="lc-total">—</div><div class="life-card-sub" id="lc-sub">39 positions</div></div>
+          <div class="life-card" onclick="nav('maison',null)"><div class="life-icon">🏠</div><div class="life-card-title">Maison 2030</div><div class="life-card-stat am">$17,669</div><div class="life-card-sub">RAP + FHSA · 17.7% atteint</div></div>
+          <div class="life-card" onclick="nav('fi',null)"><div class="life-icon">📈</div><div class="life-card-title">Liberté financière</div><div class="life-card-stat b">~2040</div><div class="life-card-sub">$2.1M objectif · 8%/an</div></div>
+          <div class="life-card" onclick="nav('sante',null)"><div class="life-icon">🏋️</div><div class="life-card-title">Corps &amp; Santé</div><div class="life-card-stat">175 lbs</div><div class="life-card-sub">Objectif 190 lbs · PPL actif</div></div>
+          <div class="life-card" onclick="nav('films',null)"><div class="life-icon">🎬</div><div class="life-card-title">Culture</div><div class="life-card-stat" style="color:#7F77DD;">—</div><div class="life-card-sub">Films · Livres · Restaurants</div></div>
+          <div class="life-card" onclick="nav('actions',null)"><div class="life-icon">🚨</div><div class="life-card-title">Actions requises</div><div class="life-card-stat r">3</div><div class="life-card-sub">EQ Bank · Bénéficiaires · $12K</div></div>
         </div>
       </div>
 
-      <!-- Account health -->
-      <div class="card">
-        <div class="card-hdr"><span class="card-title">Santé des comptes</span></div>
-        <div class="card-body" id="acct-health-cards" style="padding:.85rem 1.1rem"></div>
+      <div class="page" id="page-portfolio">
+        <div class="page-title">Portfolio</div>
+        <div class="page-sub">Valeur live · TFSA · FHSA · REER</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-label">Valeur marché</div><div class="kpi-val g" id="pf-total">—</div></div>
+          <div class="kpi"><div class="kpi-label">Coût investi</div><div class="kpi-val" id="pf-cost">—</div></div>
+          <div class="kpi"><div class="kpi-label">Gain ouvert</div><div class="kpi-val g" id="pf-gain">—</div></div>
+          <div class="kpi"><div class="kpi-label">Rendement</div><div class="kpi-val g" id="pf-pct">—</div></div>
+        </div>
+        <div class="grid2" style="margin-bottom:22px;">
+          <div class="card"><div class="card-title">Par compte</div>
+            <div class="data-row"><span class="data-label">TFSA</span><span class="data-val g" id="acc-tfsa">—</span></div>
+            <div class="data-row"><span class="data-label">FHSA</span><span class="data-val b" id="acc-fhsa">—</span></div>
+            <div class="data-row"><span class="data-label">REER</span><span class="data-val" id="acc-reer">—</span></div>
+            <div class="data-row"><span class="data-label">ATH</span><span class="data-val">$87,252 · 10 mars</span></div>
+          </div>
+          <div class="card"><div class="card-title">Expositions</div>
+            <div class="data-row"><span class="data-label">USD</span><span class="data-val" id="exp-usd">~45%</span></div>
+            <div class="data-row"><span class="data-label">CAD</span><span class="data-val" id="exp-cad">~55%</span></div>
+            <div class="data-row"><span class="data-label">Positions T1</span><span class="data-val">9 titres</span></div>
+            <div class="data-row"><span class="data-label">Dividendes annuels</span><span class="data-val g">~$1,926</span></div>
+          </div>
+        </div>
+        <div class="section-hdr">Top positions T1</div>
+        <table class="tbl"><thead><tr><th>Ticker</th><th>Compte</th><th>Valeur CAD</th><th>Gain $</th><th>Gain %</th></tr></thead><tbody id="tbl-top"></tbody></table>
       </div>
 
-      <!-- Next events -->
-      <div class="card">
-        <div class="card-hdr"><span class="card-title">📅 Prochains événements</span></div>
-        <div class="card-body">
-          <div class="event-row">
-            <div class="event-date"><div class="event-day">18</div><div class="event-mon">MAR</div></div>
-            <div><div class="event-title">BdC — Décision taux</div><div class="event-sub">Attendre avant achats FHSA · Impact CAD</div></div>
+      <div class="page" id="page-positions">
+        <div class="page-title">Positions <span id="pos-count-lbl"></span></div>
+        <div class="page-sub">Prix live depuis GitHub · Refresh auto 60s</div>
+        <div class="filters">
+          <button class="btn-sm" id="f-all" onclick="filterPos('ALL')" style="background:#1a1a1a;color:#fff;border-color:#1a1a1a;">Tous</button>
+          <button class="btn-sm" id="f-t1" onclick="filterPos('T1')">T1</button>
+          <button class="btn-sm" id="f-t2" onclick="filterPos('T2')">T2</button>
+          <button class="btn-sm" id="f-t3" onclick="filterPos('T3')">T3</button>
+          <button class="btn-sm" id="f-t4" onclick="filterPos('T4')">T4</button>
+          <button class="btn-sm" id="f-tfsa" onclick="filterPos('TFSA')">TFSA</button>
+          <button class="btn-sm" id="f-fhsa" onclick="filterPos('FHSA')">FHSA</button>
+          <button class="btn-sm" id="f-reer" onclick="filterPos('REER')">REER</button>
+        </div>
+        <table class="tbl"><thead><tr><th>Ticker</th><th>Nom</th><th>Compte</th><th>Tier</th><th>Qté</th><th>Prix moy.</th><th>Prix live</th><th>Valeur CAD</th><th>Gain $</th><th>Gain %</th></tr></thead><tbody id="tbl-positions"></tbody></table>
+      </div>
+
+      <div class="page" id="page-budget">
+        <div class="page-title">Budget &amp; Cash Flow</div>
+        <div class="page-sub">Revenu net · Plan d'investissement · Taux d'épargne</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-label">Revenu net</div><div class="kpi-val">$7,950</div><div class="kpi-sub">/mois</div></div>
+          <div class="kpi"><div class="kpi-label">Dépenses</div><div class="kpi-val r">$1,182</div><div class="kpi-sub">/mois</div></div>
+          <div class="kpi"><div class="kpi-label">Investi structuré</div><div class="kpi-val b">$5,000</div><div class="kpi-sub">/mois</div></div>
+          <div class="kpi"><div class="kpi-label">Surplus libre</div><div class="kpi-val g">$1,768</div><div class="kpi-sub">/mois</div></div>
+        </div>
+        <div class="grid2">
+          <div class="card"><div class="card-title">Plan $5,000/mois</div>
+            <div class="data-row"><span class="data-label">REER → SCHD</span><span class="data-val g">$2,000</span></div>
+            <div class="data-row"><span class="data-label">FHSA → VFV.TO</span><span class="data-val g">$1,000</span></div>
+            <div class="data-row"><span class="data-label">TFSA → AVGO (fractional)</span><span class="data-val g">$500</span></div>
+            <div class="data-row"><span class="data-label">EQ Bank HISA</span><span class="data-val warn">$1,500 🔴 non ouvert</span></div>
           </div>
-          <div class="event-row">
-            <div class="event-date"><div class="event-day">26</div><div class="event-mon">MAR</div></div>
-            <div><div class="event-title">AVGO — Résultats Q1 FY2025</div><div class="event-sub">No-buy zone avant annonce</div></div>
-          </div>
-          <div class="event-row">
-            <div class="event-date"><div class="event-day">11</div><div class="event-mon">AVR</div></div>
-            <div><div class="event-title">Verdicts J+30</div><div class="event-sub">Saisir prix · Calculer alpha vs VFV.TO</div></div>
-          </div>
-          <div class="event-row">
-            <div class="event-date"><div class="event-day">30</div><div class="event-mon">AVR</div></div>
-            <div><div class="event-title">GOOG / META / AMZN — Résultats Q1</div><div class="event-sub">T1 — no-buy zone 48h avant</div></div>
+          <div class="card"><div class="card-title">Taux d'épargne</div>
+            <div class="data-row"><span class="data-label">Épargne / Revenu</span><span class="data-val g">85.1%</span></div>
+            <div class="data-row"><span class="data-label">Dépenses / Revenu</span><span class="data-val">14.9%</span></div>
+            <div class="data-row"><span class="data-label">Logement</span><span class="data-val">Fourni employeur ✅</span></div>
+            <div class="data-row"><span class="data-label">Nourriture</span><span class="data-val">Fournie employeur ✅</span></div>
           </div>
         </div>
       </div>
 
-      <!-- COVID anchor -->
-      <div class="card">
-        <div class="card-hdr"><span class="card-title">🧠 Ancre psychologique</span></div>
-        <div class="card-body">
-          <div class="signal-box g">
-            <div class="signal-lbl">COVID 2020 Playbook</div>
-            <div class="signal-val">En crise → acheter agressivement T1 → tenir le plan. Mars 2020 -35% → meilleurs retours de ma vie. <strong style="color:var(--green)">Même playbook toujours.</strong></div>
-          </div>
-          <div class="g2" style="margin-top:.75rem;gap:.5rem">
-            <div style="background:var(--bg3);padding:.6rem;border-radius:var(--r-sm);text-align:center;border:1px solid var(--border)">
-              <div style="font-size:.58rem;color:var(--text3);font-weight:700;letter-spacing:.08em">VIX</div>
-              <div style="font-family:var(--display);font-size:.95rem;font-weight:800;color:var(--amber)">24.60</div>
-            </div>
-            <div style="background:var(--bg3);padding:.6rem;border-radius:var(--r-sm);text-align:center;border:1px solid var(--border)">
-              <div style="font-size:.58rem;color:var(--text3);font-weight:700;letter-spacing:.08em">MODE</div>
-              <div style="font-size:.7rem;font-weight:700;color:var(--amber);margin-top:.1rem">🟡 DIP MODÉRÉ</div>
-            </div>
-          </div>
+      <div class="page" id="page-fiscal">
+        <div class="page-title">Fiscal &amp; REER</div>
+        <div class="page-sub">Snowball ARC · Room disponible · Optimisation</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-label">Taux marginal QC</div><div class="kpi-val r">52.98%</div></div>
+          <div class="kpi"><div class="kpi-label">Room FHSA 2026</div><div class="kpi-val b">~$9,700</div><div class="kpi-sub">après $4K en transit</div></div>
+          <div class="kpi"><div class="kpi-label">REER RAP cible</div><div class="kpi-val">$60,000</div></div>
+          <div class="kpi"><div class="kpi-label">Snowball mensuel</div><div class="kpi-val g">$1,060</div><div class="kpi-sub">remboursé par ARC</div></div>
+        </div>
+        <div class="card" style="max-width:500px;">
+          <div class="card-title">Stratégie REER snowball</div>
+          <div class="data-row"><span class="data-label">Cotisation mensuelle</span><span class="data-val">$2,000</span></div>
+          <div class="data-row"><span class="data-label">Remboursement ARC (52.98%)</span><span class="data-val g">+$1,060/mois</span></div>
+          <div class="data-row"><span class="data-label">Coût net réel</span><span class="data-val g">$940/mois</span></div>
+          <div class="data-row"><span class="data-label">FTQ éligibilité 2025</span><span class="data-val am">Vérification pendante</span></div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
 
-<!-- ══ PAGE: POSITIONS ══ -->
-<div class="page" id="page-positions">
-  <div class="page-hdr">
-    <div class="page-title">Positions <span id="pos-count-lbl"></span></div>
-    <div class="page-sub">Prix live · Yahoo Finance · Refresh auto 60s · Clic → détails</div>
-  </div>
-  <div class="tbl-wrap">
-    <div class="tbl-tabs">
-      <div class="tbl-tab active" id="pos-tab-pos" onclick="setPosTbl('pos',this)">Toutes</div>
-      <div class="tbl-tab" id="pos-tab-tfsa" onclick="setPosTbl('TFSA',this)">TFSA</div>
-      <div class="tbl-tab" id="pos-tab-fhsa" onclick="setPosTbl('FHSA',this)">FHSA</div>
-      <div class="tbl-tab" id="pos-tab-reer" onclick="setPosTbl('REER',this)">REER</div>
-    </div>
-    <div class="tbl-toolbar">
-      <div class="tbl-search">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text3)"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" placeholder="Filtrer…" id="pos-search" oninput="filterPositions()">
+      <div class="page" id="page-fi">
+        <div class="page-title">Projection FI</div>
+        <div class="page-sub">Liberté financière · $2.1M référence plancher · FI = liberté, pas un arrêt</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-label">Objectif FI</div><div class="kpi-val b">$2,100,000</div></div>
+          <div class="kpi"><div class="kpi-label">Atteint</div><div class="kpi-val" id="fi-pct">—</div></div>
+          <div class="kpi"><div class="kpi-label">Date estimée</div><div class="kpi-val" id="fi-yr">~2040</div></div>
+          <div class="kpi"><div class="kpi-label">Revenu passif cible</div><div class="kpi-val g">$7,000/mois</div></div>
+        </div>
+        <div class="grid2" style="margin-bottom:12px;">
+          <div class="card"><div class="card-title">Scénario réaliste · 8%/an</div>
+            <div class="prog-row"><span id="fi-r-val">—</span><span>$2,100,000</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="background:#378ADD;" id="fi-r-bar"></div></div>
+            <div style="font-size:12px;color:#aaa;" id="fi-r-sub">—</div>
+          </div>
+          <div class="card"><div class="card-title">Scénario optimiste · 10%/an</div>
+            <div class="prog-row"><span id="fi-o-val">—</span><span>$2,100,000</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="background:#22c55e;" id="fi-o-bar"></div></div>
+            <div style="font-size:12px;color:#aaa;" id="fi-o-sub">—</div>
+          </div>
+        </div>
+        <div class="card"><div class="card-title">Simulateur interactif</div>
+          <div class="slider-row"><span class="slider-label">Rendement annuel</span><input type="range" min="4" max="15" step="0.5" value="8" id="fi-rate" oninput="updateFI()"><span class="slider-val"><span id="fi-rate-v">8.0</span>%</span></div>
+          <div class="slider-row"><span class="slider-label">Cotisation mensuelle</span><input type="range" min="1000" max="10000" step="250" value="5000" id="fi-contrib" oninput="updateFI()"><span class="slider-val">$<span id="fi-contrib-v">5,000</span></span></div>
+          <div class="sim-results">
+            <div class="sim-kpi"><div class="sim-kpi-label">Date liberté</div><div class="sim-kpi-val b" id="fi-sim-yr">—</div></div>
+            <div class="sim-kpi"><div class="sim-kpi-label">Portfolio à 55 ans</div><div class="sim-kpi-val g" id="fi-sim-55">—</div></div>
+          </div>
+        </div>
       </div>
-      <button class="filter-btn active" id="f-all" onclick="setTierFilter('all',this)">Tous</button>
-      <button class="filter-btn" id="f-T1" onclick="setTierFilter('T1',this)">T1 — Accumulate</button>
-      <button class="filter-btn" id="f-T2" onclick="setTierFilter('T2',this)">T2 — Hold</button>
-      <button class="filter-btn" id="f-T3" onclick="setTierFilter('T3',this)">T3 — No buy</button>
-      <button class="filter-btn" id="f-T4" onclick="setTierFilter('T4',this)">T4 — Dilute</button>
-    </div>
-    <div id="positions-table"></div>
-  </div>
-</div>
 
-<!-- ══ PAGE: ANALYSE ══ -->
-<div class="page" id="page-analyse">
-  <div class="page-hdr">
-    <div class="page-title">Analyse <span>& Allocations</span></div>
-  </div>
-  <div class="g4" style="margin-bottom:1rem">
-    <div class="kpi" style="--kpi-accent:var(--green)">
-      <div class="kpi-label">Portfolio total</div>
-      <div class="kpi-val g" id="kpi-total">$86,869</div>
-      <div class="kpi-sub">ATH $87,252 · 10 mars</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--blue)">
-      <div class="kpi-label">Objectif FI</div>
-      <div class="kpi-val b">$2.1M+</div>
-      <div class="kpi-sub">4.14% atteint · plancher</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--amber)">
-      <div class="kpi-label">Score santé</div>
-      <div class="kpi-val a">68/100</div>
-      <div class="kpi-sub">⚠️ EQ Bank manquant</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--violet)">
-      <div class="kpi-label">ARC estimé 2026</div>
-      <div class="kpi-val v">~$21,333</div>
-      <div class="kpi-sub">REER 52.98% QC</div>
-    </div>
-  </div>
-  <div class="g2" style="margin-bottom:1rem">
-    <div class="card">
-      <div class="card-hdr"><span class="card-title">Répartition par Tier</span><span class="card-sub">coût de base</span></div>
-      <div class="card-body" id="tier-breakdown"></div>
-    </div>
-    <div class="card">
-      <div class="card-hdr"><span class="card-title">Santé par compte</span></div>
-      <div class="card-body" id="acct-breakdown"></div>
-    </div>
-  </div>
-  <div class="g2" style="margin-bottom:1rem">
-    <div class="card">
-      <div class="card-hdr"><span class="card-title">Expositions critiques</span></div>
-      <div class="card-body">
-        <div style="margin-bottom:1.1rem">
-          <div style="display:flex;justify-content:space-between;margin-bottom:.4rem">
-            <span style="font-size:.78rem;font-weight:500">Exposition USD</span>
-            <span class="pill g" id="usd-expo-pill">44.8% ✅</span>
-          </div>
-          <div class="bar-track"><div class="bar-fill bar-g" id="usd-bar" style="width:44.8%"></div></div>
-          <div style="font-size:.62rem;color:var(--text3);margin-top:.25rem">Seuil: 65% · Marge: 20.2%</div>
+      <div class="page" id="page-maison">
+        <div class="page-title">Maison 2030+</div>
+        <div class="page-sub">RAP $60K + FHSA $40K = $100K mise de fonds · Solo</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-label">REER RAP</div><div class="kpi-val" id="m-reer">$2,771</div><div class="kpi-sub">/ $60,000 · 4.6%</div></div>
+          <div class="kpi"><div class="kpi-label">FHSA</div><div class="kpi-val b" id="m-fhsa">$14,898</div><div class="kpi-sub">/ $40,000 · 37.2%</div></div>
+          <div class="kpi"><div class="kpi-label">Mise de fonds</div><div class="kpi-val am" id="m-total">$17,669</div><div class="kpi-sub">/ $100,000 · 17.7%</div></div>
+          <div class="kpi"><div class="kpi-label">Date estimée</div><div class="kpi-val">2028–2030</div></div>
         </div>
-        <div style="margin-bottom:1.1rem">
-          <div style="display:flex;justify-content:space-between;margin-bottom:.4rem">
-            <span style="font-size:.78rem;font-weight:500">Concentration IA</span>
-            <span class="pill g" id="ai-expo-pill">35.1% ✅</span>
+        <div class="grid2" style="margin-bottom:12px;">
+          <div class="card"><div class="card-title">Progression détaillée</div>
+            <div class="prog-row"><span>REER RAP</span><span id="mp-reer-lbl">$2,771 / $60K</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="background:#1a1a1a;width:4.6%;" id="mp-reer-bar"></div></div>
+            <div class="prog-row"><span>FHSA</span><span id="mp-fhsa-lbl">$14,898 / $40K</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="background:#378ADD;width:37.2%;" id="mp-fhsa-bar"></div></div>
+            <div class="prog-row"><span>Mise de fonds totale</span><span id="mp-total-lbl">$17,669 / $100K</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="background:#EF9F27;width:17.7%;" id="mp-total-bar"></div></div>
           </div>
-          <div class="bar-track"><div class="bar-fill bar-b" id="ai-bar" style="width:35.1%"></div></div>
-          <div style="font-size:.62rem;color:var(--text3);margin-top:.25rem">Seuil: 45% · Marge: 9.9%</div>
+          <div class="card"><div class="card-title">Simulateur hypothèque</div>
+            <div class="slider-row"><span class="slider-label">Prix propriété</span><input type="range" min="300000" max="900000" step="10000" value="550000" id="mort-price" oninput="updateMortgage()"><span class="slider-val">$<span id="mort-price-v">550K</span></span></div>
+            <div class="slider-row"><span class="slider-label">Taux hypothécaire</span><input type="range" min="2" max="8" step="0.25" value="5" id="mort-rate" oninput="updateMortgage()"><span class="slider-val"><span id="mort-rate-v">5.00</span>%</span></div>
+            <div class="sim-results">
+              <div class="sim-kpi"><div class="sim-kpi-label">Mensualité</div><div class="sim-kpi-val" id="mort-pmt">—</div></div>
+              <div class="sim-kpi"><div class="sim-kpi-label">Intérêts totaux</div><div class="sim-kpi-val r" id="mort-int">—</div></div>
+            </div>
+          </div>
         </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:.4rem">
-            <span style="font-size:.78rem;font-weight:500">SMH (seuil 15%)</span>
-            <span class="pill a">14.3% ⚠️</span>
-          </div>
-          <div class="bar-track"><div class="bar-fill bar-a" style="width:95.3%"></div></div>
-          <div style="font-size:.62rem;color:var(--amber);margin-top:.25rem">Proche du seuil — dip seulement</div>
+        <div class="card"><div class="card-title">Stratégie 2030</div>
+          <div class="data-row"><span class="data-label">✅ FHSA $1,000/mois → VFV.TO</span><span class="data-val">croissance + retraits libres impôt</span></div>
+          <div class="data-row"><span class="data-label">✅ REER $2,000/mois → SCHD</span><span class="data-val">RAP + snowball ARC</span></div>
+          <div class="data-row"><span class="data-label">✅ Achat solo sans co-emprunteur</span><span class="data-val">finances 100% séparées</span></div>
+          <div class="data-row"><span class="data-label">⚡ RAP retrait max $60K</span><span class="data-val">remboursement 15 ans</span></div>
+          <div class="data-row"><span class="data-label">⚡ FHSA retrait illimité</span><span class="data-val">aucune obligation remboursement</span></div>
         </div>
       </div>
-    </div>
-    <div class="card">
-      <div class="card-hdr"><span class="card-title">Plan cotisation — $5,000/mois</span></div>
-      <div class="card-body">
-        <div class="contrib-row" style="background:var(--green-dim);border-color:rgba(0,210,106,.2)">
-          <div><div class="contrib-name">REER → SCHD</div><div class="contrib-sub">Snowball ARC ~$1,060/mois · 52.98%</div></div>
-          <span class="pill g">$2,000</span>
-        </div>
-        <div class="contrib-row" style="background:var(--blue-dim);border-color:rgba(59,130,246,.2)">
-          <div><div class="contrib-name">FHSA → VFV.TO</div><div class="contrib-sub">Double exonération · RAP 2030</div></div>
-          <span class="pill b">$1,000</span>
-        </div>
-        <div class="contrib-row" style="background:var(--green-dim);border-color:rgba(0,210,106,.15)">
-          <div><div class="contrib-name">TFSA → AVGO</div><div class="contrib-sub">Fractionnel · T1 core</div></div>
-          <span class="pill g">$500</span>
-        </div>
-        <div class="contrib-row" style="background:var(--red-dim);border-color:rgba(255,77,77,.2)">
-          <div><div class="contrib-name">EQ Bank HISA</div><div class="contrib-sub" style="color:var(--red)">🔴 PAS OUVERT — urgent</div></div>
-          <span class="pill r">$1,500</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;padding:.5rem 0;border-top:1px solid var(--border);margin-top:.25rem">
-          <span style="font-size:.72rem;color:var(--text3)">Total mensuel</span>
-          <span style="font-family:var(--mono);font-size:.82rem;font-weight:700;color:var(--text)">$5,000</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="card" style="margin-bottom:1rem">
-    <div class="card-hdr"><span class="card-title">Projection FI — Scénarios rapides</span><span class="card-sub">Base: $86,869 · $5K/mois</span></div>
-    <div class="card-body" style="padding:0"><div id="fi-projection-table"></div></div>
-  </div>
-</div>
 
-<!-- ══ PAGE: BUDGET ══ -->
-<div class="page" id="page-budget">
-  <div class="page-hdr">
-    <div class="page-title">Budget <span>& Cash Flow</span></div>
-    <div class="page-sub">Revenus · Dépenses · Plan d'épargne · Surplus mensuel</div>
-  </div>
-  <div class="g4" style="margin-bottom:1rem">
-    <div class="kpi" style="--kpi-accent:var(--green)">
-      <div class="kpi-label">Revenu net</div>
-      <div class="kpi-val g">$7,950</div>
-      <div class="kpi-sub">Salaire policier / mois</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--red)">
-      <div class="kpi-label">Dépenses fixes</div>
-      <div class="kpi-val r">$1,182</div>
-      <div class="kpi-sub">14.9% du revenu</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--blue)">
-      <div class="kpi-label">Épargne automatique</div>
-      <div class="kpi-val b">$5,000</div>
-      <div class="kpi-sub">62.9% du revenu</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--amber)">
-      <div class="kpi-label">Surplus libre</div>
-      <div class="kpi-val a">$1,768</div>
-      <div class="kpi-sub">Buffer intentionnel</div>
-    </div>
-  </div>
-  <div class="g2" style="margin-bottom:1rem">
-    <div class="card">
-      <div class="card-hdr"><span class="card-title">Dépenses mensuelles</span><span class="card-sub">$1,182 / mois</span></div>
-      <div class="card-body">
-        <div class="budget-row"><span class="budget-label">🏠 Logement</span><span class="budget-val" style="color:var(--green)">$0 <span style="font-size:.65rem;color:var(--text3)">(employeur)</span></span></div>
-        <div class="budget-row"><span class="budget-label">🌐 Internet</span><span class="budget-val" style="color:var(--green)">$0 <span style="font-size:.65rem;color:var(--text3)">(employeur)</span></span></div>
-        <div class="budget-row"><span class="budget-label">🛒 Épicerie</span><span class="budget-val">$400</span></div>
-        <div class="budget-row"><span class="budget-label">📱 Téléphone</span><span class="budget-val">$110</span></div>
-        <div class="budget-row"><span class="budget-label">🚗 Paiement auto</span><span class="budget-val">$275</span></div>
-        <div class="budget-row"><span class="budget-label">🚗 Assurance auto</span><span class="budget-val">$100</span></div>
-        <div class="budget-row"><span class="budget-label">🏍️ Assurance moto</span><span class="budget-val">$80</span></div>
-        <div class="budget-row"><span class="budget-label">⛽ Essence</span><span class="budget-val">$50</span></div>
-        <div class="budget-row"><span class="budget-label">📺 Abonnements</span><span class="budget-val">$25</span></div>
-        <div class="budget-row"><span class="budget-label">🎮 Divertissement</span><span class="budget-val">$50</span></div>
-        <div class="budget-row"><span class="budget-label">✈️ Voyages (÷12)</span><span class="budget-val">$42</span></div>
-        <div class="budget-row"><span class="budget-label">👕 Vêtements/équip.</span><span class="budget-val">$50</span></div>
-        <div style="display:flex;justify-content:space-between;padding:.6rem 0;border-top:2px solid var(--border);margin-top:.25rem">
-          <span style="font-weight:700;color:var(--text)">TOTAL</span>
-          <span style="font-family:var(--mono);font-weight:800;font-size:.9rem;color:var(--red)">$1,182</span>
+      <div class="page" id="page-dividendes">
+        <div class="page-title">Dividendes</div>
+        <div class="page-sub">Revenus passifs · Calendrier · Projection</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-label">Annuel estimé</div><div class="kpi-val g">~$1,926</div></div>
+          <div class="kpi"><div class="kpi-label">Mensuel moyen</div><div class="kpi-val g">~$161</div></div>
+          <div class="kpi"><div class="kpi-label">Yield moyen</div><div class="kpi-val">~2.2%</div></div>
+          <div class="kpi"><div class="kpi-label">Positions div.</div><div class="kpi-val">12</div></div>
+        </div>
+        <div class="placeholder"><div class="placeholder-title">Calendrier dividendes à venir</div><div class="placeholder-sub">SCHD · ENB.TO · JEPI · REITs · Détail par ticker · À connecter S27+</div></div>
+      </div>
+
+      <div class="page" id="page-sante">
+        <div class="page-title">Corps &amp; Santé</div>
+        <div class="page-sub">Entraînement · Nutrition · Objectifs physiques</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-label">Poids actuel</div><div class="kpi-val">175 lbs</div><div class="kpi-sub">Objectif 190 lbs</div></div>
+          <div class="kpi"><div class="kpi-label">Programme</div><div class="kpi-val">PPL</div><div class="kpi-sub">Push · Pull · Legs</div></div>
+          <div class="kpi"><div class="kpi-label">BJJ</div><div class="kpi-val b">Q2 2026</div><div class="kpi-sub">Retour prévu</div></div>
+          <div class="kpi"><div class="kpi-label">Running</div><div class="kpi-val g">Actif</div></div>
+        </div>
+        <div class="grid2">
+          <div class="card"><div class="card-title">Programme — semaine type</div>
+            <div class="data-row"><span class="data-label">Lundi</span><span class="data-val">Push · Chest · Shoulders · Triceps</span></div>
+            <div class="data-row"><span class="data-label">Mardi</span><span class="data-val">Pull · Back · Biceps</span></div>
+            <div class="data-row"><span class="data-label">Mercredi</span><span class="data-val">Legs · Quads · Hamstrings</span></div>
+            <div class="data-row"><span class="data-label">Jeudi</span><span class="data-val">Cardio · Running</span></div>
+            <div class="data-row"><span class="data-label">Vendredi</span><span class="data-val">BJJ / Boxing</span></div>
+            <div class="data-row"><span class="data-label">Samedi</span><span class="data-val">Yoga · Mobilité</span></div>
+          </div>
+          <div class="placeholder" style="display:flex;flex-direction:column;justify-content:center;min-height:200px;"><div class="placeholder-title">Suivi PRs &amp; poids</div><div class="placeholder-sub">Bench · Squat · Deadlift · Poids corporel · À connecter S27+</div></div>
         </div>
       </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:1rem">
-      <div class="card">
-        <div class="card-hdr"><span class="card-title">Cash Flow mensuel</span></div>
-        <div class="card-body">
-          <div style="margin-bottom:1rem">
-            <div style="display:flex;justify-content:space-between;margin-bottom:.35rem">
-              <span style="font-size:.75rem;color:var(--text2)">Revenu net</span>
-              <span style="font-family:var(--mono);font-size:.78rem;font-weight:700;color:var(--green)">+$7,950</span>
-            </div>
-            <div class="bar-track" style="height:6px"><div class="bar-fill bar-g" style="width:100%"></div></div>
-          </div>
-          <div style="margin-bottom:1rem">
-            <div style="display:flex;justify-content:space-between;margin-bottom:.35rem">
-              <span style="font-size:.75rem;color:var(--text2)">Dépenses fixes</span>
-              <span style="font-family:var(--mono);font-size:.78rem;font-weight:700;color:var(--red)">-$1,182</span>
-            </div>
-            <div class="bar-track" style="height:6px"><div class="bar-fill bar-r" style="width:14.9%"></div></div>
-          </div>
-          <div style="margin-bottom:1rem">
-            <div style="display:flex;justify-content:space-between;margin-bottom:.35rem">
-              <span style="font-size:.75rem;color:var(--text2)">Épargne automatique</span>
-              <span style="font-family:var(--mono);font-size:.78rem;font-weight:700;color:var(--blue)">-$5,000</span>
-            </div>
-            <div class="bar-track" style="height:6px"><div class="bar-fill bar-b" style="width:62.9%"></div></div>
-          </div>
-          <div style="background:var(--green-dim);border:1px solid rgba(0,210,106,.2);border-radius:var(--r-sm);padding:.75rem;display:flex;justify-content:space-between;align-items:center">
-            <div>
-              <div style="font-size:.62rem;color:var(--green);font-weight:700;letter-spacing:.1em;margin-bottom:.1rem">SURPLUS LIBRE</div>
-              <div style="font-size:.68rem;color:var(--text3)">Buffer · investissement · BJJ · moto</div>
-            </div>
-            <div style="font-family:var(--display);font-size:1.5rem;font-weight:800;color:var(--green)">$1,768</div>
-          </div>
-        </div>
+
+      <div class="page" id="page-films">
+        <div class="page-title">Films &amp; Séries</div>
+        <div class="page-sub">Liste à voir · En cours · Favoris</div>
+        <div class="placeholder"><div class="placeholder-title">Ta liste de films &amp; séries</div><div class="placeholder-sub">Films à voir · Séries en cours · Notes · À construire S27+</div></div>
       </div>
-      <div class="card">
-        <div class="card-hdr"><span class="card-title">Taux d'épargne</span></div>
-        <div class="card-body">
-          <div style="text-align:center;padding:.5rem 0">
-            <div style="font-family:var(--display);font-size:3rem;font-weight:800;color:var(--green);letter-spacing:-.06em">62.9%</div>
-            <div style="font-size:.72rem;color:var(--text3);margin-top:.25rem">du revenu net épargné · chaque mois</div>
-          </div>
-          <div style="background:var(--bg3);border-radius:var(--r-sm);padding:.75rem;border:1px solid var(--border);margin-top:.5rem">
-            <div style="font-size:.65rem;color:var(--text3);line-height:1.7">
-              Logement $0 (employeur) · Internet $0 (employeur)<br>
-              Avantage Nunavik estimé: <strong style="color:var(--green)">~$2,000/mois</strong> économisés
-            </div>
+
+      <div class="page" id="page-livres">
+        <div class="page-title">Livres</div>
+        <div class="page-sub">En cours · À lire · Complétés</div>
+        <div class="placeholder"><div class="placeholder-title">Ta liste de lecture</div><div class="placeholder-sub">Livres en cours · Wishlist · Notes de lecture · À construire S27+</div></div>
+      </div>
+
+      <div class="page" id="page-restaurants">
+        <div class="page-title">Restaurants</div>
+        <div class="page-sub">À essayer · Favoris · Par ville</div>
+        <div class="placeholder"><div class="placeholder-title">Ta liste de restaurants</div><div class="placeholder-sub">Montréal · Québec · Autres villes · Cuisine · À construire S27+</div></div>
+      </div>
+
+      <div class="page" id="page-voyages">
+        <div class="page-title">Voyages</div>
+        <div class="page-sub">Destinations · Bucket list · Planification</div>
+        <div class="placeholder"><div class="placeholder-title">Tes destinations</div><div class="placeholder-sub">Bucket list · Voyages planifiés · Pays visités · À construire S27+</div></div>
+      </div>
+
+      <div class="page" id="page-nutrition">
+        <div class="page-title">Nutrition</div>
+        <div class="page-sub">Alimentation · Objectifs · Suivi</div>
+        <div class="placeholder"><div class="placeholder-title">Suivi nutritionnel</div><div class="placeholder-sub">Macros · Objectifs caloriques · Habitudes · À construire S27+</div></div>
+      </div>
+
+      <div class="page" id="page-actions">
+        <div class="page-title">Actions requises</div>
+        <div class="page-sub">3 urgences en attente</div>
+        <div class="action-item"><div class="action-dot red"></div><div><div class="action-title">🔴 EQ Bank HISA — Ouvrir maintenant</div><div class="action-sub">$1,500/mois qui dort · Taux ~4% · eqbank.ca · 15 minutes</div></div></div>
+        <div class="action-item"><div class="action-dot red"></div><div><div class="action-title">🔴 Bénéficiaires Questrade — 5 minutes</div><div class="action-sub">$85,683 sans bénéficiaires · My Account → Beneficiaries</div></div></div>
+        <div class="action-item"><div class="action-dot amber"></div><div><div class="action-title">🟡 Analyse $12K rétroactivité</div><div class="action-sub">Room FHSA ~$9,700 · Allocation pendante · avec Claude</div></div></div>
+        <div class="action-item"><div class="action-dot blue"></div><div><div class="action-title">📅 BdC 18 mars — Dans 5 jours</div><div class="action-sub">Décision taux directeur · Impact FHSA et hypothèque 2030</div></div></div>
+      </div>
+
+      <div class="page" id="page-verdicts">
+        <div class="page-title">Verdicts J+30</div>
+        <div class="page-sub">Décisions passées · Résultats · Apprentissages</div>
+        <div class="placeholder"><div class="placeholder-title">Journal de décisions</div><div class="placeholder-sub">Historique des achats · Verdicts 30 jours après · À construire S27+</div></div>
+      </div>
+
+      <div class="page" id="page-crash">
+        <div class="page-title">Crash Simulator</div>
+        <div class="page-sub">Scénarios de stress · COVID 2020 comme ancrage de conviction</div>
+        <div class="card" style="max-width:520px;">
+          <div class="card-title">Simuler une correction</div>
+          <div class="slider-row"><span class="slider-label">Correction marché</span><input type="range" min="5" max="60" step="5" value="20" id="crash-pct" oninput="updateCrash()"><span class="slider-val">-<span id="crash-pct-v">20</span>%</span></div>
+          <div class="sim-results">
+            <div class="sim-kpi"><div class="sim-kpi-label">Portfolio après crash</div><div class="sim-kpi-val r" id="crash-after">—</div></div>
+            <div class="sim-kpi"><div class="sim-kpi-label">Perte en $</div><div class="sim-kpi-val r" id="crash-loss">—</div></div>
+            <div class="sim-kpi"><div class="sim-kpi-label">Récupération à 8%/an</div><div class="sim-kpi-val" id="crash-rec">—</div></div>
+            <div class="sim-kpi"><div class="sim-kpi-label">Opportunité DCA</div><div class="sim-kpi-val g" id="crash-dca">—</div></div>
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </div>
-
-<!-- ══ PAGE: DIVIDENDES ══ -->
-<div class="page" id="page-dividendes">
-  <div class="page-hdr">
-    <div class="page-title">Dividendes <span>& Revenus passifs</span></div>
-    <div class="page-sub">Revenus estimés annuels · Calendrier trimestriel</div>
-  </div>
-  <div class="g3" style="margin-bottom:1rem">
-    <div class="kpi" style="--kpi-accent:var(--green)">
-      <div class="kpi-label">Dividendes annuels</div>
-      <div class="kpi-val g">~$1,926</div>
-      <div class="kpi-sub">CAD combiné · ~$160/mois</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--blue)">
-      <div class="kpi-label">SCHD (REER)</div>
-      <div class="kpi-val b">~$800 USD</div>
-      <div class="kpi-sub">Reinvesti automatiquement</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--amber)">
-      <div class="kpi-label">ENB.TO (TFSA)</div>
-      <div class="kpi-val a">~$315 CAD</div>
-      <div class="kpi-sub">$0.915/action · 9 actions</div>
-    </div>
-  </div>
-  <div class="g2">
-    <div class="card">
-      <div class="card-hdr"><span class="card-title">Positions avec dividendes</span></div>
-      <div class="card-body" style="padding:0">
-        <div style="padding:.5rem .85rem">
-          <div class="div-row">
-            <div style="display:flex;align-items:center;gap:.75rem;flex:1">
-              <span class="div-ticker">SCHD</span>
-              <div><div style="font-size:.72rem;font-weight:500;color:var(--text)">Schwab US Dividend</div><div class="div-name">REER · 64.3 unités · USD</div></div>
-            </div>
-            <span class="div-freq">Trimestriel</span>
-            <span class="div-amount" style="color:var(--green)">~$800/an</span>
-          </div>
-          <div class="div-row">
-            <div style="display:flex;align-items:center;gap:.75rem;flex:1">
-              <span class="div-ticker">ENB.TO</span>
-              <div><div style="font-size:.72rem;font-weight:500;color:var(--text)">Enbridge Inc.</div><div class="div-name">TFSA · 9 actions · CAD</div></div>
-            </div>
-            <span class="div-freq">Trimestriel</span>
-            <span class="div-amount" style="color:var(--green)">~$315/an</span>
-          </div>
-          <div class="div-row">
-            <div style="display:flex;align-items:center;gap:.75rem;flex:1">
-              <span class="div-ticker">TD.TO</span>
-              <div><div style="font-size:.72rem;font-weight:500;color:var(--text)">TD Bank</div><div class="div-name">TFSA+FHSA · 102 actions · CAD</div></div>
-            </div>
-            <span class="div-freq">Trimestriel</span>
-            <span class="div-amount" style="color:var(--green)">~$430/an</span>
-          </div>
-          <div class="div-row">
-            <div style="display:flex;align-items:center;gap:.75rem;flex:1">
-              <span class="div-ticker">SRU-UN.TO</span>
-              <div><div style="font-size:.72rem;font-weight:500;color:var(--text)">SmartCentres REIT</div><div class="div-name">TFSA+FHSA · 120 unités · CAD</div></div>
-            </div>
-            <span class="div-freq">Mensuel</span>
-            <span class="div-amount" style="color:var(--amber)">~$210/an</span>
-          </div>
-          <div class="div-row">
-            <div style="display:flex;align-items:center;gap:.75rem;flex:1">
-              <span class="div-ticker">XEI.TO</span>
-              <div><div style="font-size:.72rem;font-weight:500;color:var(--text)">iShares High Div</div><div class="div-name">TFSA+FHSA · 77 unités · CAD</div></div>
-            </div>
-            <span class="div-freq">Mensuel</span>
-            <span class="div-amount" style="color:var(--amber)">~$115/an</span>
-          </div>
-          <div class="div-row">
-            <div style="display:flex;align-items:center;gap:.75rem;flex:1">
-              <span class="div-ticker">JEPI</span>
-              <div><div style="font-size:.72rem;font-weight:500;color:var(--text)">JPMorgan Premium Income</div><div class="div-name">REER · 1 unité · USD</div></div>
-            </div>
-            <span class="div-freq">Mensuel</span>
-            <span class="div-amount" style="color:var(--text3)">~$7/an</span>
-          </div>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:.65rem .85rem;border-top:1px solid var(--border);background:var(--bg3)">
-          <span style="font-size:.72rem;color:var(--text3)">Total estimé annuel</span>
-          <span style="font-family:var(--mono);font-weight:800;color:var(--green)">~$1,926 CAD</span>
-        </div>
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:1rem">
-      <div class="card">
-        <div class="card-hdr"><span class="card-title">Calendrier · Q2 2026</span></div>
-        <div class="card-body">
-          <div class="event-row">
-            <div class="event-date"><div class="event-day">AVR</div><div class="event-mon">2026</div></div>
-            <div><div class="event-title">SCHD — Dividende Q1</div><div class="event-sub">~$47 USD · REER reinvesti</div></div>
-          </div>
-          <div class="event-row">
-            <div class="event-date"><div class="event-day">AVR</div><div class="event-mon">2026</div></div>
-            <div><div class="event-title">ENB.TO — Dividende Q1</div><div class="event-sub">~$8.24 CAD · TFSA</div></div>
-          </div>
-          <div class="event-row">
-            <div class="event-date"><div class="event-day">MAI</div><div class="event-mon">2026</div></div>
-            <div><div class="event-title">TD.TO — Dividende Q2</div><div class="event-sub">~$107 CAD · TFSA+FHSA</div></div>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-hdr"><span class="card-title">Projection revenus passifs</span></div>
-        <div class="card-body">
-          <div class="budget-row"><span class="budget-label">2026 (actuel)</span><span class="budget-val" style="color:var(--green)">~$1,926/an</span></div>
-          <div class="budget-row"><span class="budget-label">2030 (@$200K)</span><span class="budget-val" style="color:var(--green)">~$5,000/an</span></div>
-          <div class="budget-row"><span class="budget-label">2040 FI (@$2.1M)</span><span class="budget-val" style="color:var(--green)">~$63,000/an</span></div>
-          <div style="margin-top:.75rem;background:var(--green-dim);border:1px solid rgba(0,210,106,.15);border-radius:var(--r-sm);padding:.65rem;font-size:.68rem;color:var(--text3)">
-            Croissance dividendes SCHD: ~10%/an historique · Snowball REER en cours
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ PAGE: FISCAL ══ -->
-<div class="page" id="page-fiscal">
-  <div class="page-hdr">
-    <div class="page-title">Fiscal <span>& Snowball REER</span></div>
-    <div class="page-sub">Taux marginal 52.98% QC · Mécanisme ARC · Room FHSA</div>
-  </div>
-  <div class="g4" style="margin-bottom:1rem">
-    <div class="kpi" style="--kpi-accent:var(--green)">
-      <div class="kpi-label">ARC estimé 2026</div>
-      <div class="kpi-val g">~$12,720</div>
-      <div class="kpi-sub">REER $24K × 52.98%</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--blue)">
-      <div class="kpi-label">Snowball mensuel</div>
-      <div class="kpi-val b">~$1,060</div>
-      <div class="kpi-sub">$2,000 REER × 52.98%</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--amber)">
-      <div class="kpi-label">Room FHSA restant</div>
-      <div class="kpi-val a">~$9,700</div>
-      <div class="kpi-sub">$4K en transit · 2026</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--violet)">
-      <div class="kpi-label">Taux marginal QC</div>
-      <div class="kpi-val v">52.98%</div>
-      <div class="kpi-sub">Chaque $1 REER = $0.53 ARC</div>
-    </div>
-  </div>
-  <div class="g2" style="margin-bottom:1rem">
-    <div class="card">
-      <div class="card-hdr"><span class="card-title">Snowball REER — Mécanisme</span></div>
-      <div class="card-body">
-        <div class="signal-box g" style="margin-bottom:.85rem">
-          <div class="signal-lbl">Comment ça marche</div>
-          <div class="signal-val">Tu cotises $2,000/mois au REER → déduction d'impôt → ARC retourne ~$1,060/mois → réinvesti en REER → cycle qui s'accélère chaque année.</div>
-        </div>
-        <div class="fiscal-row"><span class="fiscal-label">Cotisation REER mensuelle</span><span class="fiscal-val">$2,000/mois</span></div>
-        <div class="fiscal-row"><span class="fiscal-label">Cotisation annuelle</span><span class="fiscal-val">$24,000/an</span></div>
-        <div class="fiscal-row"><span class="fiscal-label">Remboursement ARC (~53%)</span><span class="fiscal-val">~$12,720/an</span></div>
-        <div class="fiscal-row"><span class="fiscal-label">Retour mensuel effectif</span><span class="fiscal-val">~$1,060/mois</span></div>
-        <div class="fiscal-row"><span class="fiscal-label">Coût net réel REER</span><span class="fiscal-val" style="color:var(--blue)">~$940/mois</span></div>
-        <div class="fiscal-row"><span class="fiscal-label">Valeur REER actuelle</span><span class="fiscal-val">$2,771 CAD</span></div>
-        <div class="fiscal-row"><span class="fiscal-label">Actif REER (SCHD)</span><span class="fiscal-val">64.3 unités</span></div>
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:1rem">
-      <div class="card">
-        <div class="card-hdr"><span class="card-title">FHSA — Room & Stratégie</span></div>
-        <div class="card-body">
-          <div class="fiscal-row"><span class="fiscal-label">Limite annuelle 2026</span><span class="fiscal-val">$16,000</span></div>
-          <div class="fiscal-row"><span class="fiscal-label">Utilisé (estimé)</span><span class="fiscal-val" style="color:var(--red)">~$2,300</span></div>
-          <div class="fiscal-row"><span class="fiscal-label">En transit → VFV.TO</span><span class="fiscal-val" style="color:var(--amber)">$4,000 ⏳</span></div>
-          <div class="fiscal-row"><span class="fiscal-label">Room restant</span><span class="fiscal-val">~$9,700</span></div>
-          <div class="fiscal-row"><span class="fiscal-label">Objectif total FHSA</span><span class="fiscal-val">$40,000</span></div>
-          <div class="fiscal-row"><span class="fiscal-label">Actuel FHSA</span><span class="fiscal-val">$14,898</span></div>
-          <div style="margin-top:.75rem">
-            <div style="display:flex;justify-content:space-between;margin-bottom:.4rem">
-              <span style="font-size:.72rem;color:var(--text3)">Progression vers $40K</span>
-              <span style="font-size:.72rem;color:var(--blue);font-weight:700">37.2%</span>
-            </div>
-            <div class="bar-track" style="height:6px"><div class="bar-fill bar-b" style="width:37.2%"></div></div>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-hdr"><span class="card-title">⚠️ Règle FHSA absolue</span></div>
-        <div class="card-body">
-          <div class="signal-box a">
-            <div class="signal-lbl">Toujours vérifier avant cotisation</div>
-            <div class="signal-val">Ne jamais dépasser la room disponible. Cotisation en excès = pénalité 1%/mois. Vérifier Questrade avant chaque dépôt.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ PAGE: FI ══ -->
-<div class="page" id="page-fi">
-  <div class="page-hdr">
-    <div class="page-title">Projection <span>Indépendance Financière</span></div>
-    <div class="page-sub">Base: $86,869 · 8%/an · $5K/mois · Objectif plancher: $2.1M</div>
-  </div>
-  <div class="g3" style="margin-bottom:1rem">
-    <div class="kpi" style="--kpi-accent:var(--green)">
-      <div class="kpi-label">Progression vers $2.1M</div>
-      <div class="kpi-val g">4.14%</div>
-      <div style="margin-top:.5rem"><div class="bar-track"><div class="bar-fill bar-g" style="width:4.14%"></div></div></div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--blue)">
-      <div class="kpi-label">Âge FI estimé @8% · $5K</div>
-      <div class="kpi-val b">~48 ans</div>
-      <div class="kpi-sub">2040 · dans ~14 ans</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--amber)">
-      <div class="kpi-label">Dividendes passifs/an</div>
-      <div class="kpi-val a">~$1,926</div>
-      <div class="kpi-sub">SCHD · ENB · TD · SRU</div>
-    </div>
-  </div>
-  <div class="card" style="margin-bottom:1rem">
-    <div class="card-hdr"><span class="card-title">Scénarios de projection</span><span class="card-sub">✅ = $2.1M atteint</span></div>
-    <div style="overflow-x:auto"><div id="fi-full-table"></div></div>
-  </div>
-  <div class="card" style="margin-bottom:1rem">
-    <div class="card-hdr"><span class="card-title">Simulateur interactif</span><span class="card-sub">Ajuster les paramètres</span></div>
-    <div class="card-body">
-      <div class="g3" style="gap:.85rem;margin-bottom:1rem">
-        <div>
-          <label style="font-size:.65rem;color:var(--text3);font-weight:700;letter-spacing:.08em;display:block;margin-bottom:.4rem">COTISATION /MOIS</label>
-          <input type="range" id="sim-monthly" min="2000" max="10000" step="500" value="5000" oninput="updateSimulator()" style="width:100%;accent-color:var(--green)">
-          <div style="text-align:center;font-family:var(--mono);font-size:.88rem;font-weight:700;color:var(--green);margin-top:.25rem" id="sim-monthly-val">$5,000/mois</div>
-        </div>
-        <div>
-          <label style="font-size:.65rem;color:var(--text3);font-weight:700;letter-spacing:.08em;display:block;margin-bottom:.4rem">RENDEMENT ANNUEL</label>
-          <input type="range" id="sim-rate" min="4" max="12" step="0.5" value="8" oninput="updateSimulator()" style="width:100%;accent-color:var(--blue)">
-          <div style="text-align:center;font-family:var(--mono);font-size:.88rem;font-weight:700;color:var(--blue);margin-top:.25rem" id="sim-rate-val">8.0%</div>
-        </div>
-        <div>
-          <label style="font-size:.65rem;color:var(--text3);font-weight:700;letter-spacing:.08em;display:block;margin-bottom:.4rem">OBJECTIF FI</label>
-          <input type="range" id="sim-target" min="1000000" max="5000000" step="100000" value="2100000" oninput="updateSimulator()" style="width:100%;accent-color:var(--amber)">
-          <div style="text-align:center;font-family:var(--mono);font-size:.88rem;font-weight:700;color:var(--amber);margin-top:.25rem" id="sim-target-val">$2.1M</div>
-        </div>
-      </div>
-      <div id="sim-result" style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:1rem;text-align:center"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ PAGE: MAISON ══ -->
-<div class="page" id="page-maison">
-  <div class="page-hdr">
-    <div class="page-title">Maison <span>2030+</span></div>
-    <div class="page-sub">RAP $60K + FHSA $40K = $100K mise de fonds · Solo · Objectif 2030</div>
-  </div>
-  <div class="g3" style="margin-bottom:1rem">
-    <div class="kpi" style="--kpi-accent:var(--green)">
-      <div class="kpi-label">REER RAP</div>
-      <div class="kpi-val g">$2,771</div>
-      <div class="kpi-sub">Objectif $60K · 4.6% atteint</div>
-      <div style="margin-top:.5rem"><div class="bar-track"><div class="bar-fill bar-g" style="width:4.6%"></div></div></div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--blue)">
-      <div class="kpi-label">FHSA</div>
-      <div class="kpi-val b">$14,898</div>
-      <div class="kpi-sub">Objectif $40K · 37.2% atteint</div>
-      <div style="margin-top:.5rem"><div class="bar-track"><div class="bar-fill bar-b" style="width:37.2%"></div></div></div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--amber)">
-      <div class="kpi-label">Mise de fonds totale</div>
-      <div class="kpi-val a">$17,669</div>
-      <div class="kpi-sub">Objectif $100K · 17.7% atteint</div>
-      <div style="margin-top:.5rem"><div class="bar-track"><div class="bar-fill bar-a" style="width:17.7%"></div></div></div>
-    </div>
-  </div>
-  <div class="g2" style="margin-bottom:1rem">
-    <div class="card">
-      <div class="card-hdr"><span class="card-title">Progression détaillée</span></div>
-      <div class="card-body">
-        <div style="margin-bottom:1.5rem">
-          <div style="display:flex;justify-content:space-between;margin-bottom:.5rem">
-            <div>
-              <div style="font-size:.78rem;font-weight:600;color:var(--text)">REER RAP</div>
-              <div style="font-size:.65rem;color:var(--text3)">Régime d'accession propriété</div>
-            </div>
-            <div style="text-align:right">
-              <div style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--green)">$2,771</div>
-              <div style="font-size:.62rem;color:var(--text3)">sur $60,000</div>
-            </div>
-          </div>
-          <div class="bar-track" style="height:8px"><div class="bar-fill bar-g" style="width:4.6%"></div></div>
-          <div style="font-size:.62rem;color:var(--text3);margin-top:.3rem">Manque: $57,229 · ~24 mois @$2K/mois</div>
-        </div>
-        <div style="margin-bottom:1.5rem">
-          <div style="display:flex;justify-content:space-between;margin-bottom:.5rem">
-            <div>
-              <div style="font-size:.78rem;font-weight:600;color:var(--text)">FHSA</div>
-              <div style="font-size:.65rem;color:var(--text3)">Compte épargne libre impôt premier achat</div>
-            </div>
-            <div style="text-align:right">
-              <div style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--blue)">$14,898</div>
-              <div style="font-size:.62rem;color:var(--text3)">sur $40,000</div>
-            </div>
-          </div>
-          <div class="bar-track" style="height:8px"><div class="bar-fill bar-b" style="width:37.2%"></div></div>
-          <div style="font-size:.62rem;color:var(--text3);margin-top:.3rem">Manque: $25,102 · ~25 mois @$1K/mois</div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:.5rem">
-            <div>
-              <div style="font-size:.78rem;font-weight:600;color:var(--text)">Mise de fonds totale</div>
-              <div style="font-size:.65rem;color:var(--text3)">RAP + FHSA combinés</div>
-            </div>
-            <div style="text-align:right">
-              <div style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--amber)">$17,669</div>
-              <div style="font-size:.62rem;color:var(--text3)">sur $100,000</div>
-            </div>
-          </div>
-          <div class="bar-track" style="height:8px"><div class="bar-fill bar-a" style="width:17.7%"></div></div>
-          <div style="font-size:.62rem;color:var(--text3);margin-top:.3rem">Manque: $82,331 · Date estimée: 2028-2030</div>
-        </div>
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:1rem">
-      <div class="card">
-        <div class="card-hdr"><span class="card-title">Simulateur hypothèque</span></div>
-        <div class="card-body">
-          <div style="margin-bottom:.75rem">
-            <label style="font-size:.62rem;color:var(--text3);font-weight:700;letter-spacing:.08em;display:block;margin-bottom:.35rem">PRIX PROPRIÉTÉ</label>
-            <input type="range" id="house-price" min="300000" max="1000000" step="25000" value="550000" oninput="updateMortgage()" style="width:100%;accent-color:var(--amber)">
-            <div style="text-align:center;font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--amber);margin-top:.2rem" id="house-price-val">$550,000</div>
-          </div>
-          <div style="margin-bottom:.75rem">
-            <label style="font-size:.62rem;color:var(--text3);font-weight:700;letter-spacing:.08em;display:block;margin-bottom:.35rem">TAUX HYPOTHÉCAIRE</label>
-            <input type="range" id="house-rate" min="3" max="8" step="0.25" value="5" oninput="updateMortgage()" style="width:100%;accent-color:var(--blue)">
-            <div style="text-align:center;font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--blue);margin-top:.2rem" id="house-rate-val">5.00%</div>
-          </div>
-          <div id="mortgage-result" style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:.85rem"></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-hdr"><span class="card-title">🏠 Stratégie 2030</span></div>
-        <div class="card-body" style="font-size:.75rem;color:var(--text2);line-height:1.8">
-          <div>✅ FHSA: $1,000/mois → VFV.TO (croissance + retraits libres impôt)</div>
-          <div>✅ REER: $2,000/mois → SCHD (RAP + snowball ARC)</div>
-          <div>⏳ Achat solo · pas de co-emprunteur</div>
-          <div>⏳ RAP: retrait max $60K · remboursement 15 ans</div>
-          <div>⏳ FHSA: retrait illimité · aucune obligation remboursement</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ PAGE: ACTIONS ══ -->
-<div class="page" id="page-actions">
-  <div class="page-hdr">
-    <div class="page-title">Actions requises</div>
-  </div>
-  <div class="g21">
-    <div style="display:flex;flex-direction:column;gap:.75rem">
-      <div>
-        <div class="action-section-lbl" style="color:var(--red)">🔴 CRITIQUES — Cette semaine</div>
-        <div class="tbl-wrap"><div id="critical-actions"></div></div>
-      </div>
-      <div>
-        <div class="action-section-lbl" style="color:var(--amber)">🟡 IMPORTANTES — Avant 18 mars</div>
-        <div class="tbl-wrap"><div id="important-actions"></div></div>
-      </div>
-      <div>
-        <div class="action-section-lbl">📅 CALENDRIER</div>
-        <div class="tbl-wrap"><div id="calendar-actions"></div></div>
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:1rem">
-      <div class="card">
-        <div class="card-hdr"><span class="card-title">🔒 Règles absolues</span></div>
-        <div class="card-body" style="padding:.4rem .85rem">
-          <div class="rule-item">
-            <div class="rule-icon" style="background:var(--red-dim)">🚫</div>
-            <div><div class="rule-title">Ne jamais vendre T.TO / MFC.TO</div><div class="rule-sub">Room TFSA perdu définitivement si vendu en perte</div></div>
-          </div>
-          <div class="rule-item">
-            <div class="rule-icon" style="background:var(--green-dim)">✅</div>
-            <div><div class="rule-title">SCHD REER exécuté · 12 mars 2026</div><div class="rule-sub">Snowball ARC activé · $2K/mois</div></div>
-          </div>
-          <div class="rule-item">
-            <div class="rule-icon" style="background:var(--amber-dim)">⚠️</div>
-            <div><div class="rule-title">FHSA T4 = 36%</div><div class="rule-sub">REI+SRU+XIC+XEI → recycler vers VFV.TO post-BdC</div></div>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-hdr"><span class="card-title">🧠 Ancre psychologique</span></div>
-        <div class="card-body">
-          <div class="signal-box g">
-            <div class="signal-lbl">COVID 2020 Playbook</div>
-            <div class="signal-val">En crise → acheter agressivement T1 → ne pas vendre → tenir le plan</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ PAGE: VERDICTS ══ -->
-<div class="page" id="page-verdicts">
-  <div class="page-hdr">
-    <div class="page-title">Verdicts <span>J+30</span></div>
-    <div class="page-sub">Saisir les prix du 11 avril 2026 · Alpha calculé automatiquement vs VFV.TO</div>
-  </div>
-  <div style="background:var(--amber-dim);border:1px solid rgba(245,158,11,.2);border-radius:var(--r);padding:.85rem 1.1rem;margin-bottom:1rem;display:flex;align-items:center;gap:.85rem">
-    <span style="font-size:1.3rem">📅</span>
-    <div>
-      <div style="font-size:.82rem;font-weight:700;color:var(--amber)">Date verdicts: 11 AVRIL 2026</div>
-      <div style="font-size:.7rem;color:var(--text3)">Ouvrir Questrade · noter les prix · entrer ci-dessous · l'alpha se calcule automatiquement</div>
-    </div>
-  </div>
-  <div class="tbl-wrap"><div id="verdicts-table"></div></div>
-  <div class="card" style="margin-top:1rem">
-    <div class="card-hdr"><span class="card-title">Questions de leçons — 11 avril</span></div>
-    <div class="card-body">
-      <div class="g2" style="gap:.65rem">
-        <div style="background:var(--bg3);padding:.75rem;border-radius:var(--r-sm);border:1px solid var(--border)"><div style="font-size:.72rem;font-weight:600;margin-bottom:.2rem;color:var(--text)">❓ Les T1 achetés en dip ont-ils surperformé VFV.TO?</div><div style="font-size:.65rem;color:var(--text3)">Alpha positif = gestion active justifiée</div></div>
-        <div style="background:var(--bg3);padding:.75rem;border-radius:var(--r-sm);border:1px solid var(--border)"><div style="font-size:.72rem;font-weight:600;margin-bottom:.2rem;color:var(--text)">❓ La rotation PLZ.UN → T1 était-elle optimale?</div><div style="font-size:.65rem;color:var(--text3)">Comparer VFV vs PLZ.UN même période</div></div>
-        <div style="background:var(--bg3);padding:.75rem;border-radius:var(--r-sm);border:1px solid var(--border)"><div style="font-size:.72rem;font-weight:600;margin-bottom:.2rem;color:var(--text)">❓ Le frein pré-achat a-t-il coûté du rendement?</div><div style="font-size:.65rem;color:var(--text3)">Prix 11 mars vs prix si acheté 9 mars</div></div>
-        <div style="background:var(--bg3);padding:.75rem;border-radius:var(--r-sm);border:1px solid var(--border)"><div style="font-size:.72rem;font-weight:600;margin-bottom:.2rem;color:var(--text)">❓ SCHD REER — dividende reçu en mars?</div><div style="font-size:.65rem;color:var(--text3)">Vérifier Questrade · ~$47 USD trimestriel</div></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ PAGE: CRASH SIM ══ -->
-<div class="page" id="page-crash">
-  <div class="page-hdr">
-    <div class="page-title">Crash <span>Simulator</span></div>
-    <div class="page-sub">Impact en temps réel · Plan d'action par scénario · Ancre COVID 2020</div>
-  </div>
-  <div class="g4" style="margin-bottom:1rem" id="crash-kpis"></div>
-  <div class="card" style="margin-bottom:1rem">
-    <div class="card-hdr"><span class="card-title">Niveau de correction</span></div>
-    <div class="card-body">
-      <div style="display:flex;align-items:center;gap:2rem;flex-wrap:wrap">
-        <div style="flex:1;min-width:200px">
-          <input type="range" class="crash-slider" id="crash-slider" min="-60" max="-5" step="5" value="-20" oninput="updateCrash()">
-          <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--text3);margin-top:.4rem">
-            <span>-60% Crash 2008</span><span>-30% Bear</span><span>-5% Dip</span>
-          </div>
-        </div>
-        <div style="text-align:center;min-width:90px">
-          <div id="crash-pct" style="font-family:var(--display);font-size:2.8rem;font-weight:800;color:var(--red);letter-spacing:-.06em;line-height:1">-20%</div>
-          <div style="font-size:.58rem;color:var(--text3);letter-spacing:.08em;text-transform:uppercase">Correction</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="g21">
-    <div class="tbl-wrap">
-      <div class="card-hdr" style="border-bottom:1px solid var(--border)">
-        <span class="card-title">Impact par position T1</span>
-        <span id="crash-col-hdr" class="card-sub" style="color:var(--red)">À -20%</span>
-      </div>
-      <div id="crash-t1-table"></div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:1rem">
-      <div class="card">
-        <div class="card-hdr"><span class="card-title">Plan d'action</span></div>
-        <div class="card-body" id="crash-plan"></div>
-      </div>
-      <div class="card">
-        <div class="card-hdr"><span class="card-title">🧠 Ancre COVID 2020</span></div>
-        <div class="card-body">
-          <div class="signal-box g">
-            <div class="signal-lbl">Le playbook qui fonctionne</div>
-            <div class="signal-val">Mars 2020 — S&P <strong>-35%</strong> en 23 jours. Tu as acheté agressivement. Résultat: meilleurs retours de ta vie. <strong style="color:var(--green)">Même playbook toujours.</strong></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-</main>
-
 <script>
-// ════════════════════════════════════════════
-// SECURITY
-// ════════════════════════════════════════════
-const PW_HASH = 'c838df5335c1eba2532f32090cd555d17c9e218289d99ecaf55525d7b199aa88'; // "123"
-async function sha256(s) {
-  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
-  return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');
-}
-async function tryLogin() {
-  const pw = document.getElementById('pw-input').value;
-  if (await sha256(pw) === PW_HASH) {
-    document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('pw-input').value = '';
-    init();
-  } else {
-    const e = document.getElementById('login-error');
-    e.style.opacity = '1';
-    document.getElementById('pw-input').value = '';
-    document.getElementById('pw-input').focus();
-    setTimeout(() => e.style.opacity = '0', 2500);
-  }
-}
-
-// ════════════════════════════════════════════
-// DATA
-// ════════════════════════════════════════════
-const DATA_JSON_URL = 'https://raw.githubusercontent.com/Lemiwinks007/heyos-dashboard/main/data.json';
-
-let POSITIONS = [
-  // ── TFSA ──
-  {ticker:'VFV.TO',nom:'Vanguard S&P 500',type:'ETF',tier:'T1',compte:'TFSA',qty:84,prixMoy:119.9246,dev:'CAD',ciblePrix:155},
-  {ticker:'GOOG',nom:'Alphabet',type:'Action',tier:'T1',compte:'TFSA',qty:6,prixMoy:90.6059,dev:'USD',ciblePrix:280},
-  {ticker:'AVGO',nom:'Broadcom',type:'Action',tier:'T1',compte:'TFSA',qty:16.5743,prixMoy:342.1593,dev:'USD'},
-  {ticker:'AMZN',nom:'Amazon',type:'Action',tier:'T1',compte:'TFSA',qty:7.4817,prixMoy:113.7377,dev:'USD'},
-  {ticker:'SMH',nom:'VanEck Semis',type:'ETF',tier:'T1',compte:'TFSA',qty:19.2266,prixMoy:393.5653,dev:'USD',ciblePrix:350},
-  {ticker:'META',nom:'Meta Platforms',type:'Action',tier:'T1',compte:'TFSA',qty:1,prixMoy:637.7698,dev:'USD',ciblePrix:580},
-  {ticker:'ENB.TO',nom:'Enbridge',type:'Action',tier:'T1',compte:'TFSA',qty:9,prixMoy:49.62,dev:'CAD'},
-  {ticker:'GEV',nom:'GE Vernova',type:'Action',tier:'T1',compte:'TFSA',qty:2.4431,prixMoy:831.9907,dev:'USD',ciblePrix:750},
-  {ticker:'MSFT',nom:'Microsoft',type:'Action',tier:'T2',compte:'TFSA',qty:2,prixMoy:312.5938,dev:'USD',ciblePrix:370},
-  {ticker:'NVDA',nom:'NVIDIA',type:'Action',tier:'T2',compte:'TFSA',qty:4,prixMoy:128.59,dev:'USD',ciblePrix:160},
-  {ticker:'TSLA',nom:'Tesla',type:'Action',tier:'T2',compte:'TFSA',qty:1.8645,prixMoy:303.5644,dev:'USD'},
-  {ticker:'QQQM',nom:'Invesco Nasdaq 100',type:'ETF',tier:'T2',compte:'TFSA',qty:4.4515,prixMoy:247.1068,dev:'USD'},
-  {ticker:'XEQT.TO',nom:'iShares Core Equity',type:'ETF',tier:'T2',compte:'TFSA',qty:25,prixMoy:39.97,dev:'CAD'},
-  {ticker:'SPGI',nom:'S&P Global',type:'Action',tier:'T2',compte:'TFSA',qty:0.9996,prixMoy:443.2458,dev:'USD'},
-  {ticker:'TD.TO',nom:'TD Bank',type:'Action',tier:'T3',compte:'TFSA',qty:87,prixMoy:79.8348,dev:'CAD'},
-  {ticker:'ZLB.TO',nom:'BMO Low Volatility',type:'ETF',tier:'T3',compte:'TFSA',qty:37,prixMoy:58.1416,dev:'CAD'},
-  {ticker:'H.TO',nom:'Hydro One',type:'Action',tier:'T3',compte:'TFSA',qty:22,prixMoy:52.8663,dev:'CAD'},
-  {ticker:'T.TO',nom:'TELUS ⚠️NEVER SELL',type:'Action',tier:'T3',compte:'TFSA',qty:32,prixMoy:22.04,dev:'CAD'},
-  {ticker:'QTUM',nom:'Defiance Quantum',type:'ETF',tier:'T3',compte:'TFSA',qty:5,prixMoy:120.81,dev:'USD'},
-  {ticker:'HURA.TO',nom:'Global X Uranium',type:'ETF',tier:'T3',compte:'TFSA',qty:6,prixMoy:55.25,dev:'CAD'},
-  {ticker:'XEI.TO',nom:'iShares High Div',type:'ETF',tier:'T4',compte:'TFSA',qty:51,prixMoy:30.6811,dev:'CAD'},
-  {ticker:'SRU.UN.TO',nom:'SmartCentres REIT',type:'REIT',tier:'T4',compte:'TFSA',qty:57,prixMoy:25.2543,dev:'CAD'},
-  {ticker:'XIC.TO',nom:'iShares Core TSX',type:'ETF',tier:'T4',compte:'TFSA',qty:21,prixMoy:40.4066,dev:'CAD'},
-  {ticker:'ZRE.TO',nom:'BMO Equal REITs',type:'ETF',tier:'T4',compte:'TFSA',qty:19,prixMoy:20.83,dev:'CAD'},
-  {ticker:'MFC.TO',nom:'Manulife ⚠️NEVER SELL',type:'Action',tier:'T4',compte:'TFSA',qty:8,prixMoy:51.7,dev:'CAD'},
-  {ticker:'VDU.TO',nom:'Vanguard Dev Markets',type:'ETF',tier:'T4',compte:'TFSA',qty:6,prixMoy:43.75,dev:'CAD'},
-  // ── FHSA ──
-  {ticker:'VFV.TO',nom:'Vanguard S&P 500',type:'ETF',tier:'T1',compte:'FHSA',qty:16,prixMoy:157.3812,dev:'CAD'},
-  {ticker:'AMZN',nom:'Amazon',type:'Action',tier:'T1',compte:'FHSA',qty:7,prixMoy:154.9418,dev:'USD'},
-  {ticker:'QQQM',nom:'Invesco Nasdaq 100',type:'ETF',tier:'T2',compte:'FHSA',qty:5.311,prixMoy:247.4064,dev:'USD'},
-  {ticker:'XEQT.TO',nom:'iShares Core Equity',type:'ETF',tier:'T2',compte:'FHSA',qty:15,prixMoy:40.06,dev:'CAD'},
-  {ticker:'TD.TO',nom:'TD Bank',type:'Action',tier:'T3',compte:'FHSA',qty:15,prixMoy:82.29,dev:'CAD'},
-  {ticker:'H.TO',nom:'Hydro One',type:'Action',tier:'T3',compte:'FHSA',qty:10,prixMoy:51.78,dev:'CAD'},
-  {ticker:'ZLB.TO',nom:'BMO Low Volatility',type:'ETF',tier:'T3',compte:'FHSA',qty:3,prixMoy:59.0666,dev:'CAD'},
-  {ticker:'SRU.UN.TO',nom:'SmartCentres REIT',type:'REIT',tier:'T4',compte:'FHSA',qty:63,prixMoy:23.61,dev:'CAD'},
-  {ticker:'REI.UN.TO',nom:'RioCan REIT',type:'REIT',tier:'T4',compte:'FHSA',qty:80,prixMoy:18.73,dev:'CAD'},
-  {ticker:'XIC.TO',nom:'iShares Core TSX',type:'ETF',tier:'T4',compte:'FHSA',qty:19,prixMoy:48.3705,dev:'CAD'},
-  {ticker:'XEI.TO',nom:'iShares High Div',type:'ETF',tier:'T4',compte:'FHSA',qty:26,prixMoy:32.6111,dev:'CAD'},
-  // ── REER ──
-  {ticker:'SCHD',nom:'Schwab US Dividend',type:'ETF',tier:'T1',compte:'REER',qty:64.3053,prixMoy:25.5008,dev:'USD'},
-  {ticker:'JEPI',nom:'JPMorgan Premium Income',type:'ETF',tier:'T2',compte:'REER',qty:1,prixMoy:54.52,dev:'USD'},
+const PW_HASH='c838df5335c1eba2532f32090cd555d17c9e218289d99ecaf55525d7b199aa88';
+async function sha256(s){const b=new TextEncoder().encode(s);const h=await crypto.subtle.digest('SHA-256',b);return Array.from(new Uint8Array(h)).map(x=>x.toString(16).padStart(2,'0')).join('');}
+async function tryLogin(){const pw=document.getElementById('pw-input').value;if(await sha256(pw)===PW_HASH){sessionStorage.setItem('heyos_auth','1');document.getElementById('login-screen').style.display='none';document.getElementById('app').classList.add('visible');init();}else{document.getElementById('login-err').textContent='Code incorrect';document.getElementById('pw-input').value='';}}
+if(sessionStorage.getItem('heyos_auth')==='1'){document.getElementById('login-screen').style.display='none';document.getElementById('app').classList.add('visible');}
+const DATA_URL='https://raw.githubusercontent.com/Lemiwinks007/heyos-dashboard/main/data.json';
+let USDCAD=1.3559,TOTAL_CAD=85683,COST_BASE=71776.46,_lc={},_pf='ALL';
+let POSITIONS=[
+{ticker:'VFV.TO',nom:'Vanguard S&P 500',tier:'T1',compte:'TFSA',qty:84,prixMoy:119.9246,dev:'CAD'},
+{ticker:'GOOG',nom:'Alphabet',tier:'T1',compte:'TFSA',qty:6,prixMoy:90.6059,dev:'USD'},
+{ticker:'AVGO',nom:'Broadcom',tier:'T1',compte:'TFSA',qty:16.5743,prixMoy:342.1593,dev:'USD'},
+{ticker:'AMZN',nom:'Amazon',tier:'T1',compte:'TFSA',qty:7.4817,prixMoy:113.7377,dev:'USD'},
+{ticker:'SMH',nom:'VanEck Semis',tier:'T1',compte:'TFSA',qty:19.2266,prixMoy:393.5653,dev:'USD'},
+{ticker:'META',nom:'Meta Platforms',tier:'T1',compte:'TFSA',qty:1,prixMoy:637.7698,dev:'USD'},
+{ticker:'ENB.TO',nom:'Enbridge',tier:'T1',compte:'TFSA',qty:9,prixMoy:49.62,dev:'CAD'},
+{ticker:'GEV',nom:'GE Vernova',tier:'T1',compte:'TFSA',qty:2.4431,prixMoy:831.9907,dev:'USD'},
+{ticker:'MSFT',nom:'Microsoft',tier:'T2',compte:'TFSA',qty:2,prixMoy:312.5938,dev:'USD'},
+{ticker:'NVDA',nom:'NVIDIA',tier:'T2',compte:'TFSA',qty:4,prixMoy:128.59,dev:'USD'},
+{ticker:'TSLA',nom:'Tesla',tier:'T2',compte:'TFSA',qty:1.8645,prixMoy:303.5644,dev:'USD'},
+{ticker:'QQQM',nom:'Invesco Nasdaq 100',tier:'T2',compte:'TFSA',qty:4.4515,prixMoy:247.1068,dev:'USD'},
+{ticker:'XEQT.TO',nom:'iShares Core Equity',tier:'T2',compte:'TFSA',qty:25,prixMoy:39.97,dev:'CAD'},
+{ticker:'SPGI',nom:'S&P Global',tier:'T2',compte:'TFSA',qty:0.9996,prixMoy:443.2458,dev:'USD'},
+{ticker:'TD.TO',nom:'TD Bank',tier:'T3',compte:'TFSA',qty:87,prixMoy:79.8348,dev:'CAD'},
+{ticker:'ZLB.TO',nom:'BMO Low Volatility',tier:'T3',compte:'TFSA',qty:37,prixMoy:58.1416,dev:'CAD'},
+{ticker:'H.TO',nom:'Hydro One',tier:'T3',compte:'TFSA',qty:22,prixMoy:52.8663,dev:'CAD'},
+{ticker:'T.TO',nom:'TELUS',tier:'T3',compte:'TFSA',qty:32,prixMoy:22.04,dev:'CAD'},
+{ticker:'QTUM',nom:'Defiance Quantum',tier:'T3',compte:'TFSA',qty:5,prixMoy:120.81,dev:'USD'},
+{ticker:'HURA.TO',nom:'Global X Uranium',tier:'T3',compte:'TFSA',qty:6,prixMoy:55.25,dev:'CAD'},
+{ticker:'XEI.TO',nom:'iShares High Div',tier:'T4',compte:'TFSA',qty:51,prixMoy:30.6811,dev:'CAD'},
+{ticker:'SRU.UN.TO',nom:'SmartCentres REIT',tier:'T4',compte:'TFSA',qty:57,prixMoy:25.2543,dev:'CAD'},
+{ticker:'XIC.TO',nom:'iShares Core TSX',tier:'T4',compte:'TFSA',qty:21,prixMoy:40.4066,dev:'CAD'},
+{ticker:'ZRE.TO',nom:'BMO Equal REITs',tier:'T4',compte:'TFSA',qty:19,prixMoy:20.83,dev:'CAD'},
+{ticker:'MFC.TO',nom:'Manulife',tier:'T4',compte:'TFSA',qty:8,prixMoy:51.7,dev:'CAD'},
+{ticker:'VDU.TO',nom:'Vanguard Dev Markets',tier:'T4',compte:'TFSA',qty:6,prixMoy:43.75,dev:'CAD'},
+{ticker:'VFV.TO',nom:'Vanguard S&P 500',tier:'T1',compte:'FHSA',qty:16,prixMoy:157.3812,dev:'CAD'},
+{ticker:'AMZN',nom:'Amazon',tier:'T1',compte:'FHSA',qty:7,prixMoy:154.9418,dev:'USD'},
+{ticker:'QQQM',nom:'Invesco Nasdaq 100',tier:'T2',compte:'FHSA',qty:5.311,prixMoy:247.4064,dev:'USD'},
+{ticker:'XEQT.TO',nom:'iShares Core Equity',tier:'T2',compte:'FHSA',qty:15,prixMoy:40.06,dev:'CAD'},
+{ticker:'TD.TO',nom:'TD Bank',tier:'T3',compte:'FHSA',qty:15,prixMoy:82.29,dev:'CAD'},
+{ticker:'H.TO',nom:'Hydro One',tier:'T3',compte:'FHSA',qty:10,prixMoy:51.78,dev:'CAD'},
+{ticker:'ZLB.TO',nom:'BMO Low Volatility',tier:'T3',compte:'FHSA',qty:3,prixMoy:59.0666,dev:'CAD'},
+{ticker:'SRU.UN.TO',nom:'SmartCentres REIT',tier:'T4',compte:'FHSA',qty:63,prixMoy:23.61,dev:'CAD'},
+{ticker:'REI.UN.TO',nom:'RioCan REIT',tier:'T4',compte:'FHSA',qty:80,prixMoy:18.73,dev:'CAD'},
+{ticker:'XIC.TO',nom:'iShares Core TSX',tier:'T4',compte:'FHSA',qty:19,prixMoy:48.3705,dev:'CAD'},
+{ticker:'XEI.TO',nom:'iShares High Div',tier:'T4',compte:'FHSA',qty:26,prixMoy:32.6111,dev:'CAD'},
+{ticker:'SCHD',nom:'Schwab US Dividend',tier:'T1',compte:'REER',qty:64.3053,prixMoy:25.5008,dev:'USD'},
+{ticker:'JEPI',nom:'JPMorgan Premium Income',tier:'T2',compte:'REER',qty:1,prixMoy:54.52,dev:'USD'},
 ];
-
-let USDCAD = 1.3559;
-let TOTAL_CAD = 86869.43; // TFSA $69,199.98 + FHSA $14,898.25 + REER $2,771.20 · 12 mars 2026
-let COST_BASE = 71776.46;
-let _acct = 'all';
-let _posTbl = 'pos';
-let _tierFilter = 'all';
-let _sortCol = 'valeurLive';
-let _sortDir = -1;
-let _expandedRow = null;
-let _liveCache = {};
-let _verdictData = {};
-try { _verdictData = JSON.parse(localStorage.getItem('verdicts_v11') || '{}'); } catch(e) {}
-
-// ════════════════════════════════════════════
-// HELPERS
-// ════════════════════════════════════════════
-const fmtC = v => '$' + Math.abs(v).toLocaleString('fr-CA', {minimumFractionDigits:2, maximumFractionDigits:2});
-const fmtPct = v => (v >= 0 ? '+' : '') + v.toFixed(2) + '%';
-const pill = (v, pct) => `<span class="pill ${v>=0?'g':'r'}">${v>=0?'+':''}${fmtC(v)} (${fmtPct(pct)})</span>`;
-const pillPct = v => `<span class="pill ${v>=0?'g':'r'}">${fmtPct(v)}</span>`;
-const tierBadge = t => `<span class="tier-badge tier-${t}">${t}</span>`;
-
-function sanitizeImport(data) {
-  if (typeof data === 'string') return data.replace(/<[^>]*>/g, '').substring(0, 200);
-  if (Array.isArray(data)) return data.map(sanitizeImport);
-  if (data && typeof data === 'object') {
-    const c = {}; for (const k of Object.keys(data).slice(0,50)) c[k] = sanitizeImport(data[k]); return c;
-  }
-  return data;
+function fc(v){return '$'+Math.abs(v).toLocaleString('fr-CA',{maximumFractionDigits:0});}
+function fp(v){return(v>=0?'+':'')+v.toFixed(2)+'%';}
+function gr(v){return v>=0?'g':'r';}
+function compute(){POSITIONS.forEach(p=>{p.cout=p.dev==='CAD'?p.qty*p.prixMoy:p.qty*p.prixMoy*USDCAD;if(!p.prixLive)p.prixLive=p.prixMoy;p.val=p.dev==='CAD'?p.qty*p.prixLive:p.qty*p.prixLive*USDCAD;p.gain=p.val-p.cout;p.pct=p.gain/p.cout*100;if(!p.todayPL)p.todayPL=0;});}
+async function fetchData(){
+  try{const r=await fetch(DATA_URL+'?t='+Date.now());if(!r.ok)throw new Error();const d=await r.json();
+  const V=['T1','T2','T3','T4'];
+  if(d.positions&&Array.isArray(d.positions)){POSITIONS=d.positions.filter(p=>p.ticker&&p.tier&&V.includes(String(p.tier).trim())&&parseFloat(p.qty)>0).map(p=>({...p,qty:parseFloat(p.qty),prixMoy:parseFloat(p.prixMoy)||0}));}
+  if(d.usdcad)USDCAD=d.usdcad;if(d.total_cad&&d.total_cad>0)TOTAL_CAD=d.total_cad;if(d.totalCAD&&d.totalCAD>0)TOTAL_CAD=d.totalCAD;if(d.costBase)COST_BASE=d.costBase;
+  if(d.positions)d.positions.forEach(dp=>POSITIONS.forEach(p=>{if(p.ticker===dp.ticker&&p.compte===dp.compte&&dp.prixLive)_lc[p.ticker+'_'+p.compte]={price:dp.prixLive,prev:dp.prixPrev||dp.prixLive};}));
+  const raw=d.date||'';let dh=raw;try{const dd=new Date(raw);dh=dd.toLocaleString('fr-CA',{timeZone:'America/Toronto',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false})+' HNE';}catch(e){}
+  setStatus('Live · '+POSITIONS.length+' positions · '+fc(TOTAL_CAD)+' CAD · '+dh);
+  }catch(e){setStatus('Données locales · '+POSITIONS.length+' positions');}
+  applyLive();compute();renderAll();
 }
-
-// ════════════════════════════════════════════
-// COMPUTE
-// ════════════════════════════════════════════
-function computePositions() {
-  POSITIONS.forEach(p => {
-    p.coutCAD = p.dev === 'CAD' ? p.qty * p.prixMoy : p.qty * p.prixMoy * USDCAD;
-    p.pctPort = p.coutCAD / COST_BASE * 100;
-    if (!p.prixLive) p.prixLive = p.prixMoy;
-    p.valeurLive = p.dev === 'CAD' ? p.qty * p.prixLive : p.qty * p.prixLive * USDCAD;
-    p.gainOuvert = p.valeurLive - p.coutCAD;
-    p.gainPct = p.gainOuvert / p.coutCAD * 100;
-    if (!p.todayPL) p.todayPL = 0;
-    if (!p.todayPct) p.todayPct = 0;
-  });
+function applyLive(){let td=0;POSITIONS.forEach(p=>{const l=_lc[p.ticker+'_'+p.compte]||_lc[p.ticker];if(l){p.prixLive=l.price;p.val=p.dev==='CAD'?p.qty*l.price:p.qty*l.price*USDCAD;p.cout=p.dev==='CAD'?p.qty*p.prixMoy:p.qty*p.prixMoy*USDCAD;p.gain=p.val-p.cout;p.pct=p.gain/p.cout*100;const pv=p.dev==='CAD'?p.qty*l.prev:p.qty*l.prev*USDCAD;p.todayPL=p.val-pv;}td+=p.todayPL||0;});const lt=POSITIONS.reduce((s,p)=>s+(p.val||0),0);if(lt>0)TOTAL_CAD=lt;}
+function setStatus(t){document.getElementById('topbar-status').textContent=t;}
+function renderAll(){document.getElementById('usdcad-cell').textContent='USD/CAD '+USDCAD.toFixed(4);renderToday();renderPortfolio();renderPositions();renderFI();renderMaison();updateMortgage();updateCrash();}
+function renderToday(){
+  const op=TOTAL_CAD-COST_BASE,opP=op/COST_BASE*100,td=POSITIONS.reduce((s,p)=>s+(p.todayPL||0),0);
+  document.getElementById('today-total').textContent=fc(TOTAL_CAD);
+  document.getElementById('today-openpl').textContent=(op>=0?'+':'-')+fc(op)+' ('+fp(opP)+') depuis début';
+  const tde=document.getElementById('today-daypl');tde.textContent=(td>=0?'+':'-')+fc(td);tde.className='kpi-val '+gr(td);
+  document.getElementById('today-mkt').textContent=td===0?'Marché fermé':'Variation du jour';
+  document.getElementById('today-fi-pct').textContent=(TOTAL_CAD/2100000*100).toFixed(1)+'%';
+  document.getElementById('lc-total').textContent=fc(TOTAL_CAD);
+  document.getElementById('lc-sub').textContent=POSITIONS.length+' positions · '+fp(opP);
+  const d=new Date().toLocaleDateString('fr-CA',{timeZone:'America/Toronto',weekday:'long',day:'numeric',month:'long'});
+  document.getElementById('today-date').textContent='· '+d;
 }
-
-// ════════════════════════════════════════════
-// FETCH GITHUB DATA
-// ════════════════════════════════════════════
-async function fetchFromSheets() {
-  const banner = document.getElementById('data-banner');
-  const bannerText = document.getElementById('data-banner-text');
-  bannerText.textContent = '🔄 Connexion données portfolio…';
-  banner.classList.add('show');
-  try {
-    const r = await fetch(DATA_JSON_URL + '?t=' + Date.now());
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const data = await r.json();
-    const VALID_TIERS = ['T1','T2','T3','T4'];
-    if (data.positions && Array.isArray(data.positions)) {
-      POSITIONS = data.positions.filter(p => {
-        if (!p.ticker || typeof p.ticker !== 'string') return false;
-        if (!p.tier || !VALID_TIERS.includes(String(p.tier).trim())) return false;
-        if (!p.nom || String(p.nom).trim() === '') return false;
-        const qty = parseFloat(p.qty);
-        return !isNaN(qty) && qty > 0;
-      }).map(p => ({...p, qty:parseFloat(p.qty), prixMoy:parseFloat(p.prixMoy)||0}));
-    }
-    if (data.usdcad) USDCAD = data.usdcad;
-    if (data.totalCAD) TOTAL_CAD = data.totalCAD;
-    if (data.costBase) COST_BASE = data.costBase;
-    computePositions();
-    bannerText.textContent = '✅ Live depuis GitHub · ' + POSITIONS.length + ' positions · $' + (TOTAL_CAD/1000).toFixed(1) + 'K CAD · Mis à jour: ' + (data.date || 'aujourd\'hui');
-    renderMiniPositions(); renderAccountHealthCards(); drawChart('1Y');
-  } catch(e) {
-    bannerText.textContent = '⚠️ Données locales · ' + POSITIONS.length + ' positions · Ouvrir Apps Script pour synchroniser';
-  }
+function renderPortfolio(){
+  const op=TOTAL_CAD-COST_BASE;
+  document.getElementById('pf-total').textContent=fc(TOTAL_CAD);
+  document.getElementById('pf-cost').textContent=fc(COST_BASE);
+  const ge=document.getElementById('pf-gain');ge.textContent=(op>=0?'+':'')+fc(op);ge.className='kpi-val '+gr(op);
+  const pe=document.getElementById('pf-pct');pe.textContent=fp(op/COST_BASE*100);pe.className='kpi-val '+gr(op);
+  const ba={TFSA:0,FHSA:0,REER:0};
+  POSITIONS.forEach(p=>{if(ba[p.compte]!==undefined)ba[p.compte]+=(p.val||p.cout||0);});
+  document.getElementById('acc-tfsa').textContent=fc(ba.TFSA);
+  document.getElementById('acc-fhsa').textContent=fc(ba.FHSA);
+  document.getElementById('acc-reer').textContent=fc(ba.REER);
+  const uv=POSITIONS.filter(p=>p.dev==='USD').reduce((s,p)=>s+(p.val||p.cout||0),0);
+  const up=(uv/TOTAL_CAD*100).toFixed(0);
+  document.getElementById('exp-usd').textContent='~'+up+'%';
+  document.getElementById('exp-cad').textContent='~'+(100-parseInt(up))+'%';
+  const t1=POSITIONS.filter(p=>p.tier==='T1').sort((a,b)=>(b.val||0)-(a.val||0)).slice(0,6);
+  document.getElementById('tbl-top').innerHTML=t1.map(p=>'<tr><td><strong>'+p.ticker+'</strong></td><td>'+p.compte+'</td><td>'+fc(p.val||0)+'</td><td class="'+gr(p.gain||0)+'">'+(p.gain>=0?'+':'-')+fc(p.gain||0)+'</td><td class="'+gr(p.pct||0)+'">'+fp(p.pct||0)+'</td></tr>').join('');
 }
-
-// ════════════════════════════════════════════
-// LIVE PRICES
-// ════════════════════════════════════════════
-async function fetchLivePrices() {
-  try {
-    const r = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/USDCAD%3DX?interval=1m&range=1d'));
-    const d = await r.json();
-    const rate = d?.chart?.result?.[0]?.meta?.regularMarketPrice;
-    if (rate) {
-      USDCAD = rate;
-      document.getElementById('usdcad-cell').textContent = 'USD/CAD ' + rate.toFixed(4);
-      document.getElementById('usdcad-hero').textContent = rate.toFixed(4);
-    }
-  } catch(e) {}
-  const keyTickers = ['AVGO','SMH','VFV-TO','GEV','GOOG','SCHD','META','AMZN','ENB-TO','MSFT','NVDA','TSLA','TD-TO','SRU-UN-TO','REI-UN-TO','XEQT-TO'];
-  for (const t of keyTickers) {
-    try {
-      const r = await fetch('https://corsproxy.io/?' + encodeURIComponent(`https://query1.finance.yahoo.com/v8/finance/chart/${t}?interval=1d&range=2d`));
-      const d = await r.json();
-      const meta = d?.chart?.result?.[0]?.meta;
-      const orig = t.replace(/-TO$/, '.TO').replace(/-UN-TO$/, '.UN.TO');
-      if (meta?.regularMarketPrice) _liveCache[orig] = {price:meta.regularMarketPrice, prev:meta.chartPreviousClose||meta.regularMarketPrice};
-    } catch(e) {}
-  }
-  updateLivePrices();
+function renderPositions(){
+  const f=_pf==='ALL'?POSITIONS:['T1','T2','T3','T4'].includes(_pf)?POSITIONS.filter(p=>p.tier===_pf):POSITIONS.filter(p=>p.compte===_pf);
+  document.getElementById('pos-count-lbl').textContent='('+f.length+')';
+  document.getElementById('tbl-positions').innerHTML=f.map(p=>'<tr><td><strong>'+p.ticker+'</strong></td><td>'+p.nom+'</td><td style="font-size:11px;color:#aaa;">'+p.compte+'</td><td><span class="tier-pill '+p.tier.toLowerCase()+'">'+p.tier+'</span></td><td>'+p.qty.toFixed(2)+'</td><td>$'+p.prixMoy.toFixed(2)+'</td><td>$'+(p.prixLive||p.prixMoy).toFixed(2)+'</td><td>'+fc(p.val||p.cout||0)+'</td><td class="'+gr(p.gain||0)+'">'+(p.gain>=0?'+':'-')+fc(p.gain||0)+'</td><td class="'+gr(p.pct||0)+'">'+fp(p.pct||0)+'</td></tr>').join('');
 }
-
-function updateLivePrices() {
-  let todayTotal = 0;
-  POSITIONS.forEach(p => {
-    const live = _liveCache[p.ticker];
-    if (live) {
-      p.prixLive = live.price;
-      p.valeurLive = p.dev==='CAD' ? p.qty*live.price : p.qty*live.price*USDCAD;
-      p.gainOuvert = p.valeurLive - p.coutCAD;
-      p.gainPct = p.gainOuvert / p.coutCAD * 100;
-      const prevVal = p.dev==='CAD' ? p.qty*live.prev : p.qty*live.prev*USDCAD;
-      p.todayPL = p.valeurLive - prevVal;
-      p.todayPct = p.todayPL / prevVal * 100;
-    }
-    todayTotal += p.todayPL || 0;
-  });
-  const liveTot = POSITIONS.reduce((s,p) => s+(p.valeurLive||0), 0);
-  if (liveTot > 0) {
-    TOTAL_CAD = liveTot;
-    document.getElementById('equity-value').textContent = '$' + liveTot.toLocaleString('fr-CA',{maximumFractionDigits:0});
-    document.getElementById('kpi-total-mini').textContent = '$' + (liveTot/1000).toFixed(1) + 'K';
-    const kt = document.getElementById('kpi-total'); if(kt) kt.textContent = '$' + liveTot.toLocaleString('fr-CA',{maximumFractionDigits:0});
-  }
-  const te = document.getElementById('today-pl-hero');
-  if(te) { te.className='hero-stat-val '+(todayTotal>=0?'g':'r'); te.textContent=(todayTotal>=0?'+':'')+fmtC(todayTotal)+' ('+(todayTotal/TOTAL_CAD*100).toFixed(2)+'%)'; }
-  const openPL = TOTAL_CAD - COST_BASE;
-  const oe = document.getElementById('open-pl-hero'); if(oe) oe.textContent=(openPL>=0?'+':'')+fmtC(openPL);
-  const op = document.getElementById('open-pl-pct'); if(op) op.textContent=fmtPct(openPL/COST_BASE*100);
+function filterPos(f){_pf=f;['ALL','T1','T2','T3','T4','TFSA','FHSA','REER'].forEach(k=>{const el=document.getElementById('f-'+k.toLowerCase());if(el){el.style.background=k===f?'#1a1a1a':'#fff';el.style.color=k===f?'#fff':'#555';el.style.borderColor=k===f?'#1a1a1a':'#ddd';}});renderPositions();}
+function renderFI(){const p=(TOTAL_CAD/2100000*100);document.getElementById('fi-pct').textContent=p.toFixed(1)+'%';document.getElementById('fi-r-val').textContent=fc(TOTAL_CAD);document.getElementById('fi-o-val').textContent=fc(TOTAL_CAD);document.getElementById('fi-r-bar').style.width=Math.min(p,100)+'%';document.getElementById('fi-o-bar').style.width=Math.min(p,100)+'%';updateFI();}
+function updateFI(){
+  const rate=parseFloat(document.getElementById('fi-rate').value)/100,contrib=parseFloat(document.getElementById('fi-contrib').value);
+  document.getElementById('fi-rate-v').textContent=parseFloat(document.getElementById('fi-rate').value).toFixed(1);
+  document.getElementById('fi-contrib-v').textContent=contrib.toLocaleString('fr-CA');
+  let v=TOTAL_CAD,y=0;while(v<2100000&&y<50){v=v*(1+rate)+contrib*12;y++;}
+  const yr=new Date().getFullYear()+y;
+  document.getElementById('fi-sim-yr').textContent=y<50?yr.toString():'50+ ans';
+  document.getElementById('fi-yr').textContent='~'+yr;
+  let v55=TOTAL_CAD;for(let i=0;i<21;i++)v55=v55*(1+rate)+contrib*12;
+  document.getElementById('fi-sim-55').textContent=fc(v55);
+  function cy(r){let vv=TOTAL_CAD,yy=0;while(vv<2100000&&yy<50){vv=vv*(1+r/100)+5000*12;yy++;}return yy;}
+  const ry=new Date().getFullYear()+cy(8),oy=new Date().getFullYear()+cy(10);
+  document.getElementById('fi-r-sub').textContent='~'+ry+' · '+(ry-new Date().getFullYear())+' ans à 8%/an';
+  document.getElementById('fi-o-sub').textContent='~'+oy+' · '+(oy-new Date().getFullYear())+' ans à 10%/an';
 }
-
-// ════════════════════════════════════════════
-// CLOCK
-// ════════════════════════════════════════════
-function updateClock() {
-  const et = new Date(new Date().toLocaleString('en-US',{timeZone:'America/Toronto'}));
-  document.getElementById('clock').textContent = et.toLocaleTimeString('fr-CA',{hour:'2-digit',minute:'2-digit',hour12:false}) + ' HNE';
-}
-setInterval(updateClock, 1000); updateClock();
-
-// ════════════════════════════════════════════
-// NAV
-// ════════════════════════════════════════════
-function nav(page) {
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+page).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n=>{
-    n.classList.remove('active');
-    if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+page+"'")) n.classList.add('active');
-  });
-  if(page==='positions') renderPositions();
-  if(page==='analyse') renderAnalyse();
-  if(page==='actions') renderActions();
-  if(page==='verdicts') renderVerdicts();
-  if(page==='crash') updateCrash();
-  if(page==='fi') { renderFI(); updateSimulator(); }
-  if(page==='maison') updateMortgage();
-}
-
-function globalSearch(q) {
-  if(q.length>=2) { nav('positions'); document.getElementById('pos-search').value=q; filterPositions(); }
-}
-
-// ════════════════════════════════════════════
-// IMPORT
-// ════════════════════════════════════════════
-function showImport() { document.getElementById('import-overlay').classList.add('show'); }
-function hideImport() { document.getElementById('import-overlay').classList.remove('show'); }
-function handleDrop(e) { e.preventDefault(); document.getElementById('drop-zone').classList.remove('drag-over'); const f=e.dataTransfer.files[0]; if(f) loadJSON(f); }
-function handleFileInput(e) { const f=e.target.files[0]; if(f) loadJSON(f); }
-function loadJSON(file) {
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const data = sanitizeImport(JSON.parse(e.target.result));
-      const VALID_TIERS = ['T1','T2','T3','T4'];
-      if(data.positions&&Array.isArray(data.positions)) {
-        POSITIONS = data.positions.filter(p=>{
-          if(!p.ticker||typeof p.ticker!=='string') return false;
-          if(!p.tier||!VALID_TIERS.includes(String(p.tier).trim())) return false;
-          const qty=parseFloat(p.qty); return !isNaN(qty)&&qty>0;
-        }).map(p=>({...p,qty:parseFloat(p.qty),prixMoy:parseFloat(p.prixMoy)||0}));
-      }
-      if(data.usdcad) USDCAD=data.usdcad;
-      if(data.totalCAD) TOTAL_CAD=data.totalCAD;
-      if(data.costBase) COST_BASE=data.costBase;
-      computePositions();
-      document.getElementById('data-banner-text').textContent='✅ '+file.name+' · '+POSITIONS.length+' positions · $'+(TOTAL_CAD/1000).toFixed(1)+'K CAD';
-      document.getElementById('data-banner').classList.add('show');
-      hideImport(); renderMiniPositions(); renderAccountHealthCards(); drawChart('1Y');
-    } catch(err) { alert('Erreur JSON: '+err.message); }
-  };
-  reader.readAsText(file);
-}
-
-// ════════════════════════════════════════════
-// ACCOUNT FILTER
-// ════════════════════════════════════════════
-function setAcct(a, el) {
-  _acct=a;
-  document.querySelectorAll('.acct-tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active'); renderMiniPositions();
-}
-
-// ════════════════════════════════════════════
-// CHART
-// ════════════════════════════════════════════
-let _chartInstance = null;
-function drawChart(filter='1Y') {
-  const canvas = document.getElementById('main-chart');
-  if(!canvas) return;
-  const pts = {'15D':15,'1M':30,'3M':90,'6M':180,'YTD':72,'1Y':365,'ALL':1095};
-  const days = pts[filter]||365;
-  const data = [];
-  let v = TOTAL_CAD*(filter==='ALL'?.35:filter==='1Y'?.82:filter==='6M'?.87:filter==='3M'?.92:filter==='1M'?.95:filter==='YTD'?.88:.97);
-  for(let i=0;i<days;i++) {
-    const seed=(i*137+42)%100;
-    v+=v*((seed-46)/1000)+(COST_BASE/(days*3));
-    data.push(Math.max(v,20000));
-  }
-  data.push(TOTAL_CAD);
-  if(_chartInstance) _chartInstance.destroy();
-  _chartInstance = new Chart(canvas, {
-    type:'line',
-    data:{labels:data.map((_,i)=>i),datasets:[{data,borderColor:'#00d26a',borderWidth:2,pointRadius:0,fill:true,
-      backgroundColor:(ctx)=>{const g=ctx.chart.ctx.createLinearGradient(0,0,0,ctx.chart.height);g.addColorStop(0,'rgba(0,210,106,.18)');g.addColorStop(1,'rgba(0,210,106,.01)');return g;},
-      tension:0.4}]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' $'+Math.round(ctx.raw).toLocaleString('fr-CA')},
-        backgroundColor:'rgba(17,17,17,.95)',titleColor:'rgba(255,255,255,.4)',bodyColor:'#f0f0f0',padding:10,cornerRadius:8,displayColors:false,borderColor:'rgba(255,255,255,.1)',borderWidth:1}},
-      scales:{x:{display:false},y:{display:true,position:'left',grid:{color:'rgba(255,255,255,.04)',drawBorder:false},
-        ticks:{color:'rgba(255,255,255,.25)',font:{family:'IBM Plex Mono',size:9},callback:v=>'$'+Math.round(v/1000)+'K'},border:{display:false}}},
-      interaction:{mode:'index',intersect:false}}
-  });
-}
-function setChartFilter(el,f) { document.querySelectorAll('.cf').forEach(x=>x.classList.remove('active')); el.classList.add('active'); drawChart(f); }
-
-// ════════════════════════════════════════════
-// POSITIONS TABLE
-// ════════════════════════════════════════════
-function getFilteredPositions() {
-  let pos = POSITIONS.filter(p=>p.qty>0);
-  if(_posTbl!=='pos') pos=pos.filter(p=>p.compte===_posTbl);
-  if(_tierFilter!=='all') pos=pos.filter(p=>p.tier===_tierFilter);
-  const search = document.getElementById('pos-search')?.value?.toLowerCase()||'';
-  if(search) pos=pos.filter(p=>p.ticker.toLowerCase().includes(search)||p.nom.toLowerCase().includes(search));
-  pos.sort((a,b)=>{let va=a[_sortCol],vb=b[_sortCol];if(typeof va==='string') return _sortDir*(va.localeCompare(vb));return _sortDir*((va||0)-(vb||0));});
-  return pos;
-}
-
-function setPosTbl(t,el) { _posTbl=t; document.querySelectorAll('.tbl-tab').forEach(x=>x.classList.remove('active')); el.classList.add('active'); filterPositions(); }
-function setTierFilter(t,el) { _tierFilter=t; document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); el.classList.add('active'); filterPositions(); }
-function filterPositions() { renderPositions(); }
-function sortBy(col) { if(_sortCol===col) _sortDir*=-1; else{_sortCol=col;_sortDir=-1;} renderPositions(); }
-
-function renderPositions() {
-  const pos=getFilteredPositions();
-  const el=document.getElementById('pos-count-lbl'); if(el) el.textContent='· '+pos.length+' positions';
-  const tbl=document.getElementById('positions-table'); if(!tbl) return;
-  const cols=[
-    {key:'ticker',label:'Ticker',w:'150px'},
-    {key:'todayPL',label:"Today's P&L"},
-    {key:'gainOuvert',label:'Open P&L'},
-    {key:'qty',label:'Qté'},
-    {key:'prixMoy',label:'Prix moy.'},
-    {key:'prixLive',label:'Prix live'},
-    {key:'valeurLive',label:'Val. marché'},
-    {key:'dev',label:'Dev.'},
-    {key:'pctPort',label:'% port.'},
-    {key:'tier',label:'Tier'},
-  ];
-  tbl.innerHTML=`<table>
-    <thead><tr>${cols.map(c=>`<th onclick="sortBy('${c.key}')" class="${_sortCol===c.key?'sorted':''}" ${c.w?`style="min-width:${c.w}"`:''}>${c.label}${_sortCol===c.key?`<span class="sort-arr">${_sortDir>0?'↑':'↓'}</span>`:''}</th>`).join('')}</tr></thead>
-    <tbody>${pos.map((p,idx)=>{
-      const rowId='row-'+idx; const isExp=_expandedRow===rowId;
-      return `<tr class="${isExp?'row-detail':''}" onclick="toggleRow('${rowId}',${idx})">
-        <td class="ticker-cell">${p.ticker}<span class="ticker-sub">${p.nom.substring(0,30)}</span></td>
-        <td>${pill(p.todayPL||0,p.todayPct||0)}</td>
-        <td>${pill(p.gainOuvert,p.gainPct)}</td>
-        <td class="num">${p.qty%1===0?p.qty:p.qty.toFixed(4)}</td>
-        <td class="num">$${p.prixMoy.toFixed(2)}</td>
-        <td class="num" style="font-weight:700;color:var(--text)">$${(p.prixLive||p.prixMoy).toFixed(2)}</td>
-        <td class="num" style="font-weight:700">$${(p.valeurLive||0).toLocaleString('fr-CA',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
-        <td style="color:var(--text3);font-size:.68rem">${p.dev}</td>
-        <td class="num" style="color:var(--text3)">${p.pctPort.toFixed(2)}%</td>
-        <td>${tierBadge(p.tier)}</td>
-      </tr>
-      <tr id="${rowId}-detail" style="display:${isExp?'table-row':'none'}">
-        <td colspan="10" style="padding:0">
-          <div class="detail-inner">
-            <div class="detail-cell"><div class="detail-label">Compte</div><div class="detail-val">${p.compte}</div></div>
-            <div class="detail-cell"><div class="detail-label">Coût de base</div><div class="detail-val">$${(p.coutCAD||0).toLocaleString('fr-CA',{minimumFractionDigits:2,maximumFractionDigits:2})}</div></div>
-            <div class="detail-cell"><div class="detail-label">Gain ouvert</div><div class="detail-val" style="color:${(p.gainOuvert||0)>=0?'var(--green)':'var(--red)'}">$${Math.abs(p.gainOuvert||0).toFixed(2)}</div></div>
-            <div class="detail-cell"><div class="detail-label">Type</div><div class="detail-val">${p.type}</div></div>
-            <div class="detail-cell"><div class="detail-label">Tier / Action</div><div class="detail-val">${tierBadge(p.tier)}</div></div>
-            ${p.ciblePrix?`<div class="detail-cell"><div class="detail-label">Cible prix</div><div class="detail-val" style="color:var(--blue)">$${p.ciblePrix}</div></div>`:''}
-          </div>
-        </td>
-      </tr>`;
-    }).join('')}</tbody></table>`;
-}
-
-function toggleRow(rowId,idx) { _expandedRow=(_expandedRow===rowId)?null:rowId; renderPositions(); }
-
-function renderMiniPositions() {
-  const tbl=document.getElementById('mini-positions-table'); if(!tbl) return;
-  let pos=POSITIONS.filter(p=>p.qty>0);
-  if(_acct!=='all') pos=pos.filter(p=>p.compte===_acct);
-  pos.sort((a,b)=>(b.valeurLive||0)-(a.valeurLive||0));
-  const show=pos.slice(0,8);
-  tbl.innerHTML=`<table>
-    <thead><tr><th>Ticker</th><th>Today's P&L</th><th>Open P&L</th><th>Qté</th><th>Prix moy.</th><th>Prix live</th><th>Valeur marché</th><th>Dev.</th><th>% port.</th></tr></thead>
-    <tbody>
-    ${show.map(p=>`<tr onclick="nav('positions')">
-      <td class="ticker-cell">${p.ticker}<span class="ticker-sub">${p.nom.substring(0,22)}</span></td>
-      <td>${pill(p.todayPL||0,p.todayPct||0)}</td>
-      <td>${pill(p.gainOuvert,p.gainPct)}</td>
-      <td class="num">${p.qty%1===0?p.qty:p.qty.toFixed(2)}</td>
-      <td class="num">$${p.prixMoy.toFixed(2)}</td>
-      <td class="num" style="font-weight:700">$${(p.prixLive||p.prixMoy).toFixed(2)}</td>
-      <td class="num" style="font-weight:700">$${(p.valeurLive||0).toLocaleString('fr-CA',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
-      <td style="color:var(--text3);font-size:.68rem">${p.dev}</td>
-      <td class="num">${p.pctPort.toFixed(2)}%</td>
-    </tr>`).join('')}
-    <tr style="cursor:pointer" onclick="nav('positions')">
-      <td colspan="9" style="text-align:center;color:var(--green);font-size:.7rem;font-weight:700;padding:.6rem">Voir toutes les positions →</td>
-    </tr></tbody></table>`;
-  document.getElementById('pos-count-hero').textContent=pos.length+' positions';
-}
-
-// ════════════════════════════════════════════
-// ACCOUNT HEALTH
-// ════════════════════════════════════════════
-function buildAccountHealth() {
-  const byAcct={TFSA:{T1:0,T2:0,T3:0,T4:0,total:0},FHSA:{T1:0,T2:0,T3:0,T4:0,total:0},REER:{T1:0,T2:0,T3:0,T4:0,total:0}};
-  POSITIONS.filter(p=>p.qty>0&&byAcct[p.compte]).forEach(p=>{byAcct[p.compte][p.tier]=(byAcct[p.compte][p.tier]||0)+(p.coutCAD||0);byAcct[p.compte].total+=(p.coutCAD||0);});
-  const colors={T1:'#00d26a',T2:'#3b82f6',T3:'#f59e0b',T4:'#666'};
-  return Object.entries(byAcct).filter(([,d])=>d.total>0).map(([cte,d])=>{
-    const pcts=['T1','T2','T3','T4'].map(t=>({t,p:d.total>0?d[t]/d.total*100:0}));
-    const t1p=pcts.find(x=>x.t==='T1').p,t4p=pcts.find(x=>x.t==='T4').p;
-    const ok=t1p>=40&&t4p<20,warn=t4p>=30;
-    return `<div style="margin-bottom:1rem">
-      <div style="display:flex;justify-content:space-between;margin-bottom:.4rem">
-        <span style="font-family:var(--mono);font-size:.8rem;font-weight:700;color:var(--text)">${cte}</span>
-        <span style="font-size:.62rem;font-weight:700;color:${warn?'var(--red)':ok?'var(--green)':'var(--amber)'}">${warn?'⚠️ T4 ÉLEVÉ':ok?'✅ SAIN':'🟡 SURVEILLER'}</span>
-      </div>
-      <div class="tier-strip" style="margin-bottom:.3rem">
-        ${pcts.filter(x=>x.p>0).map(({t,p})=>`<div class="tier-seg" style="width:${p}%;background:${colors[t]};border-radius:20px"></div>`).join('')}
-      </div>
-      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-        ${pcts.filter(x=>x.p>0).map(({t,p})=>`<span style="font-size:.6rem;color:${colors[t]};font-weight:700">${t}: ${p.toFixed(0)}%</span>`).join('')}
-      </div>
-      ${t4p>=25?`<div style="margin-top:.2rem;font-size:.6rem;color:var(--red)">T4 à ${t4p.toFixed(0)}% — recycler vers VFV.TO</div>`:''}
-    </div>`;
-  }).join('');
-}
-
-function renderAccountHealthCards() {
-  const el=document.getElementById('acct-health-cards'); if(el) el.innerHTML=buildAccountHealth();
-}
-
-// ════════════════════════════════════════════
-// ANALYSE
-// ════════════════════════════════════════════
-function renderAnalyse() {
-  const tb=document.getElementById('tier-breakdown');
-  if(tb) {
-    const tierData={T1:{val:0,cost:0},T2:{val:0,cost:0},T3:{val:0,cost:0},T4:{val:0,cost:0}};
-    POSITIONS.filter(p=>p.qty>0).forEach(p=>{tierData[p.tier].val+=(p.valeurLive||0);tierData[p.tier].cost+=(p.coutCAD||0);});
-    const total=Object.values(tierData).reduce((s,d)=>s+d.val,0);
-    const colors={T1:'var(--green)',T2:'var(--blue)',T3:'var(--amber)',T4:'var(--text3)'};
-    tb.innerHTML=Object.entries(tierData).map(([t,d])=>{
-      const pct=total>0?d.val/total*100:0;
-      const gain=d.cost>0?(d.val-d.cost)/d.cost*100:0;
-      return `<div style="margin-bottom:.85rem">
-        <div style="display:flex;justify-content:space-between;margin-bottom:.3rem">
-          <span style="font-size:.75rem;font-weight:600">${tierBadge(t)} <span style="color:var(--text3);font-size:.68rem;margin-left:.3rem">${pct.toFixed(1)}%</span></span>
-          <div style="text-align:right">
-            <span style="font-family:var(--mono);font-size:.75rem;font-weight:700;color:${colors[t]}">$${(d.val/1000).toFixed(1)}K</span>
-            <span style="font-size:.65rem;color:${gain>=0?'var(--green)':'var(--red)'};margin-left:.4rem">${fmtPct(gain)}</span>
-          </div>
-        </div>
-        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${colors[t]}"></div></div>
-      </div>`;
-    }).join('');
-  }
-  const ab=document.getElementById('acct-breakdown'); if(ab) ab.innerHTML=buildAccountHealth();
-  const fp=document.getElementById('fi-projection-table'); if(fp) fp.innerHTML=buildFITable();
-}
-
-// ════════════════════════════════════════════
-// ACTIONS
-// ════════════════════════════════════════════
-function renderActions() {
-  const critical=[
-    {icon:'🏦',bg:'var(--red-dim)',title:'Ouvrir EQ Bank HISA',desc:'$1,500/mois idle · urgence depuis S16 · 15 min en ligne · eqbank.ca'},
-    {icon:'👤',bg:'var(--red-dim)',title:'Bénéficiaires Questrade',desc:'$87K non protégé · questrade.com → My Account → Beneficiaries · 5 min'},
-    {icon:'⏳',bg:'var(--amber-dim)',title:'$4,000 FHSA → VFV.TO en transit',desc:'Vérifier exécution · Questrade → FHSA → passer ordre si non exécuté'},
-  ];
-  const important=[
-    {icon:'🔑',bg:'var(--blue-dim)',title:'Changer MDP dashboard',desc:'Mot de passe "123" à remplacer · régénérer le hash SHA-256'},
-    {icon:'📊',bg:'var(--blue-dim)',title:'Analyse $12K rétroactivité',desc:'~$9,700 FHSA room + reste → REER/TFSA · analyse complète avec prix live'},
-    {icon:'🔄',bg:'var(--violet-dim)',title:'Passiv setup',desc:'Connecter Questrade → automatiser les rebalancements · passiv.com'},
-  ];
-  const calendar=[
-    {icon:'🏦',bg:'var(--bg3)',title:'BdC — Décision taux · 18 mars 2026',desc:'Attendre avant tout achat FHSA · surveiller impact CAD'},
-    {icon:'📈',bg:'var(--bg3)',title:'AVGO — Résultats Q1 · ~26 mars',desc:'No-buy zone 48h avant · prix cible $400+'},
-    {icon:'📅',bg:'var(--bg3)',title:'Verdicts J+30 · 11 avril 2026',desc:'Saisir prix · calculer alpha vs VFV.TO · documenter leçons'},
-  ];
-  const renderList=(items,id)=>{
-    const el=document.getElementById(id); if(!el) return;
-    el.innerHTML=items.map(i=>`<div class="action-item">
-      <div class="action-icon" style="background:${i.bg}">${i.icon}</div>
-      <div><div class="action-title">${i.title}</div><div class="action-desc">${i.desc}</div></div>
-    </div>`).join('');
-  };
-  renderList(critical,'critical-actions'); renderList(important,'important-actions'); renderList(calendar,'calendar-actions');
-}
-
-// ════════════════════════════════════════════
-// VERDICTS
-// ════════════════════════════════════════════
-function renderVerdicts() {
-  const trades=[
-    {ticker:'VFV.TO',nom:'Vanguard S&P 500',compte:'FHSA',entree:157.38,dev:'CAD'},
-    {ticker:'SCHD',nom:'Schwab US Dividend',compte:'REER',entree:25.50,dev:'USD'},
-    {ticker:'AVGO',nom:'Broadcom',compte:'TFSA',entree:342.16,dev:'USD'},
-    {ticker:'GEV',nom:'GE Vernova',compte:'TFSA',entree:831.99,dev:'USD'},
-    {ticker:'META',nom:'Meta Platforms',compte:'TFSA',entree:637.77,dev:'USD'},
-    {ticker:'SMH',nom:'VanEck Semis',compte:'TFSA',entree:393.57,dev:'USD'},
-    {ticker:'GOOG',nom:'Alphabet',compte:'TFSA',entree:90.61,dev:'USD'},
-    {ticker:'AMZN',nom:'Amazon',compte:'TFSA+FHSA',entree:113.74,dev:'USD'},
-  ];
-  const savedVFV=parseFloat(_verdictData['VFV.TO']||0);
-  const vfvPerf=savedVFV>0?(savedVFV-157.38)/157.38*100:null;
-  const el=document.getElementById('verdicts-table'); if(!el) return;
-  el.innerHTML=`<table>
-    <thead><tr><th style="padding-left:1rem">Ticker</th><th>Compte</th><th>Prix entrée</th><th>Dev.</th><th>Prix 11 avr.</th><th>Perf.</th><th>Alpha vs VFV</th></tr></thead>
-    <tbody>${trades.map(t=>{
-      const saved=parseFloat(_verdictData[t.ticker]||0);
-      const perf=saved>0?(saved-t.entree)/t.entree*100:null;
-      const isBench=t.ticker==='VFV.TO';
-      const alpha=(!isBench&&perf!==null&&vfvPerf!==null)?perf-vfvPerf:null;
-      return `<tr>
-        <td style="padding-left:1rem;font-family:var(--mono);font-weight:700;color:var(--text)">${t.ticker}</td>
-        <td style="font-size:.72rem;color:var(--text3)">${t.compte}</td>
-        <td class="num">$${t.entree.toFixed(2)}</td>
-        <td style="font-size:.68rem;color:var(--text3)">${t.dev}</td>
-        <td><input class="verdict-input" type="number" step="0.01" placeholder="—" value="${saved||''}" onchange="saveVerdict('${t.ticker}',this.value)"></td>
-        <td>${perf===null?'<span style="color:var(--text3)">⬜</span>':pillPct(perf)}</td>
-        <td style="padding-right:1rem">${alpha===null?'<span style="color:var(--text3)">—</span>':`<span style="font-weight:700;color:${alpha>=0?'var(--green)':'var(--red)'}">${fmtPct(alpha)} ${alpha>=0?'✅':'❌'}</span>`}</td>
-      </tr>`;
-    }).join('')}</tbody></table>`;
-}
-
-function saveVerdict(ticker, val) {
-  _verdictData[ticker]=val;
-  try { localStorage.setItem('verdicts_v11',JSON.stringify(_verdictData)); } catch(e) {}
-  renderVerdicts();
-}
-
-// ════════════════════════════════════════════
-// CRASH SIM
-// ════════════════════════════════════════════
-function updateCrash() {
-  const slider=document.getElementById('crash-slider'); if(!slider) return;
-  const pct=parseInt(slider.value);
-  const factor=1+pct/100;
-  const newTotal=TOTAL_CAD*factor;
-  const loss=TOTAL_CAD-newTotal;
-  document.getElementById('crash-pct').textContent=pct+'%';
-  document.getElementById('crash-col-hdr').textContent='À '+pct+'%';
-  const kpis=document.getElementById('crash-kpis');
-  if(kpis) kpis.innerHTML=[
-    {lbl:'Portfolio actuel',val:fmtC(TOTAL_CAD),sub:'Mars 2026',accent:'var(--text)'},
-    {lbl:'Après correction',val:fmtC(newTotal),sub:pct+'%',accent:'var(--red)'},
-    {lbl:'Perte latente',val:'-'+fmtC(loss),sub:Math.abs(pct)+'% du total',accent:'var(--red)'},
-    {lbl:'Signal',val:pct<=-40?'🔴 ACHAT MASSIF':pct<=-25?'🟡 DCA ACCÉLÉRÉ':'🟢 DCA NORMAL',sub:'COVID mindset si -30%+',accent:pct<=-30?'var(--red)':pct<=-20?'var(--amber)':'var(--green)'},
-  ].map(k=>`<div class="kpi" style="--kpi-accent:${k.accent}"><div class="kpi-label">${k.lbl}</div><div class="kpi-val" style="color:${k.accent};font-size:1.1rem">${k.val}</div><div class="kpi-sub">${k.sub}</div></div>`).join('');
-  const t1tbl=document.getElementById('crash-t1-table');
-  if(t1tbl) {
-    const t1=POSITIONS.filter(p=>p.tier==='T1'&&p.qty>0);
-    t1tbl.innerHTML=`<table>
-      <thead><tr><th style="padding-left:1rem">Ticker</th><th>Coût CAD</th><th>À ${pct}%</th><th style="padding-right:1rem">Action</th></tr></thead>
-      <tbody>${t1.map(p=>`<tr>
-        <td style="padding-left:1rem;font-family:var(--mono);font-weight:700">${p.ticker}</td>
-        <td class="num">$${(p.coutCAD||0).toLocaleString('fr-CA',{maximumFractionDigits:0})}</td>
-        <td class="num" style="color:var(--red)">$${((p.coutCAD||0)*factor).toLocaleString('fr-CA',{maximumFractionDigits:0})}</td>
-        <td style="padding-right:1rem;font-size:.7rem;color:var(--green);font-weight:700">✅ Accumuler</td>
-      </tr>`).join('')}</tbody></table>`;
-  }
-  const plan=document.getElementById('crash-plan');
-  if(plan) {
-    const plans=[
-      {range:[-10,-5],action:'DCA normal. Plan habituel.',psy:'✅ Routine',cls:'g'},
-      {range:[-20,-11],action:'DCA accéléré T1. AVGO+SMH+VFV en priorité.',psy:'🟡 Légère peur — ancrer COVID',cls:'a'},
-      {range:[-30,-21],action:'Maximiser AVGO+SMH+VFV. Doubler contributions.',psy:'🔴 Peur — ACHETER PLUS',cls:'a'},
-      {range:[-40,-31],action:'REER+TFSA au max. COVID playbook. Ne pas vendre.',psy:'🔴 Panique = Opportunité historique',cls:'r'},
-      {range:[-60,-41],action:'Tout en T1. Moment historique. EQ Bank → AVGO.',psy:'🔴🔴 Capitulation = BUY maximal',cls:'r'},
-    ];
-    const active=plans.find(p=>pct>=p.range[0]&&pct<=p.range[1])||plans[plans.length-1];
-    plan.innerHTML=`<div class="signal-box ${active.cls}">
-      <div class="signal-lbl">Action recommandée</div>
-      <div class="signal-val">${active.action}</div>
-      <div style="font-size:.7rem;margin-top:.3rem;font-weight:700">${active.psy}</div>
-    </div>
-    <div style="margin-top:.75rem;font-size:.7rem;color:var(--text3);line-height:1.6">
-      Portfolio résiduel: <strong style="color:var(--red);font-family:var(--mono)">${fmtC(newTotal)}</strong><br>
-      Coût de base: <strong style="font-family:var(--mono)">${fmtC(COST_BASE)}</strong>
-      ${pct<=-20?`<br><span style="color:var(--green);font-weight:700">→ COVID 2020: -35% → +200%. Même playbook.</span>`:''}
-    </div>`;
-  }
-}
-
-// ════════════════════════════════════════════
-// FI TABLE
-// ════════════════════════════════════════════
-function buildFITable() {
-  const scenarios=[
-    {label:'Conservateur 6%',rate:.06,monthly:3500,color:'var(--text3)'},
-    {label:'Base 8% · $5K/mois',rate:.08,monthly:5000,color:'var(--blue)'},
-    {label:'Optimiste 9% · $5K',rate:.09,monthly:5000,color:'var(--green)'},
-    {label:'🚀 Croissant $5K→$7K',rate:.08,monthly:5000,color:'var(--amber)',growing:true},
-  ];
-  const ages=[36,40,45,50,55,60];
-  const base=TOTAL_CAD;
-  const calc=(sc,targetAge)=>{
-    let v=base; const yrs=targetAge-34;
-    for(let y=0;y<yrs;y++){const m=sc.growing?(y<5?5000:y<10?6000:7000):sc.monthly;v=v*(1+sc.rate)+m*12;}
-    return v;
-  };
-  return `<table style="min-width:600px">
-    <thead><tr><th style="padding-left:1rem">Scénario</th>${ages.map(a=>`<th>@${a} ans</th>`).join('')}</tr></thead>
-    <tbody>${scenarios.map(sc=>`<tr>
-      <td style="padding-left:1rem;font-weight:600;color:${sc.color};font-size:.78rem">${sc.label}</td>
-      ${ages.map(a=>{const v=calc(sc,a);const hit=v>=2100000;return `<td class="num" style="font-weight:${hit?700:400};color:${hit?'var(--green)':v>=1000000?'var(--text)':'var(--text3)'};font-size:.73rem">${hit?'✅ ':''}$${(v/1000000).toFixed(2)}M</td>`;}).join('')}
-    </tr>`).join('')}</tbody></table>`;
-}
-
-function renderFI() {
-  const el=document.getElementById('fi-full-table'); if(el) el.innerHTML=buildFITable();
-}
-
-// ════════════════════════════════════════════
-// FI SIMULATOR
-// ════════════════════════════════════════════
-function updateSimulator() {
-  const monthly=parseInt(document.getElementById('sim-monthly').value);
-  const rate=parseFloat(document.getElementById('sim-rate').value)/100;
-  const target=parseInt(document.getElementById('sim-target').value);
-  document.getElementById('sim-monthly-val').textContent='$'+monthly.toLocaleString('fr-CA')+'/mois';
-  document.getElementById('sim-rate-val').textContent=((rate*100).toFixed(1))+'%';
-  document.getElementById('sim-target-val').textContent='$'+(target/1000000).toFixed(1)+'M';
-  let v=TOTAL_CAD,years=0;
-  while(v<target&&years<50){v=v*(1+rate)+monthly*12;years++;}
-  const fiAge=34+years;
-  const fiYear=2026+years;
-  const result=document.getElementById('sim-result');
-  if(result) result.innerHTML=`
-    <div style="display:flex;justify-content:center;gap:3rem;flex-wrap:wrap">
-      <div>
-        <div style="font-size:.6rem;color:var(--text3);font-weight:700;letter-spacing:.1em;margin-bottom:.25rem">ÂGE FI ESTIMÉ</div>
-        <div style="font-family:var(--display);font-size:2.5rem;font-weight:800;color:var(--green);letter-spacing:-.06em">${fiAge<84?fiAge+' ans':'N/A'}</div>
-        <div style="font-size:.7rem;color:var(--text3)">${fiYear<2110?'Année '+fiYear:''}</div>
-      </div>
-      <div>
-        <div style="font-size:.6rem;color:var(--text3);font-weight:700;letter-spacing:.1em;margin-bottom:.25rem">DANS</div>
-        <div style="font-family:var(--display);font-size:2.5rem;font-weight:800;color:var(--blue);letter-spacing:-.06em">${fiAge<84?years+' ans':'∞'}</div>
-        <div style="font-size:.7rem;color:var(--text3)">${monthly>=5000?'✅ Plan actuel respecté':'⚠️ Moins que plan $5K'}</div>
-      </div>
-    </div>`;
-}
-
-// ════════════════════════════════════════════
-// MORTGAGE SIMULATOR
-// ════════════════════════════════════════════
-function updateMortgage() {
-  const price=parseInt(document.getElementById('house-price').value);
-  const rate=parseFloat(document.getElementById('house-rate').value)/100;
-  document.getElementById('house-price-val').textContent='$'+price.toLocaleString('fr-CA');
-  document.getElementById('house-rate-val').textContent=(rate*100).toFixed(2)+'%';
-  const dp=100000; // mise de fonds $100K
-  const loan=price-dp;
-  const monthlyRate=rate/12;
-  const n=25*12; // 25 ans
-  const payment=loan*(monthlyRate*Math.pow(1+monthlyRate,n))/(Math.pow(1+monthlyRate,n)-1);
-  const totalPaid=payment*n;
-  const totalInterest=totalPaid-loan;
-  const result=document.getElementById('mortgage-result');
-  if(result) result.innerHTML=`
-    <div class="g2" style="gap:.75rem">
-      <div>
-        <div style="font-size:.6rem;color:var(--text3);font-weight:700;letter-spacing:.1em;margin-bottom:.2rem">MISE DE FONDS</div>
-        <div style="font-family:var(--mono);font-size:.95rem;font-weight:700;color:var(--green)">$${dp.toLocaleString('fr-CA')}</div>
-        <div style="font-size:.62rem;color:var(--text3)">${(dp/price*100).toFixed(1)}% du prix</div>
-      </div>
-      <div>
-        <div style="font-size:.6rem;color:var(--text3);font-weight:700;letter-spacing:.1em;margin-bottom:.2rem">MONTANT HYPOTHÈQUE</div>
-        <div style="font-family:var(--mono);font-size:.95rem;font-weight:700;color:var(--text)">$${loan.toLocaleString('fr-CA')}</div>
-        <div style="font-size:.62rem;color:var(--text3)">Amortissement 25 ans</div>
-      </div>
-      <div>
-        <div style="font-size:.6rem;color:var(--text3);font-weight:700;letter-spacing:.1em;margin-bottom:.2rem">PAIEMENT MENSUEL</div>
-        <div style="font-family:var(--mono);font-size:.95rem;font-weight:700;color:var(--amber)">$${Math.round(payment).toLocaleString('fr-CA')}</div>
-        <div style="font-size:.62rem;color:var(--text3)">/mois · 25 ans</div>
-      </div>
-      <div>
-        <div style="font-size:.6rem;color:var(--text3);font-weight:700;letter-spacing:.1em;margin-bottom:.2rem">INTÉRÊTS TOTAUX</div>
-        <div style="font-family:var(--mono);font-size:.95rem;font-weight:700;color:var(--red)">$${Math.round(totalInterest).toLocaleString('fr-CA')}</div>
-        <div style="font-size:.62rem;color:var(--text3)">sur 25 ans</div>
-      </div>
-    </div>`;
-}
-
-// ════════════════════════════════════════════
-// SAVE
-// ════════════════════════════════════════════
-function savePageToFile() {
-  const now=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Toronto'}));
-  const dateStr=now.toISOString().slice(0,10);
-  const blob=new Blob([document.documentElement.outerHTML],{type:'text/html;charset=utf-8'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download=`portfolio_dashboard_v11_${dateStr}.html`;
-  a.click();
-  URL.revokeObjectURL(a.href);
-  const btn=document.querySelector('[onclick="savePageToFile()"]');
-  if(btn){const orig=btn.innerHTML;btn.innerHTML='✅ Sauvegardé!';setTimeout(()=>btn.innerHTML=orig,2000);}
-}
-
-// ════════════════════════════════════════════
-// INIT
-// ════════════════════════════════════════════
-function init() {
-  computePositions();
-  renderMiniPositions();
-  renderAccountHealthCards();
-  setTimeout(()=>drawChart('1Y'),100);
-  fetchLivePrices();
-  setInterval(fetchLivePrices,60000);
-  fetchFromSheets();
-  setInterval(fetchFromSheets,5*60*1000);
-  updateSimulator();
+function renderMaison(){
+  const rv=POSITIONS.filter(p=>p.compte==='REER').reduce((s,p)=>s+(p.val||p.cout||0),0);
+  const fv=POSITIONS.filter(p=>p.compte==='FHSA').reduce((s,p)=>s+(p.val||p.cout||0),0);
+  document.getElementById('m-reer').textContent=fc(rv);document.getElementById('m-fhsa').textContent=fc(fv);document.getElementById('m-total').textContent=fc(rv+fv);
+  const rp=(rv/60000*100).toFixed(1),fp2=(fv/40000*100).toFixed(1),tp=((rv+fv)/100000*100).toFixed(1);
+  document.getElementById('mp-reer-bar').style.width=Math.min(rp,100)+'%';document.getElementById('mp-fhsa-bar').style.width=Math.min(fp2,100)+'%';document.getElementById('mp-total-bar').style.width=Math.min(tp,100)+'%';
+  document.getElementById('mp-reer-lbl').textContent=fc(rv)+' / $60K · '+rp+'%';document.getElementById('mp-fhsa-lbl').textContent=fc(fv)+' / $40K · '+fp2+'%';document.getElementById('mp-total-lbl').textContent=fc(rv+fv)+' / $100K · '+tp+'%';
   updateMortgage();
 }
-
-window.addEventListener('resize',()=>{drawChart(document.querySelector('.cf.active')?.textContent||'1Y');});
+function updateMortgage(){const price=parseFloat(document.getElementById('mort-price').value),rate=parseFloat(document.getElementById('mort-rate').value)/100/12,n=300,principal=price-100000,pmt=rate>0?principal*(rate*Math.pow(1+rate,n))/(Math.pow(1+rate,n)-1):principal/n;document.getElementById('mort-price-v').textContent=(price/1000).toFixed(0)+'K';document.getElementById('mort-rate-v').textContent=parseFloat(document.getElementById('mort-rate').value).toFixed(2);document.getElementById('mort-pmt').textContent=fc(pmt)+'/mois';document.getElementById('mort-int').textContent=fc(pmt*n-principal);}
+function updateCrash(){const pct=parseInt(document.getElementById('crash-pct').value);document.getElementById('crash-pct-v').textContent=pct;const after=TOTAL_CAD*(1-pct/100),loss=TOTAL_CAD-after;let v=after,y=0;while(v<TOTAL_CAD&&y<20){v=v*1.08+5000*12;y++;}document.getElementById('crash-after').textContent=fc(after);document.getElementById('crash-loss').textContent='-'+fc(loss);document.getElementById('crash-rec').textContent=y<20?y+' ans':'20+ ans';document.getElementById('crash-dca').textContent='$5,000/mois · buy the dip';}
+function loadJSON(input){const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(d.positions)POSITIONS=d.positions.map(p=>({...p,qty:parseFloat(p.qty),prixMoy:parseFloat(p.prixMoy)||0}));if(d.usdcad)USDCAD=d.usdcad;if(d.total_cad)TOTAL_CAD=d.total_cad;if(d.totalCAD)TOTAL_CAD=d.totalCAD;if(d.costBase)COST_BASE=d.costBase;compute();renderAll();setStatus('JSON local · '+POSITIONS.length+' positions');}catch(err){alert('Erreur JSON');}};r.readAsText(f);}
+function nav(page,el){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));const pg=document.getElementById('page-'+page);if(pg)pg.classList.add('active');if(el)el.classList.add('active');else document.querySelectorAll('.nav-item').forEach(n=>{if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+page+"'"))n.classList.add('active');});}
+function updateClock(){const t=new Date().toLocaleString('fr-CA',{timeZone:'America/Toronto',hour:'2-digit',minute:'2-digit',hour12:false});document.getElementById('clock').textContent=t+' HNE';}
+setInterval(updateClock,1000);updateClock();
+function init(){compute();renderAll();fetchData();setInterval(fetchData,60000);}
+if(sessionStorage.getItem('heyos_auth')==='1')init();
 </script>
 </body>
 </html>
