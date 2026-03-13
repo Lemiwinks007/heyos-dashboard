@@ -1,31 +1,37 @@
 @echo off
 cd /d C:\Users\laure\OneDrive\Documents\heyos-dashboard
 
-echo [1/4] Recherche du fichier dashboard...
+echo [1/5] Recherche dashboard...
 set NEWEST=
 for /f "delims=" %%f in ('dir /b /o-d "C:\Users\laure\Downloads\portfolio_dashboard_v*.html" 2^>nul') do (
     if not defined NEWEST set NEWEST=%%f
 )
 
-if not defined NEWEST (
-    echo [ERREUR] Aucun fichier portfolio_dashboard_v*.html trouve dans Downloads
-    pause
-    exit /b 1
+if defined NEWEST (
+    echo [OK] Dashboard : %NEWEST%
+    copy /y "C:\Users\laure\Downloads\%NEWEST%" index.html >nul
+) else (
+    echo [INFO] Pas de nouveau dashboard dans Downloads, index.html inchange
 )
 
-echo [OK] Fichier : %NEWEST%
-copy /y "C:\Users\laure\Downloads\%NEWEST%" index.html >nul
+echo [2/5] Recherche data.json...
+if exist "C:\Users\laure\Downloads\data.json" (
+    copy /y "C:\Users\laure\Downloads\data.json" data.json >nul
+    echo [OK] data.json mis a jour depuis Downloads
+) else (
+    echo [INFO] Pas de data.json dans Downloads, fichier existant conserve
+)
 
-echo [2/4] Ajout des fichiers...
+echo [3/5] Ajout des fichiers...
 git add -A
 
-echo [3/4] Commit...
-git commit -m "dashboard update" >nul 2>&1
+echo [4/5] Commit...
+git commit -m "update S38" >nul 2>&1
 
-echo [4/4] Push...
+echo [5/5] Push...
 git push origin main 2>&1
 if errorlevel 1 (
-    echo [INFO] Push direct echoue, tentative force...
+    echo [INFO] Tentative force...
     git push origin main --force
 )
 
