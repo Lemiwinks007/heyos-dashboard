@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeyOS v17 · S39</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e8e8e6;--surface:#f2f2f0;--card:#fafaf8;--border:#d4d4d0;--border-d:#b8b8b2;
+  --text:#111110;--text2:#666662;--text3:#999994;
+  --green:#1a6b3c;--green-l:#e8f5ee;--red:#b91c1c;--red-l:#fef2f2;
+  --amber:#92400e;--amber-l:#fffbeb;--blue:#1e40af;--blue-l:#eff6ff;
+  --sw:210px;--disp:'Bebas Neue',sans-serif;--body:'Syne',sans-serif;--mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:var(--body);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+#login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999}
+.lw{display:flex;flex-direction:column;align-items:center}
+.lh{font-family:var(--disp);font-size:100px;letter-spacing:.04em;color:var(--text);line-height:.85;margin-bottom:36px;animation:fu .5s ease both}
+.lh span{color:var(--text3)}
+.lb{background:var(--card);border:0.5px solid var(--border);border-radius:20px;padding:36px;width:310px;animation:fu .5s .12s ease both;opacity:0}
+.ll{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;font-weight:600}
+.li{width:100%;padding:14px 16px;border:0.5px solid var(--border);border-radius:10px;font-size:20px;background:var(--bg);outline:none;text-align:center;letter-spacing:.5em;font-family:var(--mono);transition:border-color .2s;color:var(--text)}
+.li:focus{border-color:var(--text);background:#fff}
+.lbtn{width:100%;margin-top:12px;padding:13px;background:var(--text);color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--body);letter-spacing:.1em;text-transform:uppercase;transition:opacity .15s}
+.lbtn:hover{opacity:.8}
+.lerr{color:var(--red);font-size:11px;margin-top:8px;min-height:16px;text-align:center}
+@keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+#app{display:none;height:100vh;overflow:hidden;flex-direction:row}
+#app.on{display:flex}
+.sidebar{width:var(--sw);min-width:var(--sw);background:var(--card);border-right:0.5px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;padding-bottom:32px}
+.sidebar::-webkit-scrollbar{width:0}
+.slogo{padding:22px 20px 18px;border-bottom:0.5px solid var(--border)}
+.sm{font-family:var(--disp);font-size:30px;letter-spacing:.04em;line-height:1}
+.sm span{color:var(--text3)}
+.ss{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);margin-top:2px;font-weight:500}
+.ns{padding:20px 20px 5px;font-size:9px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--text3)}
+.ni{display:flex;align-items:center;gap:10px;padding:7px 20px;cursor:pointer;font-size:12px;color:var(--text2);letter-spacing:.02em;transition:all .12s;position:relative;font-weight:500}
+.ni:hover{color:var(--text);background:var(--bg)}
+.ni.on{color:var(--text);background:var(--bg)}
+.ni.on::before{content:'';position:absolute;left:0;top:15%;bottom:15%;width:2.5px;background:var(--text);border-radius:0 2px 2px 0}
+.nd{width:5px;height:5px;border-radius:50%;flex-shrink:0;background:var(--border-d)}
+.nd.g{background:var(--green)}.nd.b{background:var(--blue)}.nd.am{background:var(--amber)}.nd.r{background:var(--red)}.nd.p{background:#7c3aed}
+.nb{margin-left:auto;background:var(--red);color:#fff;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:700;font-family:var(--mono)}
+.nw{margin-left:auto;background:var(--text);color:#fff;font-size:8px;padding:1px 6px;border-radius:4px;font-weight:600;letter-spacing:.06em}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:44px;background:var(--card);border-bottom:0.5px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;flex-shrink:0}
+.tli{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text2)}
+.tld{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.trgt{margin-left:auto;display:flex;align-items:center;gap:14px}
+.ts{font-size:11px;color:var(--text3);font-family:var(--mono)}
+.tb{padding:5px 12px;border:0.5px solid var(--border);border-radius:6px;font-size:11px;background:transparent;cursor:pointer;color:var(--text2);font-family:var(--body);font-weight:500;letter-spacing:.04em;transition:all .1s}
+.tb:hover{background:var(--bg);border-color:var(--border-d)}
+.content{flex:1;overflow-y:auto;padding:36px 40px}
+.content::-webkit-scrollbar{width:3px}
+.content::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.page{display:none}.page.on{display:block;animation:fu .22s ease both}
+.ey{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600}
+.hl{font-family:var(--disp);font-size:60px;letter-spacing:.04em;line-height:.9;margin-bottom:24px}
+.hl small{font-family:var(--body);font-size:14px;color:var(--text3);font-weight:400;letter-spacing:0;margin-left:8px;vertical-align:middle}
+.krow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:24px}
+.kpi{background:var(--card);border:0.5px solid var(--border);border-radius:18px;padding:20px 22px;transition:border-color .18s,transform .18s;animation:fu .35s ease both}
+.kpi:nth-child(1){animation-delay:.04s}.kpi:nth-child(2){animation-delay:.08s}.kpi:nth-child(3){animation-delay:.12s}.kpi:nth-child(4){animation-delay:.16s}
+.kpi:hover{border-color:var(--border-d);transform:translateY(-2px)}
+.kl{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);font-weight:600;margin-bottom:10px}
+.kv{font-family:var(--disp);font-size:36px;letter-spacing:.03em;color:var(--text);line-height:1}
+.kv.g{color:var(--green)}.kv.r{color:var(--red)}.kv.b{color:var(--blue)}.kv.am{color:var(--amber)}
+.ks{font-size:11px;color:var(--text3);margin-top:5px;font-family:var(--mono)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:16px}
+.card{background:var(--card);border:0.5px solid var(--border);border-radius:18px;padding:22px;transition:border-color .15s}
+.card:hover{border-color:var(--border-d)}
+.cl{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);font-weight:600;margin-bottom:16px}
+.lgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.lc{background:var(--card);border:0.5px solid var(--border);border-radius:18px;padding:24px;cursor:pointer;transition:border-color .18s,transform .2s,box-shadow .2s}
+.lc:hover{border-color:var(--text);transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,.08)}
+.li2{font-size:20px;margin-bottom:13px}
+.lt{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);font-weight:600;margin-bottom:7px}
+.ln{font-family:var(--disp);font-size:42px;letter-spacing:.03em;color:var(--text);line-height:1;margin-bottom:4px}
+.ln.g{color:var(--green)}.ln.b{color:var(--blue)}.ln.am{color:var(--amber)}.ln.r{color:var(--red)}.ln.p{color:#7c3aed}
+.ld{font-size:11px;color:var(--text3);line-height:1.4}
+.row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid var(--border)}
+.row:last-child{border:none}
+.rl{font-size:12px;color:var(--text2)}
+.rv{font-size:12px;font-weight:600;color:var(--text);font-family:var(--mono)}
+.rv.g{color:var(--green)}.rv.r{color:var(--red)}.rv.am{color:var(--amber)}.rv.b{color:var(--blue)}.rv.w{color:var(--red)}
+.sdiv{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--text3);font-weight:600;margin:26px 0 12px;padding-bottom:8px;border-bottom:0.5px solid var(--border)}
+.tw{overflow-x:auto;border-radius:18px;border:0.5px solid var(--border)}
+table{width:100%;border-collapse:collapse;background:var(--card)}
+th{text-align:left;font-size:9px;font-weight:600;color:var(--text3);padding:10px 14px;border-bottom:0.5px solid var(--border);text-transform:uppercase;letter-spacing:.12em;white-space:nowrap}
+td{padding:11px 14px;border-bottom:0.5px solid var(--border);font-size:12px;color:var(--text);font-family:var(--mono);white-space:nowrap}
+tbody tr:last-child td{border:none}
+tbody tr:hover td{background:var(--bg)}
+.tier{font-size:9px;padding:3px 8px;border-radius:6px;font-weight:700;letter-spacing:.05em;font-family:var(--body)}
+.t1{background:#111;color:#fff}.t2{background:var(--blue-l);color:var(--blue)}.t3{background:var(--amber-l);color:var(--amber)}.t4{background:var(--bg);color:var(--text3)}
+.g{color:var(--green)}.r{color:var(--red)}
+.filters{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.fb{padding:6px 16px;border:0.5px solid var(--border);border-radius:20px;font-size:11px;background:var(--card);cursor:pointer;color:var(--text2);font-family:var(--body);font-weight:500;letter-spacing:.04em;transition:all .12s}
+.fb:hover{border-color:var(--border-d);color:var(--text)}
+.fb.on{background:var(--text);color:#fff;border-color:var(--text)}
+.prow{display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:5px;font-family:var(--mono)}
+.pbar{height:4px;background:var(--bg);border-radius:2px;overflow:hidden;margin-bottom:15px;border:0.5px solid var(--border)}
+.pf{height:100%;border-radius:2px;transition:width .7s cubic-bezier(.4,0,.2,1)}
+.sr{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.sl{font-size:11px;color:var(--text2);width:150px;flex-shrink:0;font-weight:500}
+.sr input[type=range]{flex:1;accent-color:var(--text)}
+.sv{font-size:12px;font-weight:600;color:var(--text);width:80px;text-align:right;font-family:var(--mono)}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.sk{background:var(--bg);border-radius:12px;padding:14px;border:0.5px solid var(--border)}
+.skl{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:5px;font-weight:600}
+.skv{font-family:var(--disp);font-size:26px;letter-spacing:.03em;color:var(--text)}
+.ir{display:flex;gap:8px;margin-bottom:16px;align-items:center}
+.inp{padding:10px 14px;border:0.5px solid var(--border);border-radius:10px;font-size:12px;background:var(--bg);outline:none;font-family:var(--body);color:var(--text);transition:border-color .15s;flex:1;font-weight:500}
+.inp:focus{border-color:var(--text);background:#fff}
+.inp.sm{flex:0;width:120px}.inp.vs{flex:0;width:95px}
+.badd{padding:10px 18px;background:var(--text);color:#fff;border:none;border-radius:10px;font-size:11px;cursor:pointer;font-family:var(--body);font-weight:600;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap;transition:opacity .15s}
+.badd:hover{opacity:.8}
+.bg{background:var(--bg);color:var(--text2);border:0.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:10px;cursor:pointer;font-family:var(--body);font-weight:500;transition:all .1s}
+.bg:hover{border-color:var(--border-d);color:var(--text)}
+.bdel{background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px 4px;opacity:0;transition:opacity .15s}
+.tag{display:inline-block;font-size:9px;padding:3px 9px;border-radius:20px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-family:var(--body)}
+.tv{background:#111;color:#fff}.tc{background:var(--blue-l);color:var(--blue)}.tu{background:var(--bg);color:var(--text3);border:0.5px solid var(--border)}.tl{background:var(--bg);color:var(--text3);border:0.5px solid var(--border)}.tt{background:var(--green-l);color:var(--green)}.te{background:#111;color:#fff}.tvi{background:var(--blue-l);color:var(--blue)}.tf{background:var(--amber-l);color:var(--amber)}.tb2{background:var(--bg);color:var(--text3);border:0.5px solid var(--border)}.tp{background:var(--blue-l);color:var(--blue)}.tpend{background:var(--amber-l);color:var(--amber)}.tgood{background:var(--green-l);color:var(--green)}.tbad{background:var(--red-l);color:var(--red)}.tneut{background:var(--bg);color:var(--text3);border:0.5px solid var(--border)}
+.cgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.cc{background:var(--card);border:0.5px solid var(--border);border-radius:14px;padding:16px;position:relative;transition:border-color .15s,transform .15s}
+.cc:hover{border-color:var(--border-d);transform:translateY(-1px)}
+.cc:hover .bdel{opacity:1}
+.cct{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;line-height:1.3}
+.ccm{font-size:11px;color:var(--text3);margin-bottom:10px}
+.ccf{display:flex;align-items:center;justify-content:space-between}
+.stars{color:var(--amber);font-size:11px}
+.pr-row{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:0.5px solid var(--border)}
+.pr-row:last-child{border:none}
+.prn{flex:1;font-size:12px;color:var(--text);font-weight:500}
+.prv{font-family:var(--disp);font-size:22px;letter-spacing:.03em;color:var(--green);min-width:90px;text-align:right}
+.vc{background:var(--card);border:0.5px solid var(--border);border-radius:14px;padding:17px;margin-bottom:10px;transition:border-color .15s}
+.vc:hover{border-color:var(--border-d)}
+.vt{font-size:13px;font-weight:600;margin-bottom:3px}
+.vd{font-size:10px;color:var(--text3);margin-bottom:7px;font-family:var(--mono)}
+.vn{font-size:12px;color:var(--text2);margin-bottom:9px;line-height:1.55}
+.vf{display:flex;align-items:center;gap:8px}
+.dr{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border);font-size:12px}
+.dr:last-child{border:none}
+.dti{font-family:var(--mono);font-weight:600;width:100px;flex-shrink:0}
+.dco{font-size:9px;padding:2px 7px;border-radius:6px;background:var(--bg);color:var(--text3);font-weight:600;letter-spacing:.05em;border:0.5px solid var(--border)}
+.dfr{color:var(--text2);flex:1;margin-left:4px}
+.dy{color:var(--green);font-weight:700;min-width:45px;text-align:right;font-family:var(--mono)}
+.dan{color:var(--text);font-weight:600;min-width:80px;text-align:right;font-family:var(--mono)}
+.act{background:var(--card);border:0.5px solid var(--border);border-radius:14px;padding:17px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;transition:border-color .15s}
+.act:hover{border-color:var(--border-d)}
+.adot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.adot.r{background:var(--red)}.adot.am{background:var(--amber)}.adot.b{background:var(--blue)}
+.at{font-size:13px;font-weight:600;margin-bottom:4px}
+.as{font-size:11px;color:var(--text3);line-height:1.5}
+.ia{width:100%;padding:10px 14px;border:0.5px solid var(--border);border-radius:10px;font-size:12px;background:var(--bg);outline:none;font-family:var(--body);color:var(--text);resize:vertical;min-height:60px;transition:border-color .15s;font-weight:400}
+.ia:focus{border-color:var(--text);background:#fff}
+.empty{text-align:center;padding:52px 20px;color:var(--text3)}
+.ei{font-family:var(--disp);font-size:44px;color:var(--border-d);margin-bottom:10px;letter-spacing:.04em}
+.em{font-size:13px;color:var(--text3)}
+.mo{position:fixed;inset:0;background:rgba(17,17,16,.35);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.mo.on{display:flex}
+.md{background:var(--card);border:0.5px solid var(--border);border-radius:20px;padding:32px;width:420px;box-shadow:0 20px 70px rgba(0,0,0,.14)}
+.mdt{font-family:var(--disp);font-size:30px;letter-spacing:.04em;margin-bottom:20px}
+.mf{margin-bottom:13px}
+.ml{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600}
+.mbtns{display:flex;gap:8px;margin-top:20px}
+.mbtn{flex:1;padding:12px;border-radius:10px;border:none;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--body);letter-spacing:.08em;text-transform:uppercase;transition:opacity .15s}
+.mbtn.p{background:var(--text);color:#fff}.mbtn.p:hover{opacity:.8}
+.mbtn.g{background:var(--bg);color:var(--text2);border:0.5px solid var(--border)}
+.stp{display:flex;gap:6px;margin-top:6px}
+.stb{font-size:26px;cursor:pointer;background:none;border:none;padding:0;transition:transform .1s;line-height:1}
+.stb:hover{transform:scale(1.2)}
+.ptab{padding:10px 18px;font-size:11px;font-weight:600;color:var(--text2);border-bottom:2px solid transparent;cursor:pointer;letter-spacing:.06em;white-space:nowrap;text-transform:uppercase;transition:all .12s}
+.ptab:hover{color:var(--text)}
+.ptab.on{color:var(--text);border-bottom:2px solid var(--text)}
+
+</style>
+</head>
+<body>
+<div id="login-screen">
+  <div class="lw">
+    <div class="lh">HEY<span>OS</span></div>
+    <div class="lb">
+      <div class="ll">Code d'accès</div>
+      <input class="li" type="password" id="pw" placeholder="••••" onkeydown="if(event.key==='Enter')tryLogin()">
+      <button class="lbtn" onclick="tryLogin()">Accéder</button>
+      <div class="lerr" id="lerr"></div>
+    </div>
+  </div>
+</div>
+<div id="app">
+  <nav class="sidebar">
+    <div class="slogo"><div class="sm">HEY<span>OS</span></div><div class="ss">v16 · Mind and Body OS</div></div>
+    <div class="ns">Vie</div>
+    <div class="ni on" onclick="nav('today',this)"><span class="nd g"></span>Aujourd'hui</div>
+    <div class="ns">Finances</div>
+    <div class="ni" onclick="nav('portfolio',this)"><span class="nd g"></span>Portfolio</div>
+    <div class="ni" onclick="nav('positions',this)"><span class="nd g"></span>Positions</div>
+    <div class="ni" onclick="nav('analyse',this)"><span class="nd g"></span>Analyse</div>
+    <div class="ni" onclick="nav('budget',this)"><span class="nd g"></span>Budget & Cash Flow</div>
+    <div class="ni" onclick="nav('dividendes',this)"><span class="nd g"></span>Dividendes</div>
+    <div class="ni" onclick="nav('fiscal',this)"><span class="nd g"></span>Fiscal & REER</div>
+    <div class="ni" onclick="nav('fi',this)"><span class="nd b"></span>Projection FI</div>
+    <div class="ni" onclick="nav('maison',this)"><span class="nd am"></span>Maison 2030</div>
+    <div class="ns">Corps & Santé</div>
+    <div class="ni" onclick="nav('sante',this)"><span class="nd r"></span>Entraînement <span class="nw">NEW</span></div>
+    <div class="ni" onclick="nav('nutrition',this)"><span class="nd r"></span>Nutrition</div>
+    <div class="ns">Culture</div>
+    <div class="ni" onclick="nav('films',this)"><span class="nd p"></span>Films & Séries <span class="nw">NEW</span></div>
+    <div class="ni" onclick="nav('livres',this)"><span class="nd p"></span>Livres <span class="nw">NEW</span></div>
+    <div class="ni" onclick="nav('restaurants',this)"><span class="nd p"></span>Restaurants <span class="nw">NEW</span></div>
+    <div class="ni" onclick="nav('voyages',this)"><span class="nd b"></span>Voyages <span class="nw">NEW</span></div>
+    <div class="ns">Outils</div>
+    <div class="ni" onclick="nav('verdicts',this)"><span class="nd"></span>Verdicts J+30 <span class="nw">NEW</span></div>
+    <div class="ni" onclick="nav('crash',this)"><span class="nd"></span>Crash Simulator</div>
+    <div class="ni" onclick="nav('actions',this)"><span class="nd r"></span>Actions requises <span class="nb">3</span></div>
+    <div class="ni" onclick="nav('watchlist',this)"><span class="nd g"></span>Watchlist S39 <span class="nw">NEW</span></div>
+  </nav>
+  <div class="main">
+    <div class="topbar">
+      <div class="tli"><div class="tld"></div><span id="ttxt">Connexion…</span></div>
+      <div class="trgt">
+        <span class="ts" id="fx-lbl">USD/CAD —</span>
+        <span class="ts" id="clk">—</span>
+        <label class="tb" style="cursor:pointer">JSON<input type="file" accept=".json" style="display:none" onchange="loadJSON(this)"></label>
+        <button class="tb" onclick="fetchData()">↺</button>
+      </div>
+    </div>
+    <div id="pillartabs" style="background:var(--card);border-bottom:0.5px solid var(--border);display:flex;padding:0 20px;gap:0;flex-shrink:0;overflow-x:auto">
+      <div class="ptab on" onclick="navPillar('finances',this)">💼 Finances</div>
+      <div class="ptab" onclick="navPillar('corps',this)">🏋️ Corps</div>
+      <div class="ptab" onclick="navPillar('culture',this)">🎬 Culture</div>
+      <div class="ptab" onclick="navPillar('vie',this)">🎯 Projet de vie</div>
+      <div class="ptab" onclick="navPillar('outils',this)">⚙️ Outils</div>
+    </div>
+    <div class="content">
+
+      <div class="page on" id="page-today">
+        <div class="ey">Mind and Body OS — Vue d'ensemble</div>
+        <div class="hl">AUJOURD'HUI <small id="tdate"></small></div>
+        <div class="krow">
+          <div class="kpi"><div class="kl">Portfolio total</div><div class="kv g" id="tt">—</div><div class="ks" id="tg">—</div></div>
+          <div class="kpi"><div class="kl">Aujourd'hui</div><div class="kv" id="td">—</div><div class="ks" id="tm">—</div></div>
+          <div class="kpi"><div class="kl">Maison 2030</div><div class="kv am">17.5%</div><div class="ks">$17,544 / $100K</div></div>
+          <div class="kpi"><div class="kl">Liberté FI</div><div class="kv b" id="tfi">4.1%</div><div class="ks" id="tfis">$85K / $2.1M</div></div>
+        </div>
+        <div class="g3">
+          <div class="card" style="cursor:pointer" onclick="nav('portfolio',null)">
+            <div class="cl" style="display:flex;align-items:center;justify-content:space-between">💼 Finances <span style="font-size:9px;padding:2px 8px;border-radius:10px;background:var(--green-l);color:var(--green);font-weight:700;letter-spacing:.05em">Actif ✓</span></div>
+            <div class="row"><span class="rl">TFSA</span><span class="rv g" id="lct2">—</span></div>
+            <div class="row"><span class="rl">FHSA</span><span class="rv b" id="lcf2">—</span></div>
+            <div class="row"><span class="rl">REER</span><span class="rv" id="lcr2">—</span></div>
+            <div class="row"><span class="rl">USD expo</span><span class="rv g" id="lcusd2">44.7% ✓</span></div>
+          </div>
+          <div class="card" style="cursor:pointer" onclick="nav('sante',null)">
+            <div class="cl" style="display:flex;align-items:center;justify-content:space-between">🏋️ Corps <span style="font-size:9px;padding:2px 8px;border-radius:10px;background:var(--amber-l);color:var(--amber);font-weight:700;letter-spacing:.05em">En cours</span></div>
+            <div class="row"><span class="rl">Bench</span><span class="rv">205 → <span style="color:var(--text3)">225 lbs</span></span></div>
+            <div class="row"><span class="rl">Squat</span><span class="rv">275 → <span style="color:var(--text3)">315 lbs</span></span></div>
+            <div class="row"><span class="rl">Deadlift</span><span class="rv">315 → <span style="color:var(--text3)">365 lbs</span></span></div>
+            <div class="row"><span class="rl">5km</span><span class="rv">24:30 → <span style="color:var(--text3)">22:00</span></span></div>
+          </div>
+          <div class="card" style="cursor:pointer" onclick="nav('films',null)">
+            <div class="cl" style="display:flex;align-items:center;justify-content:space-between">🎬 Culture <span style="font-size:9px;padding:2px 8px;border-radius:10px;background:var(--amber-l);color:var(--amber);font-weight:700;letter-spacing:.05em">À nourrir</span></div>
+            <div class="row"><span class="rl">Films / Séries</span><span class="rv" id="lcfilm">—</span></div>
+            <div class="row"><span class="rl">Livres</span><span class="rv" id="lclivre">—</span></div>
+            <div class="row"><span class="rl">Restaurants</span><span class="rv" id="lcrest">—</span></div>
+            <div class="row"><span class="rl">Gaming</span><span class="rv am">Actif · S32</span></div>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="card">
+            <div class="cl">🎯 Projet de vie · Progression</div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+              <div>
+                <div class="prow"><span>Maison 2030 · RAP+FHSA</span><span id="mov-pct">17.5%</span></div>
+                <div class="pbar"><div class="pf" style="background:var(--amber);width:17.5%"></div></div>
+              </div>
+              <div>
+                <div class="prow"><span>FI $2.1M · 2043</span><span id="fi-pct-ov">—</span></div>
+                <div class="pbar"><div class="pf" style="background:var(--blue)" id="fi-bar-ov"></div></div>
+              </div>
+              <div>
+                <div class="prow"><span>Corps · 190 lbs lean</span><span>~89%</span></div>
+                <div class="pbar"><div class="pf" style="background:#7c3aed;width:89%"></div></div>
+              </div>
+              <div>
+                <div class="prow"><span>BJJ · Retour Q2 2026</span><span style="color:var(--amber)">Planifié</span></div>
+                <div class="pbar"><div class="pf" style="background:#7c3aed;width:5%"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="cursor:pointer" onclick="nav('actions',null)">
+            <div class="cl" style="display:flex;align-items:center;justify-content:space-between">🚨 Actions requises <span style="font-size:9px;padding:2px 8px;border-radius:10px;background:var(--red-l);color:var(--red);font-weight:700">2 critiques</span></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border)"><div class="adot r" style="margin-top:4px"></div><div><div style="font-size:12px;font-weight:600;margin-bottom:2px">EQ Bank HISA — Non ouvert</div><div style="font-size:11px;color:var(--text3)">$1,000/mois qui dort · eqbank.ca · 15 min</div></div></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border)"><div class="adot r" style="margin-top:4px"></div><div><div style="font-size:12px;font-weight:600;margin-bottom:2px">Bénéficiaires Questrade</div><div style="font-size:11px;color:var(--text3)">$85K sans bénéficiaires · 5 min</div></div></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border)"><div class="adot am" style="margin-top:4px"></div><div><div style="font-size:12px;font-weight:600;margin-bottom:2px">Analyse $12K rétroactivité</div><div style="font-size:11px;color:var(--text3)">Room FHSA ~$9,700 · Priorité S33</div></div></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:9px 0"><div class="adot b" style="margin-top:4px"></div><div><div style="font-size:12px;font-weight:600;margin-bottom:2px">BdC décision taux</div><div style="font-size:11px;color:var(--text3)">18 mars · Impact hypothèque 2030</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-portfolio">
+        <div class="ey">Finances</div><div class="hl">PORTFOLIO</div>
+        <div class="krow">
+          <div class="kpi"><div class="kl">Valeur marché</div><div class="kv g" id="pft">—</div></div>
+          <div class="kpi"><div class="kl">Coût investi</div><div class="kv" id="pfc">—</div></div>
+          <div class="kpi"><div class="kl">Gain ouvert</div><div class="kv g" id="pfg">—</div></div>
+          <div class="kpi"><div class="kl">Rendement</div><div class="kv g" id="pfp">—</div></div>
+        </div>
+        <div class="g2">
+          <div class="card"><div class="cl">Par compte</div>
+            <div class="row"><span class="rl">TFSA</span><span class="rv g" id="at">—</span></div>
+            <div class="row"><span class="rl">FHSA</span><span class="rv b" id="af">—</span></div>
+            <div class="row"><span class="rl">REER</span><span class="rv" id="ar">—</span></div>
+            <div class="row"><span class="rl">ATH</span><span class="rv">$87,252 · 10 mars</span></div>
+          </div>
+          <div class="card"><div class="cl">Expositions</div>
+            <div class="row"><span class="rl">USD</span><span class="rv" id="eu">~45%</span></div>
+            <div class="row"><span class="rl">CAD</span><span class="rv" id="ec">~55%</span></div>
+            <div class="row"><span class="rl">Positions T1</span><span class="rv">9 titres</span></div>
+            <div class="row"><span class="rl">Dividendes ann.</span><span class="rv g">~$1,926</span></div>
+          </div>
+        </div>
+        <div class="sdiv">Top positions T1</div>
+        <div class="tw"><table><thead><tr><th>Ticker</th><th>Compte</th><th>Valeur CAD</th><th>Gain $</th><th>Gain %</th></tr></thead><tbody id="tt1"></tbody></table></div>
+      </div>
+
+      <div class="page" id="page-positions">
+        <div class="ey">Finances</div><div class="hl">POSITIONS <small id="pcount"></small></div>
+        <div class="filters">
+          <button class="fb on" onclick="fp2('ALL',this)">Tous</button>
+          <button class="fb" onclick="fp2('T1',this)">T1</button><button class="fb" onclick="fp2('T2',this)">T2</button>
+          <button class="fb" onclick="fp2('T3',this)">T3</button><button class="fb" onclick="fp2('T4',this)">T4</button>
+          <button class="fb" onclick="fp2('TFSA',this)">TFSA</button><button class="fb" onclick="fp2('FHSA',this)">FHSA</button>
+          <button class="fb" onclick="fp2('REER',this)">REER</button>
+        </div>
+        <div class="tw"><table><thead><tr>
+          <th onclick="sortPositions('ticker')" style="cursor:pointer">Ticker <span id="si-ticker" style="opacity:.4">⇅</span></th>
+          <th>Nom</th>
+          <th onclick="sortPositions('compte')" style="cursor:pointer">Compte <span id="si-compte" style="opacity:.4">⇅</span></th>
+          <th onclick="sortPositions('tier')" style="cursor:pointer">Tier <span id="si-tier" style="opacity:.4">⇅</span></th>
+          <th onclick="sortPositions('qty')" style="cursor:pointer">Qté <span id="si-qty" style="opacity:.4">⇅</span></th>
+          <th onclick="sortPositions('avg')" style="cursor:pointer">Prix moy. <span id="si-avg" style="opacity:.4">⇅</span></th>
+          <th onclick="sortPositions('live')" style="cursor:pointer">Prix live <span id="si-live" style="opacity:.4">⇅</span></th>
+          <th onclick="sortPositions('val')" style="cursor:pointer">Valeur CAD <span id="si-val" style="opacity:.4">⇅</span></th>
+          <th onclick="sortPositions('gain')" style="cursor:pointer">Gain $ <span id="si-gain" style="opacity:.4">⇅</span></th>
+          <th onclick="sortPositions('pct')" style="cursor:pointer">Gain % <span id="si-pct" style="opacity:.4">⇅</span></th>
+        </tr></thead><tbody id="tpos"></tbody></table></div>
+      </div>
+
+      <div class="page" id="page-analyse">
+        <div class="ey">Finances</div><div class="hl">ANALYSE</div>
+        <div class="krow">
+          <div class="kpi"><div class="kl">Exposition IA</div><div class="kv" id="aia">—</div><div class="ks">Limite ≤45%</div></div>
+          <div class="kpi"><div class="kl">Exposition USD</div><div class="kv" id="ausd">—</div><div class="ks">Limite ≤65%</div></div>
+          <div class="kpi"><div class="kl">T1 positions</div><div class="kv b">9</div></div>
+          <div class="kpi"><div class="kl">Room FHSA</div><div class="kv am">~$9,700</div><div class="ks">Après $4K en transit</div></div>
+        </div>
+        <!-- Chart tabs -->
+        <div class="filters" style="margin-bottom:12px">
+          <button class="fb on" onclick="switchChart('tier',this)">Par Tier</button>
+          <button class="fb" onclick="switchChart('compte',this)">Par Compte</button>
+          <button class="fb" onclick="switchChart('top10',this)">Top 10</button>
+          <button class="fb" onclick="switchChart('gains',this)">Gains</button>
+        </div>
+        <div class="card" style="padding:16px 20px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <div class="cl" id="chart-title">Répartition par Tier</div>
+            <div style="display:flex;gap:8px">
+              <button class="fb on" id="btn-doughnut" onclick="setChartType('doughnut',this)" style="font-size:9px;padding:4px 8px">🍩 Donut</button>
+              <button class="fb" id="btn-bar" onclick="setChartType('bar',this)" style="font-size:9px;padding:4px 8px">📊 Barres</button>
+            </div>
+          </div>
+          <div style="max-height:280px;display:flex;justify-content:center">
+            <canvas id="mainChart" style="max-height:260px"></canvas>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="card"><div class="cl">Par tier</div><div id="tbd"></div></div>
+          <div class="card"><div class="cl">Top 5</div><div id="t5bd"></div></div>
+        </div>
+        <div class="card"><div class="cl">Règles auto</div>
+          <div class="row"><span class="rl">USD ≤65%</span><span class="rv g" id="rusd">✓ OK</span></div>
+          <div class="row"><span class="rl">IA ≤45%</span><span class="rv g" id="ria">✓ OK</span></div>
+          <div class="row"><span class="rl">Room FHSA</span><span class="rv g">✓ ~$9,700</span></div>
+          <div class="row"><span class="rl">T.TO / MFC.TO</span><span class="rv">⛔ Jamais vendre</span></div>
+          <div class="row"><span class="rl">EQ Bank HISA</span><span class="rv r">🔴 Non ouvert</span></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-budget">
+        <div class="ey">Finances</div><div class="hl">BUDGET</div>
+        <div class="krow">
+          <div class="kpi"><div class="kl">Revenu net</div><div class="kv">$7,950</div><div class="ks">/mois</div></div>
+          <div class="kpi"><div class="kl">Dépenses</div><div class="kv r">$1,182</div><div class="ks">/mois</div></div>
+          <div class="kpi"><div class="kl">Investi</div><div class="kv b">$5,000</div><div class="ks">/mois</div></div>
+          <div class="kpi"><div class="kl">Surplus</div><div class="kv g">$1,768</div><div class="ks">/mois</div></div>
+        </div>
+        <div class="g2">
+          <div class="card"><div class="cl">Plan $4K/mois · S32</div>
+            <div class="row"><span class="rl">REER → SCHD</span><span class="rv g">$1,500 ✅</span></div>
+            <div class="row"><span class="rl">FHSA → VFV.TO</span><span class="rv g">$1,000 ✅</span></div>
+            <div class="row"><span class="rl">TFSA → AVGO</span><span class="rv g">$500 ✅</span></div>
+            <div class="row"><span class="rl">EQ Bank HISA</span><span class="rv w">$1,000 🔴</span></div>
+          </div>
+          <div class="card"><div class="cl">Taux d'épargne</div>
+            <div class="row"><span class="rl">Épargne / Revenu</span><span class="rv g">85.1%</span></div>
+            <div class="row"><span class="rl">Logement</span><span class="rv">Fourni ✅</span></div>
+            <div class="row"><span class="rl">Nourriture</span><span class="rv">Fournie ✅</span></div>
+            <div class="row"><span class="rl">Surplus libre</span><span class="rv g">$1,768</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-dividendes">
+        <div class="ey">Finances</div><div class="hl">DIVIDENDES</div>
+        <div class="krow">
+          <div class="kpi"><div class="kl">Annuel estimé</div><div class="kv g">~$1,926</div></div>
+          <div class="kpi"><div class="kl">Mensuel moyen</div><div class="kv g">~$161</div></div>
+          <div class="kpi"><div class="kl">Yield moyen</div><div class="kv">~2.2%</div></div>
+          <div class="kpi"><div class="kl">Positions div.</div><div class="kv">12</div></div>
+        </div>
+        <div class="card"><div class="cl">Calendrier</div>
+          <div class="dr"><span class="dti">SCHD</span><span class="dco">REER</span><span class="dfr">Trimestriel · Mars Jun Sep Déc</span><span class="dy">3.5%</span><span class="dan">~$556/an</span></div>
+          <div class="dr"><span class="dti">JEPI</span><span class="dco">REER</span><span class="dfr">Mensuel</span><span class="dy">7.1%</span><span class="dan">~$87/an</span></div>
+          <div class="dr"><span class="dti">ENB.TO</span><span class="dco">TFSA</span><span class="dfr">Trimestriel · Mars Jun Sep Déc</span><span class="dy">6.8%</span><span class="dan">~$312/an</span></div>
+          <div class="dr"><span class="dti">XEI.TO</span><span class="dco">TFSA+FHSA</span><span class="dfr">Mensuel</span><span class="dy">4.9%</span><span class="dan">~$280/an</span></div>
+          <div class="dr"><span class="dti">SRU.UN.TO</span><span class="dco">TFSA+FHSA</span><span class="dfr">Mensuel</span><span class="dy">7.2%</span><span class="dan">~$350/an</span></div>
+          <div class="dr"><span class="dti">REI.UN.TO</span><span class="dco">FHSA</span><span class="dfr">Mensuel</span><span class="dy">6.9%</span><span class="dan">~$110/an</span></div>
+          <div class="dr"><span class="dti">TD.TO</span><span class="dco">TFSA+FHSA</span><span class="dfr">Trimestriel</span><span class="dy">5.1%</span><span class="dan">~$341/an</span></div>
+          <div class="dr"><span class="dti">ZRE.TO</span><span class="dco">TFSA</span><span class="dfr">Mensuel</span><span class="dy">4.5%</span><span class="dan">~$45/an</span></div>
+          <div class="dr"><span class="dti">H.TO</span><span class="dco">TFSA+FHSA</span><span class="dfr">Trimestriel</span><span class="dy">2.9%</span><span class="dan">~$95/an</span></div>
+          <div class="dr"><span class="dti">ZLB.TO</span><span class="dco">TFSA+FHSA</span><span class="dfr">Mensuel</span><span class="dy">2.2%</span><span class="dan">~$50/an</span></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-fiscal">
+        <div class="ey">Finances</div><div class="hl">FISCAL & REER</div>
+        <div class="krow">
+          <div class="kpi"><div class="kl">Taux marginal QC</div><div class="kv r">52.98%</div></div>
+          <div class="kpi"><div class="kl">Room FHSA 2026</div><div class="kv b">~$9,700</div></div>
+          <div class="kpi"><div class="kl">RAP REER cible</div><div class="kv">$60,000</div></div>
+          <div class="kpi"><div class="kl">Remboursement ARC</div><div class="kv g">$1,060/mois</div></div>
+        </div>
+        <div class="card" style="max-width:460px"><div class="cl">Snowball REER</div>
+          <div class="row"><span class="rl">Cotisation mensuelle</span><span class="rv">$2,000</span></div>
+          <div class="row"><span class="rl">Remboursement ARC (52.98%)</span><span class="rv g">+$1,060/mois</span></div>
+          <div class="row"><span class="rl">Coût net réel</span><span class="rv g">$940/mois</span></div>
+          <div class="row"><span class="rl">Ordre priorité</span><span class="rv" style="font-size:10px">FHSA→REER→TFSA→HISA</span></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-fi">
+        <div class="ey">Finances</div><div class="hl">LIBERTÉ FI</div>
+        <div class="krow">
+          <div class="kpi"><div class="kl">Objectif</div><div class="kv b">$2,100,000</div></div>
+          <div class="kpi"><div class="kl">Atteint</div><div class="kv" id="fip">—</div></div>
+          <div class="kpi"><div class="kl">Date estimée</div><div class="kv" id="fiyr">~2040</div></div>
+          <div class="kpi"><div class="kl">Revenu cible</div><div class="kv g">$7,000/mois</div></div>
+        </div>
+        <div class="g2">
+          <div class="card"><div class="cl">8%/an · réaliste</div><div class="prow"><span id="fir">—</span><span>$2,100,000</span></div><div class="pbar"><div class="pf" style="background:var(--blue)" id="firb"></div></div><div style="font-size:11px;color:var(--text3);font-family:var(--mono)" id="firs">—</div></div>
+          <div class="card"><div class="cl">10%/an · optimiste</div><div class="prow"><span id="fio">—</span><span>$2,100,000</span></div><div class="pbar"><div class="pf" style="background:var(--green)" id="fiob"></div></div><div style="font-size:11px;color:var(--text3);font-family:var(--mono)" id="fios">—</div></div>
+        </div>
+        <div class="card"><div class="cl">Simulateur</div>
+          <div class="sr"><span class="sl">Rendement annuel</span><input type="range" min="4" max="15" step="0.5" value="8" id="fir2" oninput="uFI()"><span class="sv"><span id="firv">8.0</span>%</span></div>
+          <div class="sr"><span class="sl">Cotisation mensuelle</span><input type="range" min="1000" max="10000" step="250" value="5000" id="fic" oninput="uFI()"><span class="sv">$<span id="ficv">5,000</span></span></div>
+          <div class="sg"><div class="sk"><div class="skl">Année liberté</div><div class="skv b" id="fisyr">—</div></div><div class="sk"><div class="skl">À 55 ans</div><div class="skv g" id="fis55">—</div></div></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-maison">
+        <div class="ey">Projet de vie</div><div class="hl">MAISON 2030</div>
+        <div class="krow">
+          <div class="kpi"><div class="kl">REER RAP</div><div class="kv" id="mr">$2,771</div><div class="ks">/ $60,000</div></div>
+          <div class="kpi"><div class="kl">FHSA</div><div class="kv b" id="mf">$14,898</div><div class="ks">/ $40,000</div></div>
+          <div class="kpi"><div class="kl">Mise de fonds</div><div class="kv am" id="mt">$17,669</div><div class="ks">/ $100,000</div></div>
+          <div class="kpi"><div class="kl">Date estimée</div><div class="kv">2028–2030</div></div>
+        </div>
+        <div class="g2">
+          <div class="card"><div class="cl">Progression</div>
+            <div class="prow"><span>REER RAP</span><span id="mrl">—</span></div><div class="pbar"><div class="pf" style="background:var(--text)" id="mrb"></div></div>
+            <div class="prow"><span>FHSA</span><span id="mfl">—</span></div><div class="pbar"><div class="pf" style="background:var(--blue)" id="mfb"></div></div>
+            <div class="prow"><span>Total</span><span id="mtl">—</span></div><div class="pbar"><div class="pf" style="background:var(--amber)" id="mtb"></div></div>
+          </div>
+          <div class="card"><div class="cl">Simulateur hypothèque</div>
+            <div class="sr"><span class="sl">Prix</span><input type="range" min="300000" max="900000" step="10000" value="550000" id="mp" oninput="uMort()"><span class="sv">$<span id="mpv">550K</span></span></div>
+            <div class="sr"><span class="sl">Taux</span><input type="range" min="2" max="8" step="0.25" value="5" id="mrt" oninput="uMort()"><span class="sv"><span id="mrtv">5.00</span>%</span></div>
+            <div class="sg"><div class="sk"><div class="skl">Mensualité</div><div class="skv" id="mpmt">—</div></div><div class="sk"><div class="skl">Intérêts</div><div class="skv r" id="mint">—</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-sante">
+        <div class="ey">Corps & Santé</div><div class="hl">ENTRAÎNEMENT</div>
+        <div class="krow">
+          <div class="kpi"><div class="kl">Poids</div><div class="kv" id="kpds">175 lbs</div><div class="ks">Objectif 190 lbs</div></div>
+          <div class="kpi"><div class="kl">Programme</div><div class="kv">PPL</div></div>
+          <div class="kpi"><div class="kl">BJJ</div><div class="kv b" id="kbjj">Q2 2026</div></div>
+          <div class="kpi"><div class="kl">Running</div><div class="kv g">Actif</div></div>
+        </div>
+        <div class="g2">
+          <div class="card"><div class="cl" style="display:flex;align-items:center;justify-content:space-between">Personal Records <button class="bg" onclick="openPRM()">+ Modifier</button></div><div id="prlist"></div></div>
+          <div class="card"><div class="cl">Programme semaine</div>
+            <div class="row"><span class="rl">Push</span><span class="rv">Chest · Shoulders · Tris</span></div>
+            <div class="row"><span class="rl">Pull</span><span class="rv">Back · Biceps</span></div>
+            <div class="row"><span class="rl">Legs</span><span class="rv">Quads · Ham · Calves</span></div>
+            <div class="row"><span class="rl">Cardio</span><span class="rv">Running · Zone 2</span></div>
+            <div class="row"><span class="rl">BJJ</span><span class="rv b">Retour Q2 2026</span></div>
+            <div class="row"><span class="rl">Yoga</span><span class="rv">Mobilité · Récup</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-nutrition">
+        <div class="ey">Corps & Santé</div><div class="hl">NUTRITION</div>
+        <div class="krow">
+          <div class="kpi"><div class="kl">Calories/jour</div><div class="kv" id="ncal">3,200 kcal</div></div>
+          <div class="kpi"><div class="kl">Protéines</div><div class="kv" id="nprot">190g</div></div>
+          <div class="kpi"><div class="kl">Poids cible</div><div class="kv">190 lbs</div></div>
+          <div class="kpi"><div class="kl">Phase</div><div class="kv am">Bulk propre</div></div>
+        </div>
+        <div class="card" style="max-width:460px"><div class="cl" style="display:flex;align-items:center;justify-content:space-between">Objectifs <button class="bg" onclick="openNM()">Modifier</button></div>
+          <div class="row"><span class="rl">Calories/jour</span><span class="rv" id="ndcal">3,200 kcal</span></div>
+          <div class="row"><span class="rl">Protéines</span><span class="rv" id="ndprot">190g / jour</span></div>
+          <div class="row"><span class="rl">Glucides</span><span class="rv" id="ndgluc">380g / jour</span></div>
+          <div class="row"><span class="rl">Lipides</span><span class="rv" id="ndlip">90g / jour</span></div>
+          <div class="row"><span class="rl">Eau</span><span class="rv" id="ndeau">3.5L / jour</span></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-films">
+        <div class="ey">Culture</div><div class="hl">FILMS & SÉRIES</div>
+        <div class="ir"><input class="inp" id="fi" placeholder="Titre…"><input class="inp sm" id="fy" placeholder="Année"><select class="inp sm" id="fs"><option>À voir</option><option>En cours</option><option>Vu</option></select><button class="badd" onclick="aFilm()">+ Ajouter</button></div>
+        <div class="filters" id="fff"><button class="fb on" onclick="fFilm('tous',this)">Tous</button><button class="fb" onclick="fFilm('À voir',this)">À voir</button><button class="fb" onclick="fFilm('En cours',this)">En cours</button><button class="fb" onclick="fFilm('Vu',this)">Vu</button></div>
+        <div class="cgrid" id="fgrid"></div>
+      </div>
+
+      <div class="page" id="page-livres">
+        <div class="ey">Culture</div><div class="hl">LIVRES</div>
+        <div class="ir"><input class="inp" id="li2" placeholder="Titre…"><input class="inp sm" id="lau" placeholder="Auteur…"><select class="inp sm" id="lst"><option>À lire</option><option>En cours</option><option>Terminé</option></select><button class="badd" onclick="aLivre()">+ Ajouter</button></div>
+        <div class="filters" id="lff"><button class="fb on" onclick="fLivre('tous',this)">Tous</button><button class="fb" onclick="fLivre('À lire',this)">À lire</button><button class="fb" onclick="fLivre('En cours',this)">En cours</button><button class="fb" onclick="fLivre('Terminé',this)">Terminé</button></div>
+        <div class="cgrid" id="lgrid"></div>
+      </div>
+
+      <div class="page" id="page-restaurants">
+        <div class="ey">Culture</div><div class="hl">RESTAURANTS</div>
+        <div class="ir"><input class="inp" id="rn" placeholder="Nom…"><input class="inp sm" id="rci" placeholder="Ville…"><input class="inp sm" id="rcu" placeholder="Cuisine…"><select class="inp vs" id="rst"><option>À essayer</option><option>Visité</option><option>Favori ⭐</option></select><button class="badd" onclick="aResto()">+ Ajouter</button></div>
+        <div class="filters" id="rff"><button class="fb on" onclick="fResto('tous',this)">Tous</button><button class="fb" onclick="fResto('À essayer',this)">À essayer</button><button class="fb" onclick="fResto('Visité',this)">Visité</button><button class="fb" onclick="fResto('Favori',this)">Favoris ⭐</button></div>
+        <div class="cgrid" id="rgrid"></div>
+      </div>
+
+      <div class="page" id="page-voyages">
+        <div class="ey">Culture</div><div class="hl">VOYAGES</div>
+        <div class="ir"><input class="inp" id="vd" placeholder="Destination…"><input class="inp sm" id="vy" placeholder="Année"><select class="inp sm" id="vst"><option>Bucket list</option><option>Planifié</option><option>Visité ✓</option></select><button class="badd" onclick="aVoyage()">+ Ajouter</button></div>
+        <div class="filters" id="vff"><button class="fb on" onclick="fVoyage('tous',this)">Tous</button><button class="fb" onclick="fVoyage('Bucket list',this)">Bucket list</button><button class="fb" onclick="fVoyage('Planifié',this)">Planifié</button><button class="fb" onclick="fVoyage('Visité',this)">Visité</button></div>
+        <div class="cgrid" id="vgrid"></div>
+      </div>
+
+      <div class="page" id="page-verdicts">
+        <div class="ey">Outils</div><div class="hl">VERDICTS J+30</div>
+        <div class="card" style="margin-bottom:16px"><div class="cl">Documenter</div>
+          <div class="ir" style="margin-bottom:10px"><input class="inp" id="vdt" placeholder="Décision… ex: Achat AVGO $335"></div>
+          <textarea class="ia" id="vdn" placeholder="Raisonnement, contexte…"></textarea>
+          <div style="margin-top:10px;display:flex;gap:8px"><select class="inp" style="flex:0;width:150px" id="vds"><option value="pending">⏳ En attente</option><option value="good">✓ Bon move</option><option value="bad">✗ À revoir</option><option value="neutral">— Neutre</option></select><button class="badd" onclick="aVerdict()">+ Documenter</button></div>
+        </div>
+        <div id="vlist"></div>
+      </div>
+
+      <div class="page" id="page-crash">
+        <div class="ey">Outils</div><div class="hl">CRASH SIMULATOR</div>
+        <div class="card" style="max-width:520px"><div class="cl">Scénario correction</div>
+          <div class="sr"><span class="sl">Correction marché</span><input type="range" min="5" max="60" step="5" value="20" id="crp" oninput="uCrash()"><span class="sv">-<span id="crpv">20</span>%</span></div>
+          <div class="sg">
+            <div class="sk"><div class="skl">Portfolio après</div><div class="skv r" id="cra">—</div></div>
+            <div class="sk"><div class="skl">Perte en $</div><div class="skv r" id="crl">—</div></div>
+            <div class="sk"><div class="skl">Récup. 8%/an</div><div class="skv" id="crr">—</div></div>
+            <div class="sk"><div class="skl">DCA opportunité</div><div class="skv g">$5K/mois</div></div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="page" id="page-watchlist">
+        <div class="ey">Finances · Analyse</div>
+        <div class="hl">WATCHLIST <small>S39 · Mars 2026 · MAJ trimestrielle</small></div>
+
+        <div class="filters" style="margin-bottom:20px">
+          <button class="fb on" onclick="wFilter('all',this)">Tout (60)</button>
+          <button class="fb" onclick="wFilter('lt_actions',this)">① Actions LT (20)</button>
+          <button class="fb" onclick="wFilter('lt_etf',this)">② ETF LT (20)</button>
+          <button class="fb" onclick="wFilter('momentum',this)">③ Momentum (20)</button>
+          <button class="fb" onclick="wFilter('owned',this)">En portefeuille</button>
+          <button class="fb" onclick="wFilter('buy',this)">À considérer</button>
+        </div>
+
+        <div class="tw" id="wl-table">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Ticker</th>
+                <th>Nom</th>
+                <th>Liste</th>
+                <th>Secteur / Type</th>
+                <th>Thèse</th>
+                <th>Consensus</th>
+                <th>Upside</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody id="wl-body"></tbody>
+          </table>
+        </div>
+        <div style="margin-top:14px;font-size:10px;color:var(--text3);font-family:var(--mono);line-height:1.8">
+          SOURCES: Morningstar · Seeking Alpha Quant · Zacks · Motley Fool · US News CFRA · Mars 2026 ·
+          Prochaine révision: Juin 2026 (R-ANA-01) ·
+          ⚠️ Source de référence uniquement — toute décision = thèse + 5 sources (règle S38)
+        </div>
+      </div>
+
+      <div class="page" id="page-actions">
+        <div class="ey">Outils</div><div class="hl">ACTIONS REQUISES</div>
+        <div class="act"><div class="adot r"></div><div><div class="at">🔴 EQ Bank HISA — Ouvrir maintenant</div><div class="as">$1,500/mois qui dort · ~4% · eqbank.ca · 15 minutes</div></div></div>
+        <div class="act"><div class="adot r"></div><div><div class="at">🔴 Bénéficiaires Questrade — 5 minutes</div><div class="as">$85,683 sans bénéficiaires · My Account → Beneficiaries</div></div></div>
+        <div class="act"><div class="adot am"></div><div><div class="at">🟡 Analyse $12K rétroactivité</div><div class="as">Room FHSA ~$9,700 · Allocation pendante · avec Claude</div></div></div>
+        <div class="act"><div class="adot b"></div><div><div class="at">📅 BdC 18 mars — Dans 5 jours</div><div class="as">Décision taux directeur · Impact FHSA et hypothèque 2030</div></div></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="mo" id="mpr"><div class="md"><div class="mdt">PERSONAL RECORDS</div><div id="prfields"></div><div class="mbtns"><button class="mbtn g" onclick="cM('mpr')">Annuler</button><button class="mbtn p" onclick="savePR()">Sauvegarder</button></div></div></div>
+<div class="mo" id="mnt"><div class="md"><div class="mdt">NUTRITION</div><div class="mf"><div class="ml">Calories/jour</div><input class="inp" id="mnc"></div><div class="mf"><div class="ml">Protéines (g)</div><input class="inp" id="mnp"></div><div class="mf"><div class="ml">Glucides (g)</div><input class="inp" id="mng"></div><div class="mf"><div class="ml">Lipides (g)</div><input class="inp" id="mnl"></div><div class="mf"><div class="ml">Eau (L)</div><input class="inp" id="mne"></div><div class="mbtns"><button class="mbtn g" onclick="cM('mnt')">Annuler</button><button class="mbtn p" onclick="saveNut()">OK</button></div></div></div>
+<div class="mo" id="mrt2"><div class="md"><div class="mdt">NOTER</div><div class="stp" id="stp"></div><div class="mbtns"><button class="mbtn g" onclick="cM('mrt2')">Annuler</button><button class="mbtn p" onclick="saveRating()">OK</button></div></div></div>
+
+<script>
+const H='c838df5335c1eba2532f32090cd555d17c9e218289d99ecaf55525d7b199aa88';
+async function sha256(s){const b=new TextEncoder().encode(s);const h=await crypto.subtle.digest('SHA-256',b);return Array.from(new Uint8Array(h)).map(x=>x.toString(16).padStart(2,'0')).join('');}
+async function tryLogin(){const pw=document.getElementById('pw').value;if(await sha256(pw)===H){sessionStorage.setItem('h','1');document.getElementById('login-screen').style.display='none';document.getElementById('app').classList.add('on');init();}else{document.getElementById('lerr').textContent='Code incorrect';document.getElementById('pw').value='';}}
+if(sessionStorage.getItem('h')==='1'){document.getElementById('login-screen').style.display='none';document.getElementById('app').classList.add('on');}
+const S={g:(k,d)=>{try{const v=localStorage.getItem('h13_'+k);return v?JSON.parse(v):d;}catch{return d;}},s:(k,v)=>{try{localStorage.setItem('h13_'+k,JSON.stringify(v));}catch{}}};
+const URL='https://raw.githubusercontent.com/Lemiwinks007/heyos-dashboard/main/data.json';
+let FX=1.3559,TOT=85680.94,CST=71776.46,LC={},PF='ALL';
+let POS=[{t:'VFV.TO',n:'Vanguard S&P 500',tier:'T1',c:'TFSA',q:84,avg:119.9246,live:161.58,fx:'CAD',val:13572.72,cout:10073.67,gain:3499.05,pct:34.7347},{t:'GOOG',n:'Alphabet',tier:'T1',c:'TFSA',q:6,avg:90.6059,live:303.21,fx:'USD',val:2466.73,cout:737.12,gain:1729.62,pct:234.6471},{t:'AVGO',n:'Broadcom',tier:'T1',c:'TFSA',q:16.5743,avg:342.1593,live:335.97,fx:'USD',val:7550.29,cout:7689.38,gain:-139.09,pct:-1.8089},{t:'AMZN',n:'Amazon',tier:'T1',c:'TFSA',q:7.4817,avg:113.7377,live:209.53,fx:'USD',val:2125.56,cout:1153.80,gain:971.76,pct:84.2221},{t:'SMH',n:'VanEck Semis',tier:'T1',c:'TFSA',q:19.2266,avg:393.5653,live:388.13,fx:'USD',val:10118.30,cout:10259.99,gain:-141.69,pct:-1.3810},{t:'META',n:'Meta Platforms',tier:'T1',c:'TFSA',q:1,avg:637.7698,live:638.18,fx:'USD',val:865.31,cout:864.75,gain:0.56,pct:0.0643},{t:'ENB.TO',n:'Enbridge',tier:'T1',c:'TFSA',q:9,avg:49.62,live:73.12,fx:'CAD',val:658.08,cout:446.58,gain:211.50,pct:47.3599},{t:'GEV',n:'GE Vernova',tier:'T1',c:'TFSA',q:2.4431,avg:831.9907,live:832.11,fx:'USD',val:2756.45,cout:2756.05,gain:0.40,pct:0.0143},{t:'MSFT',n:'Microsoft',tier:'T2',c:'TFSA',q:2,avg:312.5938,live:401.86,fx:'USD',val:1089.76,cout:847.69,gain:242.07,pct:28.5566},{t:'NVDA',n:'NVIDIA',tier:'T2',c:'TFSA',q:4,avg:128.59,live:183.14,fx:'USD',val:993.28,cout:697.42,gain:295.86,pct:42.4217},{t:'TSLA',n:'Tesla',tier:'T2',c:'TFSA',q:1.8645,avg:303.5644,live:395.01,fx:'USD',val:998.62,cout:767.43,gain:231.18,pct:30.1240},{t:'QQQM',n:'Invesco Nasdaq100',tier:'T2',c:'TFSA',q:4.4515,avg:247.1068,live:245.94,fx:'USD',val:1484.44,cout:1491.48,gain:-7.04,pct:-0.4722},{t:'XEQT.TO',n:'iShares Core Eq',tier:'T2',c:'TFSA',q:25,avg:39.97,live:39.97,fx:'CAD',val:999.25,cout:999.25,gain:0.00,pct:0.0000},{t:'SPGI',n:'S&P Global',tier:'T2',c:'TFSA',q:0.9996,avg:443.2458,live:419.7,fx:'USD',val:568.84,cout:600.76,gain:-31.91,pct:-5.3121},{t:'TD.TO',n:'TD Bank',tier:'T3',c:'TFSA',q:87,avg:79.8348,live:128.24,fx:'CAD',val:11156.88,cout:6945.63,gain:4211.25,pct:60.6317},{t:'ZLB.TO',n:'BMO Low Vol',tier:'T3',c:'TFSA',q:37,avg:58.1416,live:58.77,fx:'CAD',val:2174.49,cout:2151.24,gain:23.25,pct:1.0808},{t:'H.TO',n:'Hydro One',tier:'T3',c:'TFSA',q:22,avg:52.8663,live:59.29,fx:'CAD',val:1304.38,cout:1163.06,gain:141.32,pct:12.1508},{t:'T.TO',n:'TELUS',tier:'T3',c:'TFSA',q:32,avg:22.04,live:18,fx:'CAD',val:576.00,cout:705.28,gain:-129.28,pct:-18.3303},{t:'QTUM',n:'Defiance Quantum',tier:'T3',c:'TFSA',q:5,avg:120.81,live:109.46,fx:'USD',val:742.08,cout:819.03,gain:-76.95,pct:-9.3949},{t:'HURA.TO',n:'Global X Uranium',tier:'T3',c:'TFSA',q:6,avg:55.25,live:59.34,fx:'CAD',val:356.04,cout:331.50,gain:24.54,pct:7.4027},{t:'XEI.TO',n:'iShares High Div',tier:'T4',c:'TFSA',q:51,avg:30.6811,live:35.78,fx:'CAD',val:1824.78,cout:1564.74,gain:260.04,pct:16.6190},{t:'SRU.UN.TO',n:'SmartCentres',tier:'T4',c:'TFSA',q:57,avg:25.2543,live:26.84,fx:'CAD',val:1529.88,cout:1439.50,gain:90.38,pct:6.2789},{t:'XIC.TO',n:'iShares TSX',tier:'T4',c:'TFSA',q:21,avg:40.4066,live:52.56,fx:'CAD',val:1103.76,cout:848.54,gain:255.22,pct:30.0778},{t:'ZRE.TO',n:'BMO Equal REITs',tier:'T4',c:'TFSA',q:19,avg:20.83,live:22.31,fx:'CAD',val:423.89,cout:395.77,gain:28.12,pct:7.1051},{t:'MFC.TO',n:'Manulife',tier:'T4',c:'TFSA',q:8,avg:51.7,live:45.69,fx:'CAD',val:365.52,cout:413.60,gain:-48.08,pct:-11.6248},{t:'VDU.TO',n:'Vanguard Dev',tier:'T4',c:'TFSA',q:6,avg:43.75,live:55.33,fx:'CAD',val:331.98,cout:262.50,gain:69.48,pct:26.4686},{t:'VFV.TO',n:'Vanguard S&P 500',tier:'T1',c:'FHSA',q:16,avg:157.3812,live:161.58,fx:'CAD',val:2585.28,cout:2518.10,gain:67.18,pct:2.6679},{t:'AMZN',n:'Amazon',tier:'T1',c:'FHSA',q:7,avg:154.9418,live:209.53,fx:'USD',val:1988.71,cout:1470.60,gain:518.11,pct:35.2314},{t:'QQQM',n:'Invesco Nasdaq100',tier:'T2',c:'FHSA',q:5.311,avg:247.4064,live:245.94,fx:'USD',val:1771.06,cout:1781.62,gain:-10.56,pct:-0.5927},{t:'XEQT.TO',n:'iShares Core Eq',tier:'T2',c:'FHSA',q:15,avg:40.06,live:39.97,fx:'CAD',val:599.55,cout:600.90,gain:-1.35,pct:-0.2247},{t:'TD.TO',n:'TD Bank',tier:'T3',c:'FHSA',q:15,avg:82.29,live:128.24,fx:'CAD',val:1923.60,cout:1234.35,gain:689.25,pct:55.8391},{t:'H.TO',n:'Hydro One',tier:'T3',c:'FHSA',q:10,avg:51.78,live:59.29,fx:'CAD',val:592.90,cout:517.80,gain:75.10,pct:14.5037},{t:'ZLB.TO',n:'BMO Low Vol',tier:'T3',c:'FHSA',q:3,avg:59.0666,live:58.77,fx:'CAD',val:176.31,cout:177.20,gain:-0.89,pct:-0.5021},{t:'SRU.UN.TO',n:'SmartCentres',tier:'T4',c:'FHSA',q:63,avg:23.61,live:26.84,fx:'CAD',val:1690.92,cout:1487.43,gain:203.49,pct:13.6806},{t:'REI.UN.TO',n:'RioCan REIT',tier:'T4',c:'FHSA',q:80,avg:18.73,live:19.02,fx:'CAD',val:1521.60,cout:1498.40,gain:23.20,pct:1.5483},{t:'XIC.TO',n:'iShares TSX',tier:'T4',c:'FHSA',q:19,avg:48.3705,live:52.56,fx:'CAD',val:998.64,cout:919.04,gain:79.60,pct:8.6613},{t:'XEI.TO',n:'iShares High Div',tier:'T4',c:'FHSA',q:26,avg:32.6111,live:35.78,fx:'CAD',val:930.28,cout:847.89,gain:82.39,pct:9.7172},{t:'SCHD',n:'Schwab US Div',tier:'T1',c:'REER',q:64.3053,avg:25.5008,live:30.82,fx:'USD',val:2687.24,cout:2223.45,gain:463.79,pct:20.8590},{t:'JEPI',n:'JPMorgan Income',tier:'T2',c:'REER',q:1,avg:54.52,live:57.18,fx:'USD',val:77.53,cout:73.92,gain:3.61,pct:4.8789}];
+const fc=v=>'$'+Math.abs(v).toLocaleString('fr-CA',{maximumFractionDigits:0});
+const fp=v=>(v>=0?'+':'')+v.toFixed(2)+'%';
+const gr=v=>v>=0?'g':'r';
+const se=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+const sh=(id,v)=>{const e=document.getElementById(id);if(e)e.innerHTML=v;};
+function compute(){POS.forEach(p=>{p.cout=p.cout||(p.fx==='CAD'?p.q*p.avg:p.q*p.avg*FX);p.live=p.live||p.avg;p.val=p.val||(p.fx==='CAD'?p.q*p.live:p.q*p.live*FX);p.gain=p.gain||(p.val-p.cout);p.pct=p.pct||(p.gain/p.cout*100);if(!p.dayPL)p.dayPL=0;});}
+async function fetchData(){
+  try{const r=await fetch(URL+'?t='+Date.now());if(!r.ok)throw 0;const d=await r.json();
+  if(d.positions&&Array.isArray(d.positions)){POS=d.positions.filter(p=>p.ticker&&['T1','T2','T3','T4'].includes(String(p.tier||'').trim())&&parseFloat(p.qty)>0).map(p=>({t:p.ticker,n:p.nom||p.ticker,tier:p.tier,c:p.compte||p.account,q:parseFloat(p.qty),avg:parseFloat(p.prixMoy)||0,fx:p.dev||'CAD'}));}
+  if(d.usdcad)FX=d.usdcad;if(d.total_cad&&d.total_cad>0)TOT=d.total_cad;if(d.totalCAD&&d.totalCAD>0)TOT=d.totalCAD;if(d.costBase)CST=d.costBase;
+  if(d.positions)d.positions.forEach(dp=>POS.forEach(p=>{if(p.t===dp.ticker&&p.c===dp.compte&&dp.prixLive)LC[p.t+'_'+p.c]={price:dp.prixLive,prev:dp.prixPrev||dp.prixLive};}));
+  let dh='';try{const dd=new Date(d.date||'');dh=dd.toLocaleString('fr-CA',{timeZone:'America/Toronto',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false})+' HNE';}catch{}
+  se('ttxt','Live · '+POS.length+' positions · '+fc(TOT)+' · '+dh);}
+  catch{se('ttxt','Live · 39 positions · $85,681 CAD · 13 mars 07:15 HNE');}
+  applyLive();compute();rAll();
+}
+function applyLive(){POS.forEach(p=>{const l=LC[p.t+'_'+p.c]||LC[p.t];if(l){p.live=l.price;p.val=p.fx==='CAD'?p.q*l.price:p.q*l.price*FX;p.cout=p.fx==='CAD'?p.q*p.avg:p.q*p.avg*FX;p.gain=p.val-p.cout;p.pct=p.gain/p.cout*100;const pv=p.fx==='CAD'?p.q*l.prev:p.q*l.prev*FX;p.dayPL=p.val-pv;}});const lt=POS.reduce((s,p)=>s+(p.val||0),0);if(lt>0)TOT=lt;}
+function rAll(){se('fx-lbl','USD/CAD '+FX.toFixed(4));rToday();rPortfolio();rPositions();rAnalyse();rFI();rMaison();uMort();uCrash();}
+function isMktOpen(){const n=new Date(),e=new Date(n.toLocaleString('en-US',{timeZone:'America/Toronto'})),d=e.getDay(),t=e.getHours()*60+e.getMinutes();return d>0&&d<6&&t>=570&&t<960;}
+function rToday(){const op=TOT-CST,opP=op/CST*100,td=POS.reduce((s,p)=>s+(p.dayPL||0),0);se('tt',fc(TOT));se('tg',(op>=0?'+':'')+fc(op)+' ('+fp(opP)+')');if(isMktOpen()){se('td',(td>=0?'+':'')+fc(td));const e=document.getElementById('td');if(e)e.className='kv '+gr(td);se('tm','Variation du jour');}else{se('td','Fermé');const e=document.getElementById('td');if(e)e.className='kv';se('tm','Rouvre lun 9h30 HNE');}se('tfi',(TOT/2100000*100).toFixed(1)+'%');se('tfis',fc(TOT)+' / $2.1M');
+  const ba={TFSA:0,FHSA:0,REER:0};POS.forEach(p=>{if(ba[p.c]!==undefined)ba[p.c]+=(p.val||p.cout);});
+  se('lct2',fc(ba.TFSA));se('lcf2',fc(ba.FHSA));se('lcr2',fc(ba.REER));
+  const uv2=POS.filter(p=>p.fx==='USD').reduce((s,p)=>s+(p.val||p.cout),0),up2=(uv2/TOT*100).toFixed(1);se('lcusd2','~'+up2+'% ✓');
+  const fiPct=(TOT/2100000*100);se('fi-pct-ov',fiPct.toFixed(1)+'%');const fb=document.getElementById('fi-bar-ov');if(fb)fb.style.width=Math.min(fiPct,100)+'%';
+  se('tdate',new Date().toLocaleDateString('fr-CA',{timeZone:'America/Toronto',weekday:'long',day:'numeric',month:'long'}));
+  const films=S.g('films',[]),livres=S.g('livres',[]),restos=S.g('restaurants',[]),voyages=S.g('voyages',[]);
+  se('lcfilm',films.length||'—');se('lclivre',livres.length||'—');se('lcrest',restos.length||'—');
+}
+function rPortfolio(){const op=TOT-CST;se('pft',fc(TOT));se('pfc',fc(CST));const ge=document.getElementById('pfg');if(ge){ge.textContent=(op>=0?'+':'')+fc(op);ge.className='kv '+gr(op);}const pe=document.getElementById('pfp');if(pe){pe.textContent=fp(op/CST*100);pe.className='kv '+gr(op);}const ba={TFSA:0,FHSA:0,REER:0};POS.forEach(p=>{if(ba[p.c]!==undefined)ba[p.c]+=(p.val||p.cout);});se('at',fc(ba.TFSA));se('af',fc(ba.FHSA));se('ar',fc(ba.REER));const uv=POS.filter(p=>p.fx==='USD').reduce((s,p)=>s+(p.val||p.cout),0),up=(uv/TOT*100).toFixed(0);se('eu','~'+up+'%');se('ec','~'+(100-parseInt(up))+'%');sh('tt1',[...POS].filter(p=>p.tier==='T1').sort((a,b)=>(b.val||0)-(a.val||0)).slice(0,6).map(p=>`<tr><td><strong>${p.t}</strong></td><td>${p.c}</td><td>${fc(p.val||0)}</td><td class="${gr(p.gain||0)}">${(p.gain||0)>=0?'+':'-'}${fc(Math.abs(p.gain||0))}</td><td class="${gr(p.pct||0)}">${fp(p.pct||0)}</td></tr>`).join(''));}
+// ── TICKER FACTSHEETS ──
+const LINKS = {
+  'VFV.TO':'https://www.vanguard.ca/en/advisor/products/products-group/etfs/9563',
+  'AVGO':'https://investors.broadcom.com/',
+  'GOOG':'https://abc.xyz/investor/',
+  'AMZN':'https://ir.aboutamazon.com/',
+  'SMH':'https://www.vaneck.com/us/en/investments/semiconductor-etf-smh/',
+  'META':'https://investor.fb.com/',
+  'ENB.TO':'https://www.enbridge.com/investors',
+  'GEV':'https://www.gevernova.com/investors',
+  'SCHD':'https://www.schwabassetmanagement.com/products/schd',
+  'MSFT':'https://www.microsoft.com/en-us/investor',
+  'NVDA':'https://investor.nvidia.com/',
+  'QQQM':'https://www.invesco.com/us/financial-products/etfs/product-detail?audienceType=Investor&ticker=QQQM',
+  'XEQT.TO':'https://www.blackrock.com/ca/investors/en/products/products-list#!type=ishares&style=All&config=CA-Retail-iShares-CA&view=keyFacts&fac=43557',
+  'SPGI':'https://investor.spglobal.com/',
+  'JEPI':'https://am.jpmorgan.com/us/en/asset-management/adv/products/jpmorgan-equity-premium-income-etf-46641q761',
+  'TSLA':'https://ir.tesla.com/',
+  'T.TO':'https://www.telus.com/en/investors',
+  'MFC.TO':'https://www.manulife.com/en/investors.html',
+  'HURA.TO':'https://globalxetfs.ca/funds/hura/',
+  'ZLB.TO':'https://www.bmo.com/gam/ca/advisor/products/etfs?fundUrl=/fundProfile/ZLB',
+  'XIC.TO':'https://www.blackrock.com/ca/investors/en/products/239837/',
+  'XEI.TO':'https://www.blackrock.com/ca/investors/en/products/251421/',
+  'ZRE.TO':'https://www.bmo.com/gam/ca/advisor/products/etfs?fundUrl=/fundProfile/ZRE',
+  'VDU.TO':'https://www.vanguard.ca/en/advisor/products/products-group/etfs/9542',
+  'REI-UN.TO':'https://www.reitmansinvestors.com/',
+  'SRU-UN.TO':'https://www.smartcentres.com/investors',
+  'XUU.TO':'https://www.blackrock.com/ca/investors/en/products/264040/',
+  'FEQT.TO':'https://ci.com/en/investments/etfs/feqt',
+  'H.TO':'https://www.hydro.qc.ca/en/enterprise/investor-relations/',
+  'TD.TO':'https://www.td.com/ca/en/about-td/for-investors/',
+};
+function tickerLink(t){const url=LINKS[t]||LINKS[t+'.TO'];return url?`<a href="${url}" target="_blank" rel="noopener" style="color:var(--text);text-decoration:none;border-bottom:1px dotted var(--text3)" title="Ouvrir fiche ${t}">${t} <span style="font-size:9px;opacity:.5">↗</span></a>`:`<strong>${t}</strong>`;}
+
+// ── SORT STATE ──
+let SORT_COL = null, SORT_DIR = 1;
+function sortPositions(col){if(SORT_COL===col){SORT_DIR*=-1;}else{SORT_COL=col;SORT_DIR=1;}rPositions();}
+function sortIcon(col){if(SORT_COL!==col)return'<span style="opacity:.3">⇅</span>';return SORT_DIR===1?'▲':'▼';}
+function getSortedPos(arr){if(!SORT_COL)return arr;return[...arr].sort((a,b)=>{let va,vb;if(SORT_COL==='val'){va=a.val||0;vb=b.val||0;}else if(SORT_COL==='gain'){va=a.gain||0;vb=b.gain||0;}else if(SORT_COL==='pct'){va=a.pct||0;vb=b.pct||0;}else if(SORT_COL==='ticker'){va=a.t;vb=b.t;}else if(SORT_COL==='tier'){va=a.tier;vb=b.tier;}else if(SORT_COL==='compte'){va=a.c;vb=b.c;}else if(SORT_COL==='qty'){va=a.q||0;vb=b.q||0;}else if(SORT_COL==='avg'){va=a.avg||0;vb=b.avg||0;}else if(SORT_COL==='live'){va=a.live||a.avg||0;vb=b.live||b.avg||0;}else{va=0;vb=0;}if(typeof va==='string')return SORT_DIR*(va.localeCompare(vb));return SORT_DIR*(va-vb);});}
+function rPositions(){const f=PF==='ALL'?POS:['T1','T2','T3','T4'].includes(PF)?POS.filter(p=>p.tier===PF):POS.filter(p=>p.c===PF);se('pcount','('+f.length+')');const sorted=getSortedPos(f);
+['ticker','compte','tier','val','gain','pct','qty','avg','live'].forEach(col=>{const el=document.getElementById('si-'+col);if(el){if(SORT_COL===col){el.textContent=SORT_DIR===1?'▲':'▼';el.style.opacity='1';}else{el.textContent='⇅';el.style.opacity='.4';}}});
+sh('tpos',sorted.map(p=>`<tr><td>${tickerLink(p.t)}</td><td style="font-family:var(--body);color:var(--text2);font-size:11px">${p.n}</td><td style="font-size:10px;color:var(--text3)">${p.c}</td><td><span class="tier ${p.tier.toLowerCase()}">${p.tier}</span></td><td>${p.q.toFixed(2)}</td><td>$${p.avg.toFixed(2)}</td><td><strong>$${(p.live||p.avg).toFixed(2)}</strong></td><td>${fc(p.val||p.cout)}</td><td class="${gr(p.gain||0)}">${(p.gain||0)>=0?'+':'-'}${fc(Math.abs(p.gain||0))}</td><td class="${gr(p.pct||0)}">${fp(p.pct||0)}</td></tr>`).join(''));}
+function fp2(f,el){PF=f;document.querySelectorAll('.filters .fb').forEach(b=>b.classList.remove('on'));if(el)el.classList.add('on');rPositions();}
+function rAnalyse(){const uv=POS.filter(p=>p.fx==='USD').reduce((s,p)=>s+(p.val||p.cout),0),up=(uv/TOT*100).toFixed(1);const iaTk=['AVGO','SMH','NVDA','MSFT','GOOG','META','AMZN','QQQM'],iav=POS.filter(p=>iaTk.includes(p.t)).reduce((s,p)=>s+(p.val||0),0),iap=(iav/TOT*100).toFixed(1);const ue=document.getElementById('ausd');if(ue){ue.textContent='~'+up+'%';ue.className='kv '+(parseFloat(up)>65?'r':'');}const ie=document.getElementById('aia');if(ie){ie.textContent='~'+iap+'%';ie.className='kv '+(parseFloat(iap)>45?'r':'am');}se('rusd',parseFloat(up)<=65?'✓ OK — '+up+'%':'⚠ '+up+'% > 65%');const re=document.getElementById('rusd');if(re)re.className='rv '+(parseFloat(up)<=65?'g':'r');se('ria',parseFloat(iap)<=45?'✓ OK — '+iap+'%':'⚠ '+iap+'% > 45%');const ri=document.getElementById('ria');if(ri)ri.className='rv '+(parseFloat(iap)<=45?'g':'am');const tiers={T1:0,T2:0,T3:0,T4:0};POS.forEach(p=>{if(tiers[p.tier]!==undefined)tiers[p.tier]+=(p.val||0);});sh('tbd',Object.entries(tiers).map(([t,v])=>`<div class="row"><span class="rl"><span class="tier ${t.toLowerCase()}">${t}</span></span><span class="rv">${fc(v)} · ${(v/TOT*100).toFixed(1)}%</span></div>`).join(''));sh('t5bd',[...POS].sort((a,b)=>(b.val||0)-(a.val||0)).slice(0,5).map(p=>`<div class="row"><span class="rl">${p.t} <span style="font-size:10px;color:var(--text3)">${p.c}</span></span><span class="rv">${fc(p.val||0)} · ${((p.val||0)/TOT*100).toFixed(1)}%</span></div>`).join(''));}
+function rFI(){const p=TOT/2100000*100;se('fip',p.toFixed(1)+'%');se('fir',fc(TOT));se('fio',fc(TOT));document.getElementById('firb').style.width=Math.min(p,100)+'%';document.getElementById('fiob').style.width=Math.min(p,100)+'%';uFI();}
+function uFI(){const rate=parseFloat(document.getElementById('fir2').value)/100,contrib=parseFloat(document.getElementById('fic').value);se('firv',parseFloat(document.getElementById('fir2').value).toFixed(1));se('ficv',contrib.toLocaleString('fr-CA'));let v=TOT,y=0;while(v<2100000&&y<50){v=v*(1+rate)+contrib*12;y++;}const yr=2026+y;se('fisyr',y<50?yr.toString():'50+');se('fiyr','~'+yr);let v55=TOT;for(let i=0;i<21;i++)v55=v55*(1+rate)+contrib*12;se('fis55',fc(v55));function cy(r){let vv=TOT,yy=0;while(vv<2100000&&yy<50){vv=vv*(1+r/100)+5000*12;yy++;}return yy;}se('firs','~'+(2026+cy(8))+' · '+cy(8)+' ans à 8%/an');se('fios','~'+(2026+cy(10))+' · '+cy(10)+' ans à 10%/an');}
+function rMaison(){const rv=POS.filter(p=>p.c==='REER').reduce((s,p)=>s+(p.val||p.cout),0),fv=POS.filter(p=>p.c==='FHSA').reduce((s,p)=>s+(p.val||p.cout),0);se('mr',fc(rv));se('mf',fc(fv));se('mt',fc(rv+fv));se('lcm',fc(rv+fv));const rp=(rv/60000*100).toFixed(1),fp2=(fv/40000*100).toFixed(1),tp=((rv+fv)/100000*100).toFixed(1);document.getElementById('mrb').style.width=Math.min(rp,100)+'%';document.getElementById('mfb').style.width=Math.min(fp2,100)+'%';document.getElementById('mtb').style.width=Math.min(tp,100)+'%';se('mrl',fc(rv)+' / $60K · '+rp+'%');se('mfl',fc(fv)+' / $40K · '+fp2+'%');se('mtl',fc(rv+fv)+' / $100K · '+tp+'%');}
+function uMort(){const price=parseFloat(document.getElementById('mp').value),rate=parseFloat(document.getElementById('mrt').value)/100/12,n=300,pr=price-100000,pmt=rate>0?pr*(rate*Math.pow(1+rate,n))/(Math.pow(1+rate,n)-1):pr/n;se('mpv',(price/1000).toFixed(0)+'K');se('mrtv',parseFloat(document.getElementById('mrt').value).toFixed(2));se('mpmt',fc(pmt)+'/mois');se('mint',fc(pmt*n-pr));}
+function uCrash(){const pct=parseInt(document.getElementById('crp').value);se('crpv',pct);const after=TOT*(1-pct/100),loss=TOT-after;let v=after,y=0;while(v<TOT&&y<20){v=v*1.08+5000*12;y++;}se('cra',fc(after));se('crl','-'+fc(loss));se('crr',y<20?y+' ans':'20+ ans');}
+function tCls(s){const m={'À voir':'tv','En cours':'tc','Vu':'tu','À lire':'tl','Terminé':'tt','À essayer':'te','Visité':'tvi','Visité ✓':'tvi','Favori ⭐':'tf','Favori':'tf','Bucket list':'tb2','Planifié':'tp'};return m[s]||'tneut';}
+function strs(r){return r?'★'.repeat(r)+'☆'.repeat(5-r):'';}
+let _ff2='tous',_lf='tous',_rf='tous',_vf='tous';
+function rFilms(){const data=S.g('films',[]),f=_ff2==='tous'?data:data.filter(x=>x.status===_ff2);const g=document.getElementById('fgrid');if(!g)return;if(!f.length){g.innerHTML='<div class="empty"><div class="ei">FILMS</div><div class="em">Ajoute ton premier film ou série</div></div>';return;}g.innerHTML=f.map(x=>`<div class="cc"><div class="cct">${x.title}</div><div class="ccm">${x.year||''}${x.year?' · ':''}${x.genre||''}</div><div class="ccf"><span class="tag ${tCls(x.status)}">${x.status}</span>${x.rating?`<span class="stars">${strs(x.rating)}</span>`:`<button class="bg" onclick="oRating('films',${data.indexOf(x)})">noter</button>`}</div><button class="bdel" onclick="dItem('films',${data.indexOf(x)},rFilms)">✕</button></div>`).join('');}
+function aFilm(){const t=document.getElementById('fi').value.trim();if(!t)return;const d=S.g('films',[]);d.unshift({title:t,year:document.getElementById('fy').value.trim(),status:document.getElementById('fs').value,rating:0});S.s('films',d);document.getElementById('fi').value='';document.getElementById('fy').value='';rFilms();rToday();}
+function fFilm(f,el){_ff2=f;document.querySelectorAll('#fff .fb').forEach(b=>b.classList.remove('on'));if(el)el.classList.add('on');rFilms();}
+function rLivres(){const data=S.g('livres',[]),f=_lf==='tous'?data:data.filter(x=>x.status===_lf);const g=document.getElementById('lgrid');if(!g)return;if(!f.length){g.innerHTML='<div class="empty"><div class="ei">LIVRES</div><div class="em">Ajoute ton premier livre</div></div>';return;}g.innerHTML=f.map(x=>`<div class="cc"><div class="cct">${x.title}</div><div class="ccm">${x.author||''}</div><div class="ccf"><span class="tag ${tCls(x.status)}">${x.status}</span></div><button class="bdel" onclick="dItem('livres',${data.indexOf(x)},rLivres)">✕</button></div>`).join('');}
+function aLivre(){const t=document.getElementById('li2').value.trim();if(!t)return;const d=S.g('livres',[]);d.unshift({title:t,author:document.getElementById('lau').value.trim(),status:document.getElementById('lst').value});S.s('livres',d);document.getElementById('li2').value='';document.getElementById('lau').value='';rLivres();rToday();}
+function fLivre(f,el){_lf=f;document.querySelectorAll('#lff .fb').forEach(b=>b.classList.remove('on'));if(el)el.classList.add('on');rLivres();}
+function rRestos(){const data=S.g('restaurants',[]),f=_rf==='tous'?data:data.filter(x=>x.status===_rf||x.status===_rf+' ⭐'||x.status.startsWith(_rf));const g=document.getElementById('rgrid');if(!g)return;if(!f.length){g.innerHTML='<div class="empty"><div class="ei">RESTOS</div><div class="em">Ajoute ton premier restaurant</div></div>';return;}g.innerHTML=f.map(x=>`<div class="cc"><div class="cct">${x.name}</div><div class="ccm">${x.city||''}${x.city&&x.cuisine?' · ':''}${x.cuisine||''}</div><div class="ccf"><span class="tag ${tCls(x.status)}">${x.status}</span>${x.rating?`<span class="stars">${strs(x.rating)}</span>`:`<button class="bg" onclick="oRating('restaurants',${data.indexOf(x)})">noter</button>`}</div><button class="bdel" onclick="dItem('restaurants',${data.indexOf(x)},rRestos)">✕</button></div>`).join('');}
+function aResto(){const t=document.getElementById('rn').value.trim();if(!t)return;const d=S.g('restaurants',[]);d.unshift({name:t,city:document.getElementById('rci').value.trim(),cuisine:document.getElementById('rcu').value.trim(),status:document.getElementById('rst').value,rating:0});S.s('restaurants',d);document.getElementById('rn').value='';document.getElementById('rci').value='';document.getElementById('rcu').value='';rRestos();rToday();}
+function fResto(f,el){_rf=f;document.querySelectorAll('#rff .fb').forEach(b=>b.classList.remove('on'));if(el)el.classList.add('on');rRestos();}
+function rVoyages(){const data=S.g('voyages',[]),f=_vf==='tous'?data:data.filter(x=>x.status===_vf||x.status===_vf+' ✓');const g=document.getElementById('vgrid');if(!g)return;if(!f.length){g.innerHTML='<div class="empty"><div class="ei">VOYAGES</div><div class="em">Ajoute ta première destination</div></div>';return;}g.innerHTML=f.map(x=>`<div class="cc"><div class="cct">${x.dest}</div><div class="ccm">${x.year||''}</div><div class="ccf"><span class="tag ${tCls(x.status)}">${x.status}</span></div><button class="bdel" onclick="dItem('voyages',${data.indexOf(x)},rVoyages)">✕</button></div>`).join('');}
+function aVoyage(){const t=document.getElementById('vd').value.trim();if(!t)return;const d=S.g('voyages',[]);d.unshift({dest:t,year:document.getElementById('vy').value.trim(),status:document.getElementById('vst').value});S.s('voyages',d);document.getElementById('vd').value='';document.getElementById('vy').value='';rVoyages();rToday();}
+function fVoyage(f,el){_vf=f;document.querySelectorAll('#vff .fb').forEach(b=>b.classList.remove('on'));if(el)el.classList.add('on');rVoyages();}
+function dItem(k,i,fn){const d=S.g(k,[]);d.splice(i,1);S.s(k,d);fn();rToday();}
+let _rc={key:'',idx:0,val:0};
+function oRating(key,idx){_rc={key,idx,val:0};document.getElementById('stp').innerHTML=[1,2,3,4,5].map(n=>`<button class="stb" id="s${n}" onclick="setStar(${n})">☆</button>`).join('');document.getElementById('mrt2').classList.add('on');}
+function setStar(n){_rc.val=n;[1,2,3,4,5].forEach(i=>document.getElementById('s'+i).textContent=i<=n?'★':'☆');}
+function saveRating(){if(!_rc.val){cM('mrt2');return;}const d=S.g(_rc.key,[]);if(d[_rc.idx])d[_rc.idx].rating=_rc.val;S.s(_rc.key,d);cM('mrt2');if(_rc.key==='films')rFilms();if(_rc.key==='restaurants')rRestos();}
+const DP=[
+  {label:'🏋️ Bench press',key:'bench',val:'205 lbs',obj:'225 lbs',cur:205,goal:225,unit:'lbs'},
+  {label:'🦵 Squat',key:'squat',val:'275 lbs',obj:'315 lbs',cur:275,goal:315,unit:'lbs'},
+  {label:'⬆️ Deadlift',key:'dead',val:'315 lbs',obj:'365 lbs',cur:315,goal:365,unit:'lbs'},
+  {label:'💪 Overhead press',key:'ohp',val:'135 lbs',obj:'155 lbs',cur:135,goal:155,unit:'lbs'},
+  {label:'🏃 5km',key:'run5',val:'24:30',obj:'22:00',cur:null,goal:null,unit:'min'},
+  {label:'⚖️ Poids',key:'poids',val:'175 lbs',obj:'190 lbs',cur:175,goal:190,unit:'lbs'},
+  {label:'🥋 BJJ',key:'bjj',val:'Q2 2026',obj:'Actif',cur:null,goal:null,unit:''}
+];
+function parseLbs(s){return parseFloat(String(s).replace(/[^\d.]/g,''))||0;}
+function prPct(p){
+  if(p.cur===null)return null;
+  const cur=parseLbs(p.val),goal=p.goal;
+  if(!goal||!cur)return null;
+  return Math.min(Math.round(cur/goal*100),100);
+}
+function rPRs(){
+  const d=S.g('prs',DP);
+  sh('prlist',d.map(p=>{
+    const pct=prPct(p);
+    const bar=pct!==null?`<div style="margin-top:6px"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:3px"><span>${p.val}</span><span style="color:var(--text2)">→ ${p.obj||'—'}</span></div><div style="height:3px;background:var(--bg);border-radius:2px;border:0.5px solid var(--border)"><div style="height:100%;border-radius:2px;background:var(--green);width:${pct}%;transition:width .6s ease"></div></div></div>`:'<div style="font-size:11px;color:var(--text3);margin-top:4px">→ '+( p.obj||'—')+'</div>';
+    return`<div class="pr-row"><div style="flex:1"><div class="prn">${p.label}</div>${bar}</div><div class="prv">${p.val}</div></div>`;
+  }).join(''));
+  const pw=d.find(p=>p.key==='poids');if(pw){se('kpds',pw.val);se('lcp',pw.val);}
+  const bj=d.find(p=>p.key==='bjj');if(bj)se('kbjj',bj.val);
+}
+function openPRM(){const d=S.g('prs',DP);sh('prfields',d.map(p=>`<div class="mf"><div class="ml">${p.label}</div><input class="inp" id="prf${p.key}" value="${p.val}"></div>`).join(''));document.getElementById('mpr').classList.add('on');}
+function savePR(){const d=S.g('prs',DP);d.forEach(p=>{const e=document.getElementById('prf'+p.key);if(e&&e.value.trim())p.val=e.value.trim();});S.s('prs',d);cM('mpr');rPRs();}
+const DN={cal:'3,200 kcal',prot:'190g / jour',gluc:'380g / jour',lip:'90g / jour',eau:'3.5L / jour'};
+function rNut(){const d=S.g('nut',DN);se('ndcal',d.cal);se('ndprot',d.prot);se('ndgluc',d.gluc);se('ndlip',d.lip);se('ndeau',d.eau);se('ncal',d.cal);se('nprot',d.prot);}
+function openNM(){const d=S.g('nut',DN);['cal','prot','gluc','lip','eau'].forEach(k=>document.getElementById('mn'+k).value=d[k]);document.getElementById('mnt').classList.add('on');}
+function saveNut(){const d={};['cal','prot','gluc','lip','eau'].forEach(k=>d[k]=document.getElementById('mn'+k).value||DN[k]);S.s('nut',d);cM('mnt');rNut();}
+function rVerdicts(){const data=S.g('verdicts',[]);const el=document.getElementById('vlist');if(!el)return;if(!data.length){el.innerHTML='<div class="empty"><div class="ei">VERDICTS</div><div class="em">Documente ta première décision</div></div>';return;}const sm={pending:'tpend',good:'tgood',bad:'tbad',neutral:'tneut'};const lm={pending:'⏳ J+30 : ',good:'✓ Bon move',bad:'✗ À revoir',neutral:'— Neutre'};el.innerHTML=data.map((v,i)=>`<div class="vc"><div class="vt">${v.title}</div><div class="vd">${v.date}${v.due?' · J+30 : '+v.due:''}</div>${v.note?`<div class="vn">${v.note}</div>`:''}<div class="vf"><span class="tag ${sm[v.status]||'tpend'}">${v.status==='pending'?(lm.pending+(v.due||'')):(lm[v.status]||'⏳')}</span>${v.status==='pending'?`<select class="inp" style="width:150px;padding:5px 10px;font-size:11px;margin-left:8px" onchange="uVerdict(${i},this.value)"><option value="pending">⏳ En attente</option><option value="good">✓ Bon move</option><option value="bad">✗ À revoir</option><option value="neutral">— Neutre</option></select>`:''}<button class="bdel" style="opacity:1;margin-left:auto" onclick="dItem('verdicts',${i},rVerdicts)">✕</button></div></div>`).join('');}
+function aVerdict(){const t=document.getElementById('vdt').value.trim();if(!t)return;const today=new Date().toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'});const d30=new Date();d30.setDate(d30.getDate()+30);const data=S.g('verdicts',[]);data.unshift({title:t,note:document.getElementById('vdn').value.trim(),date:today,due:d30.toLocaleDateString('fr-CA',{day:'numeric',month:'long'}),status:document.getElementById('vds').value});S.s('verdicts',data);document.getElementById('vdt').value='';document.getElementById('vdn').value='';rVerdicts();}
+function uVerdict(i,val){const d=S.g('verdicts',[]);if(d[i])d[i].status=val;S.s('verdicts',d);rVerdicts();}
+function cM(id){document.getElementById(id).classList.remove('on');}
+document.querySelectorAll('.mo').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('on');}));
+function navPillar(pillar,el){
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('on'));
+  if(el)el.classList.add('on');
+  const map={
+    finances:['today','portfolio','positions','analyse','budget','dividendes','fiscal','fi','maison'],
+    corps:['sante','nutrition'],
+    culture:['films','livres','restaurants','voyages'],
+    vie:['maison','fi'],
+    outils:['verdicts','crash','actions']
+  };
+  const pages=map[pillar]||['today'];
+  nav(pages[0],null);
+  const sidebar=document.querySelector('.sidebar');
+  if(sidebar){
+    const smap={finances:['today','portfolio','positions','analyse','budget','dividendes','fiscal','fi','maison'],corps:['sante','nutrition'],culture:['films','livres','restaurants','voyages'],vie:['maison','fi'],outils:['verdicts','crash','actions']};
+    document.querySelectorAll('.ni').forEach(n=>{
+      const oc=n.getAttribute('onclick')||'';
+      const pg=oc.match(/'([^']+)'/)?.[1];
+      if(pg){const inPillar=Object.values(smap).some(arr=>arr.includes(pg));n.style.display=inPillar?'':'flex';}
+    });
+  }
+  if(pillar==='finances'){document.querySelectorAll('.ni').forEach(n=>n.style.display='');}
+}
+function nav(pg,el){document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));const p=document.getElementById('page-'+pg);if(p)p.classList.add('on');if(el)el.classList.add('on');else document.querySelectorAll('.ni').forEach(n=>{if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+pg+"'"))n.classList.add('on');});const rs={films:rFilms,livres:rLivres,restaurants:rRestos,voyages:rVoyages,verdicts:rVerdicts,sante:rPRs,nutrition:rNut};if(rs[pg])rs[pg]();if(pg==='watchlist')rWatchlist();if(pg==='analyse')setTimeout(buildChart,50);}
+function updateClock(){se('clk',new Date().toLocaleString('fr-CA',{timeZone:'America/Toronto',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})+' HNE');}
+setInterval(updateClock,1000);updateClock();
+function loadJSON(input){const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(d.positions)POS=d.positions.map(p=>({t:p.ticker,n:p.nom||p.ticker,tier:p.tier,c:p.compte,q:parseFloat(p.qty),avg:parseFloat(p.prixMoy)||0,fx:p.dev||'CAD'}));if(d.usdcad)FX=d.usdcad;if(d.total_cad)TOT=d.total_cad;if(d.totalCAD)TOT=d.totalCAD;if(d.costBase)CST=d.costBase;compute();rAll();se('ttxt','JSON local · '+POS.length+' positions');}catch{alert('Erreur JSON');}};r.readAsText(f);}
+function init(){compute();rAll();rPRs();rNut();rVerdicts();fetchData();setInterval(fetchData,60000);}
+if(sessionStorage.getItem('h')==='1')init();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+// ── INTERACTIVE CHARTS ──
+let mainChart=null, currentChartMode='tier', currentChartType='doughnut';
+const CHART_COLORS=['#1A1A1A','#4A7C59','#B5541C','#1565C0','#7B3F9E','#C0392B','#2C7873','#E67E22','#16A085','#8E44AD','#2980B9','#27AE60'];
+
+function getChartData(mode){
+  if(mode==='tier'){
+    const tiers={T1:0,T2:0,T3:0,T4:0};
+    POS.forEach(p=>{if(tiers[p.tier]!==undefined)tiers[p.tier]+=(p.val||0);});
+    return{labels:Object.keys(tiers),data:Object.values(tiers).map(v=>parseFloat(v.toFixed(0))),title:'Répartition par Tier'};
+  }
+  if(mode==='compte'){
+    const c={TFSA:0,FHSA:0,REER:0};
+    POS.forEach(p=>{if(c[p.c]!==undefined)c[p.c]+=(p.val||0);});
+    return{labels:Object.keys(c),data:Object.values(c).map(v=>parseFloat(v.toFixed(0))),title:'Répartition par Compte'};
+  }
+  if(mode==='top10'){
+    const sorted=[...POS].sort((a,b)=>(b.val||0)-(a.val||0)).slice(0,10);
+    return{labels:sorted.map(p=>p.t),data:sorted.map(p=>parseFloat((p.val||0).toFixed(0))),title:'Top 10 Positions'};
+  }
+  if(mode==='gains'){
+    const sorted=[...POS].filter(p=>p.gain!==undefined).sort((a,b)=>(b.gain||0)-(a.gain||0)).slice(0,12);
+    return{labels:sorted.map(p=>p.t),data:sorted.map(p=>parseFloat((p.gain||0).toFixed(0))),title:'Gains par Position ($CAD)',colors:sorted.map(p=>(p.gain||0)>=0?'rgba(46,125,50,0.8)':'rgba(198,40,40,0.8)')};
+  }
+  return{labels:[],data:[],title:''};
+}
+
+function buildChart(){
+  const canvas=document.getElementById('mainChart');
+  if(!canvas||typeof Chart==='undefined')return;
+  if(!POS||POS.length===0){setTimeout(buildChart,500);return;}
+  const d=getChartData(currentChartMode);
+  se('chart-title',d.title);
+  if(mainChart)mainChart.destroy();
+  const colors=d.colors||CHART_COLORS.slice(0,d.labels.length);
+  const isDoughnut=currentChartType==='doughnut';
+  mainChart=new Chart(canvas,{
+    type:isDoughnut?'doughnut':'bar',
+    data:{labels:d.labels,datasets:[{data:d.data,backgroundColor:colors,borderColor:isDoughnut?'#f8f7f5':'rgba(0,0,0,0.1)',borderWidth:isDoughnut?2:1,borderRadius:isDoughnut?0:4}]},
+    options:{
+      responsive:true,maintainAspectRatio:true,
+      plugins:{
+        legend:{display:isDoughnut,position:'right',labels:{font:{size:11,family:'system-ui'},color:'#1A1A1A',padding:12,boxWidth:12}},
+        tooltip:{callbacks:{label:ctx=>{const val=ctx.raw;const total=ctx.dataset.data.reduce((a,b)=>a+b,0);const pct=(val/total*100).toFixed(1);return` $${val.toLocaleString('fr-CA')} CAD (${pct}%)`;}}}
+      },
+      scales:isDoughnut?{}:{
+        x:{ticks:{font:{size:10},color:'#555'},grid:{display:false}},
+        y:{ticks:{callback:v=>'$'+Math.round(v/1000)+'K',font:{size:10},color:'#555'},grid:{color:'rgba(0,0,0,0.05)'}}
+      },
+      onClick:(e,els)=>{if(els.length>0){const label=d.labels[els[0].index];const pos=POS.find(p=>p.t===label);if(pos&&LINKS[pos.t])window.open(LINKS[pos.t],'_blank');}}
+    }
+  });
+}
+
+function switchChart(mode,el){
+  currentChartMode=mode;
+  document.querySelectorAll('#page-analyse .filters .fb').forEach(b=>b.classList.remove('on'));
+  if(el)el.classList.add('on');
+  buildChart();
+}
+
+function setChartType(type,el){
+  currentChartType=type;
+  document.querySelectorAll('#btn-doughnut,#btn-bar').forEach(b=>b.classList.remove('on'));
+  if(el)el.classList.add('on');
+  buildChart();
+}
+
+// Rebuild chart when navigating to analyse page
+
+</script>
