@@ -527,16 +527,5 @@
       "marketValue": 57.09,
       "dev": "USD"
     }
-  ],
-  "watchlist_version": "v1-S39",
-  "watchlist_date": "2026-03-14",
-  "watchlist_next_update": "2026-06-01",
-  "watchlist_summary": {
-    "total": 60,
-    "actions_lt": 20,
-    "etf_lt": 20,
-    "momentum": 20,
-    "en_portefeuille": 18,
-    "a_considerer": 8
-  }
+  ]
 }
