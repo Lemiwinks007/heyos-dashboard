@@ -651,15 +651,19 @@ const se=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
 const sh=(id,v)=>{const e=document.getElementById(id);if(e)e.innerHTML=v;};
 function compute(){POS.forEach(p=>{p.cout=p.cout||(p.fx==='CAD'?p.q*p.avg:p.q*p.avg*FX);p.live=p.live||p.avg;p.val=p.val||(p.fx==='CAD'?p.q*p.live:p.q*p.live*FX);p.gain=p.gain||(p.val-p.cout);p.pct=p.pct||(p.gain/p.cout*100);if(!p.dayPL)p.dayPL=0;});}
 // ── YAHOO FINANCE LIVE PRICES via Apps Script proxy ──
-const GAS_URL='https://script.google.com/macros/s/AKfycbxB64LhhwvwjLmVhCuiPoFJ1IV-el43sAoCR1tORcDATfIhxwrIUaA7kDmI4qvl3C1T/exec';
+const GAS_URL='https://script.google.com/macros/s/AKfycbz9sJ6MKEwdq7g-oq1zBk2GLR9yyuS3BWCPWzSYuxZjiKO1lS9zr08JAYcjOqvJaPOF/exec';
 async function yahooFetch(tickers){
   const sym=tickers.join(',');
   try{
-    const r=await fetch(GAS_URL+'?symbols='+encodeURIComponent(sym),{signal:AbortSignal.timeout(12000),redirect:'follow'});
+    const r=await fetch(GAS_URL+'?symbols='+encodeURIComponent(sym),{signal:AbortSignal.timeout(15000),redirect:'follow'});
     if(!r.ok)return null;
-    const raw=await r.json();
+    let text=await r.text();
+    // HtmlService wraps content in HTML - extract JSON
+    const match=text.match(/(\{[\s\S]*\}|\[[\s\S]*\])/);
+    if(match)text=match[1];
+    const raw=JSON.parse(text);
     const out={};
-    // Format 1: {TICKER: {close:[...], chartPreviousClose:...}}
+    // Format: {TICKER: {close:[...], chartPreviousClose:...}}
     if(raw&&typeof raw==='object'&&!raw.spark){
       Object.entries(raw).forEach(([sym,d])=>{
         if(d&&d.close&&d.close.length>0){
@@ -669,11 +673,11 @@ async function yahooFetch(tickers){
         }
       });
     }
-    // Format 2: spark.result format
+    // Format: spark.result
     if(raw?.spark?.result){
       raw.spark.result.forEach(s=>{
         const meta=s.response?.[0]?.meta;
-        if(meta){out[s.symbol]={price:meta.regularMarketPrice||meta.previousClose,prev:meta.previousClose||meta.regularMarketPrice};}
+        if(meta)out[s.symbol]={price:meta.regularMarketPrice||meta.previousClose,prev:meta.previousClose||meta.regularMarketPrice};
       });
     }
     return Object.keys(out).length>0?out:null;
