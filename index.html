@@ -658,12 +658,24 @@ async function yahooFetch(tickers){
     const r=await fetch(GAS_URL+'?symbols='+encodeURIComponent(sym),{signal:AbortSignal.timeout(12000),redirect:'follow'});
     if(!r.ok)return null;
     const raw=await r.json();
-    const sp=raw?.spark?.result||[];
     const out={};
-    sp.forEach(s=>{
-      const meta=s.response?.[0]?.meta;
-      if(meta){out[s.symbol]={price:meta.regularMarketPrice||meta.previousClose,prev:meta.previousClose||meta.regularMarketPrice};}
-    });
+    // Format 1: {TICKER: {close:[...], chartPreviousClose:...}}
+    if(raw&&typeof raw==='object'&&!raw.spark){
+      Object.entries(raw).forEach(([sym,d])=>{
+        if(d&&d.close&&d.close.length>0){
+          const price=d.close[d.close.length-1];
+          const prev=d.chartPreviousClose||price;
+          out[sym]={price,prev};
+        }
+      });
+    }
+    // Format 2: spark.result format
+    if(raw?.spark?.result){
+      raw.spark.result.forEach(s=>{
+        const meta=s.response?.[0]?.meta;
+        if(meta){out[s.symbol]={price:meta.regularMarketPrice||meta.previousClose,prev:meta.previousClose||meta.regularMarketPrice};}
+      });
+    }
     return Object.keys(out).length>0?out:null;
   }catch(e){return null;}
 }
