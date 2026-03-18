@@ -771,9 +771,31 @@ let SORT_COL = null, SORT_DIR = 1;
 function sortPositions(col){if(SORT_COL===col){SORT_DIR*=-1;}else{SORT_COL=col;SORT_DIR=1;}rPositions();}
 function sortIcon(col){if(SORT_COL!==col)return'<span style="opacity:.3">⇅</span>';return SORT_DIR===1?'▲':'▼';}
 function getSortedPos(arr){if(!SORT_COL)return arr;return[...arr].sort((a,b)=>{let va,vb;if(SORT_COL==='val'){va=a.val||0;vb=b.val||0;}else if(SORT_COL==='gain'){va=a.gain||0;vb=b.gain||0;}else if(SORT_COL==='pct'){va=a.pct||0;vb=b.pct||0;}else if(SORT_COL==='ticker'){va=a.t;vb=b.t;}else if(SORT_COL==='tier'){va=a.tier;vb=b.tier;}else if(SORT_COL==='compte'){va=a.c;vb=b.c;}else if(SORT_COL==='qty'){va=a.q||0;vb=b.q||0;}else if(SORT_COL==='avg'){va=a.avg||0;vb=b.avg||0;}else if(SORT_COL==='live'){va=a.live||a.avg||0;vb=b.live||b.avg||0;}else{va=0;vb=0;}if(typeof va==='string')return SORT_DIR*(va.localeCompare(vb));return SORT_DIR*(va-vb);});}
-function rPositions(){const f=PF==='ALL'?POS:['T1','T2','T3','T4'].includes(PF)?POS.filter(p=>p.tier===PF):POS.filter(p=>p.c===PF);se('pcount','('+f.length+')');const sorted=getSortedPos(f);
+function rPositions(){
+  let f=PF==='ALL'?POS:['T1','T2','T3','T4'].includes(PF)?POS.filter(p=>p.tier===PF):POS.filter(p=>p.c===PF);
+  // Fusionner les positions identiques quand filtre = ALL
+  if(PF==='ALL'){
+    const map={};
+    f.forEach(p=>{
+      const k=p.t;
+      if(!map[k]){map[k]={...p,q:p.q,val:p.val||0,cout:p.cout||0,gain:p.gain||0,c:'Multi',_merged:false};}
+      else{
+        map[k].q+=p.q;
+        map[k].val+=(p.val||0);
+        map[k].cout+=(p.cout||0);
+        map[k].gain+=(p.gain||0);
+        map[k].c='Multi';
+        map[k]._merged=true;
+      }
+    });
+    // Recalculer pct sur la position fusionnée
+    Object.values(map).forEach(p=>{p.pct=p.cout>0?p.gain/p.cout*100:0;});
+    f=Object.values(map);
+  }
+  se('pcount','('+f.length+')');
+  const sorted=getSortedPos(f);
 ['ticker','compte','tier','val','gain','pct','qty','avg','live'].forEach(col=>{const el=document.getElementById('si-'+col);if(el){if(SORT_COL===col){el.textContent=SORT_DIR===1?'▲':'▼';el.style.opacity='1';}else{el.textContent='⇅';el.style.opacity='.4';}}});
-sh('tpos',sorted.map(p=>`<tr><td>${tickerLink(p.t)}</td><td style="font-family:var(--body);color:var(--text2);font-size:11px">${p.n}</td><td style="font-size:10px;color:var(--text3)">${p.c}</td><td><span class="tier ${p.tier.toLowerCase()}">${p.tier}</span></td><td>${p.q.toFixed(2)}</td><td>$${p.avg.toFixed(2)}</td><td><strong>$${(p.live||p.avg).toFixed(2)}</strong></td><td>${fc(p.val||p.cout)}</td><td class="${gr(p.gain||0)}">${(p.gain||0)>=0?'+':'-'}${fc(Math.abs(p.gain||0))}</td><td class="${gr(p.pct||0)}">${fp(p.pct||0)}</td></tr>`).join(''));}
+sh('tpos',sorted.map(p=>`<tr><td>${tickerLink(p.t)}</td><td style="font-family:var(--body);color:var(--text2);font-size:11px">${p.n}</td><td style="font-size:10px;color:${p.c==='Multi'?'var(--blue)':'var(--text3)'};font-weight:${p.c==='Multi'?'600':'400'}">${p.c}</td><td><span class="tier ${p.tier.toLowerCase()}">${p.tier}</span></td><td>${p.q.toFixed(2)}</td><td>$${p.avg.toFixed(2)}</td><td><strong>$${(p.live||p.avg).toFixed(2)}</strong></td><td>${fc(p.val||p.cout)}</td><td class="${gr(p.gain||0)}">${(p.gain||0)>=0?'+':'-'}${fc(Math.abs(p.gain||0))}</td><td class="${gr(p.pct||0)}">${fp(p.pct||0)}</td></tr>`).join(''));}
 function fp2(f,el){PF=f;document.querySelectorAll('.filters .fb').forEach(b=>b.classList.remove('on'));if(el)el.classList.add('on');rPositions();}
 function rAnalyse(){const uv=POS.filter(p=>p.fx==='USD').reduce((s,p)=>s+(p.val||p.cout),0),up=(uv/TOT*100).toFixed(1);const iaTk=['AVGO','SMH','NVDA','MSFT','GOOG','META','AMZN','QQQM'],iav=POS.filter(p=>iaTk.includes(p.t)).reduce((s,p)=>s+(p.val||0),0),iap=(iav/TOT*100).toFixed(1);const ue=document.getElementById('ausd');if(ue){ue.textContent='~'+up+'%';ue.className='kv '+(parseFloat(up)>65?'r':'');}const ie=document.getElementById('aia');if(ie){ie.textContent='~'+iap+'%';ie.className='kv '+(parseFloat(iap)>45?'r':'am');}se('rusd',parseFloat(up)<=65?'✓ OK — '+up+'%':'⚠ '+up+'% > 65%');const re=document.getElementById('rusd');if(re)re.className='rv '+(parseFloat(up)<=65?'g':'r');se('ria',parseFloat(iap)<=45?'✓ OK — '+iap+'%':'⚠ '+iap+'% > 45%');const ri=document.getElementById('ria');if(ri)ri.className='rv '+(parseFloat(iap)<=45?'g':'am');const tiers={T1:0,T2:0,T3:0,T4:0};POS.forEach(p=>{if(tiers[p.tier]!==undefined)tiers[p.tier]+=(p.val||0);});sh('tbd',Object.entries(tiers).map(([t,v])=>`<div class="row"><span class="rl"><span class="tier ${t.toLowerCase()}">${t}</span></span><span class="rv">${fc(v)} · ${(v/TOT*100).toFixed(1)}%</span></div>`).join(''));sh('t5bd',[...POS].sort((a,b)=>(b.val||0)-(a.val||0)).slice(0,5).map(p=>`<div class="row"><span class="rl">${p.t} <span style="font-size:10px;color:var(--text3)">${p.c}</span></span><span class="rv">${fc(p.val||0)} · ${((p.val||0)/TOT*100).toFixed(1)}%</span></div>`).join(''));}
 function rFI(){const p=TOT/2100000*100;se('fip',p.toFixed(1)+'%');se('fir',fc(TOT));se('fio',fc(TOT));document.getElementById('firb').style.width=Math.min(p,100)+'%';document.getElementById('fiob').style.width=Math.min(p,100)+'%';uFI();}
