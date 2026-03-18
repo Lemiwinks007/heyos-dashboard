@@ -650,58 +650,37 @@ const gr=v=>v>=0?'g':'r';
 const se=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
 const sh=(id,v)=>{const e=document.getElementById(id);if(e)e.innerHTML=v;};
 function compute(){POS.forEach(p=>{p.cout=p.cout||(p.fx==='CAD'?p.q*p.avg:p.q*p.avg*FX);p.live=p.live||p.avg;p.val=p.val||(p.fx==='CAD'?p.q*p.live:p.q*p.live*FX);p.gain=p.gain||(p.val-p.cout);p.pct=p.pct||(p.gain/p.cout*100);if(!p.dayPL)p.dayPL=0;});}
-// ── YAHOO FINANCE LIVE PRICES ──
-const PROXIES=[
-  t=>`https://corsproxy.io/?${encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/spark?symbols='+t+'&range=1d&interval=1d')}`,
-  t=>`https://api.allorigins.win/get?url=${encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/spark?symbols='+t+'&range=1d&interval=1d')}`,
-  t=>`https://corsproxy.io/?${encodeURIComponent('https://query2.finance.yahoo.com/v8/finance/spark?symbols='+t+'&range=1d&interval=1d')}`
-];
+// ── YAHOO FINANCE LIVE PRICES via Apps Script proxy ──
+const GAS_URL='https://script.google.com/macros/s/AKfycbz9YcHLHVYd2IpesGBj-rI1ALzfGXuAydLIufVfxDYo3KdbAdNkUZ9VA-OQEcka4iUI/exec';
 async function yahooFetch(tickers){
-  const sym=tickers.map(t=>t.endsWith('.TO')?t:t).join(',');
-  for(const proxy of PROXIES){
-    try{
-      const r=await fetch(proxy(sym),{signal:AbortSignal.timeout(8000)});
-      if(!r.ok)continue;
-      let raw=await r.json();
-      if(raw.contents)raw=JSON.parse(raw.contents);
-      const sp=raw?.spark?.result||[];
-      const out={};
-      sp.forEach(s=>{
-        const sym=s.symbol;
-        const resp=s.response?.[0];
-        const meta=resp?.meta;
-        if(meta){out[sym]={price:meta.regularMarketPrice||meta.previousClose,prev:meta.previousClose||meta.regularMarketPrice,name:meta.shortName||sym};}
-      });
-      if(Object.keys(out).length>0)return out;
-    }catch(e){}
-  }
-  return null;
-}
-async function fetchFX(){
+  const sym=tickers.join(',');
   try{
-    const d=await yahooFetch(['USDCAD=X']);
-    if(d&&d['USDCAD=X'])return d['USDCAD=X'].price;
-  }catch{}
-  return FX;
+    const r=await fetch(GAS_URL+'?symbols='+encodeURIComponent(sym),{signal:AbortSignal.timeout(12000)});
+    if(!r.ok)return null;
+    const raw=await r.json();
+    const sp=raw?.spark?.result||[];
+    const out={};
+    sp.forEach(s=>{
+      const meta=s.response?.[0]?.meta;
+      if(meta){out[s.symbol]={price:meta.regularMarketPrice||meta.previousClose,prev:meta.previousClose||meta.regularMarketPrice};}
+    });
+    return Object.keys(out).length>0?out:null;
+  }catch(e){return null;}
 }
 async function fetchData(){
   se('ttxt','⟳ Chargement prix live…');
   try{
-    // Get all unique tickers
-    const tickers=[...new Set(POS.map(p=>p.t))];
-    // Add FX
-    const allTickers=[...tickers,'USDCAD=X'];
-    // Yahoo Finance returns .TO tickers as-is
-    const prices=await yahooFetch(allTickers);
+    const tickers=[...new Set(POS.map(p=>p.t)),'USDCAD=X'];
+    const prices=await yahooFetch(tickers);
     if(prices){
       if(prices['USDCAD=X'])FX=prices['USDCAD=X'].price;
       POS.forEach(p=>{
         const q=prices[p.t];
-        if(q){LC[p.t+'_'+p.c]={price:q.price,prev:q.prev};}
+        if(q)LC[p.t+'_'+p.c]={price:q.price,prev:q.prev};
       });
       applyLive();
       const now=new Date().toLocaleString('fr-CA',{timeZone:'America/Toronto',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false});
-      se('ttxt','Live Yahoo · '+POS.length+' positions · '+fc(TOT)+' · '+now+' HNE');
+      se('ttxt','● Live Yahoo · '+POS.length+' positions · '+fc(TOT)+' · '+now+' HNE');
     }else{
       se('ttxt','⚠ Prix live indisponibles · données locales');
     }
