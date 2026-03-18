@@ -216,6 +216,7 @@ tbody tr:hover td{background:var(--bg)}
     <div class="ni" onclick="nav('crash',this)"><span class="nd"></span>Crash Simulator</div>
     <div class="ni" onclick="nav('actions',this)"><span class="nd r"></span>Actions requises <span class="nb">3</span></div>
     <div class="ni" onclick="nav('watchlist',this)"><span class="nd g"></span>Watchlist S39 <span class="nw">NEW</span></div>
+    <div class="ni" onclick="nav('roadmap',this)"><span class="nd b"></span>Roadmap HeyOS <span class="nw">NEW</span></div>
   </nav>
   <div class="main">
     <div class="topbar">
@@ -620,8 +621,38 @@ tbody tr:hover td{background:var(--bg)}
         </div>
       </div>
 
-      <div class="page" id="page-actions">
-        <div class="ey">Outils</div><div class="hl">ACTIONS REQUISES</div>
+      <div class="page" id="page-roadmap">
+        <div class="ey">Outils · Système</div>
+        <div class="hl">ROADMAP HEYOS</div>
+        <div class="krow">
+          <div class="kpi"><div class="kl">Idées totales</div><div class="kv b" id="rm-total">—</div></div>
+          <div class="kpi"><div class="kl">En cours</div><div class="kv am" id="rm-progress">—</div></div>
+          <div class="kpi"><div class="kl">Complétées</div><div class="kv g" id="rm-done">—</div></div>
+          <div class="kpi"><div class="kl">Dernière MAJ</div><div class="kv" id="rm-date">S40</div></div>
+        </div>
+        <div class="filters" id="rm-filters">
+          <button class="fb on" onclick="rmFilter('all',this)">Tout</button>
+          <button class="fb" onclick="rmFilter('idee',this)">💡 Idées</button>
+          <button class="fb" onclick="rmFilter('cours',this)">🔄 En cours</button>
+          <button class="fb" onclick="rmFilter('fait',this)">✅ Fait</button>
+          <button class="fb" onclick="rmFilter('dashboard',this)">Dashboard</button>
+          <button class="fb" onclick="rmFilter('systeme',this)">Système</button>
+          <button class="fb" onclick="rmFilter('ia',this)">IA & Outils</button>
+        </div>
+        <div class="tw">
+          <table>
+            <thead><tr>
+              <th>Session</th>
+              <th>Idée / Amélioration</th>
+              <th>Catégorie</th>
+              <th>Impact</th>
+              <th>Effort</th>
+              <th>Statut</th>
+            </tr></thead>
+            <tbody id="rm-body"></tbody>
+          </table>
+        </div>
+      </div>
         <div class="act"><div class="adot r"></div><div><div class="at">🔴 EQ Bank HISA — Ouvrir maintenant</div><div class="as">$1,500/mois qui dort · ~4% · eqbank.ca · 15 minutes</div></div></div>
         <div class="act"><div class="adot r"></div><div><div class="at">🔴 Bénéficiaires Questrade — 5 minutes</div><div class="as">$85,683 sans bénéficiaires · My Account → Beneficiaries</div></div></div>
         <div class="act"><div class="adot am"></div><div><div class="at">🟡 Analyse $12K rétroactivité</div><div class="as">Room FHSA ~$9,700 · Allocation pendante · avec Claude</div></div></div>
@@ -975,7 +1006,47 @@ function rWatchlist(){
   </tr>`).join('');
 }
 function wFilter(f,el){_wf=f;document.querySelectorAll('#page-watchlist .filters .fb').forEach(b=>b.classList.remove('on'));if(el)el.classList.add('on');rWatchlist();}
-function init(){compute();rAll();rPRs();rNut();rVerdicts();rWatchlist();fetchData();setInterval(fetchData,300000);}
+// ── ROADMAP HEYOS ──
+const RM_DATA=[
+  // S40
+  {s:'S40',titre:'Prix live automatiques via Apps Script → Yahoo → GitHub',cat:'dashboard',impact:'🔴 Critique',effort:'Fait',statut:'fait'},
+  {s:'S40',titre:'Trigger Apps Script toutes les 30 min — zéro action manuelle',cat:'systeme',impact:'🔴 Critique',effort:'Fait',statut:'fait'},
+  {s:'S40',titre:'Fusion positions multi-comptes en vue Tous',cat:'dashboard',impact:'🟡 Moyen',effort:'Fait',statut:'fait'},
+  {s:'S40',titre:'WhisperFlow installé — updates vocaux',cat:'systeme',impact:'🟡 Moyen',effort:'Fait',statut:'fait'},
+  {s:'S40',titre:'Watchlist 60 tickers restaurée dans dashboard',cat:'dashboard',impact:'🟡 Moyen',effort:'Fait',statut:'fait'},
+  {s:'S40',titre:'Bouton Analyser → API Claude intégré par ticker',cat:'ia',impact:'🔴 Critique',effort:'Moyen',statut:'idee'},
+  {s:'S40',titre:'Perplexity API — news live par ticker au clic',cat:'ia',impact:'🟡 Moyen',effort:'Moyen',statut:'idee'},
+  {s:'S40',titre:'Make.com/Zapier → trades Questrade auto vers dashboard',cat:'systeme',impact:'🔴 Critique',effort:'Élevé',statut:'idee'},
+  {s:'S40',titre:'NotebookLM sur le xlsx — questions vocales sur portefeuille',cat:'ia',impact:'🟡 Moyen',effort:'Faible',statut:'idee'},
+  {s:'S40',titre:'Formulaire achat/vente dans dashboard — MAJ positions sans Claude',cat:'dashboard',impact:'🔴 Critique',effort:'Moyen',statut:'idee'},
+  {s:'S40',titre:'Coût de base précis tracé trade par trade',cat:'systeme',impact:'🟡 Moyen',effort:'Moyen',statut:'idee'},
+  {s:'S40',titre:'Alertes prix — notification quand ticker atteint cible',cat:'dashboard',impact:'🟡 Moyen',effort:'Moyen',statut:'idee'},
+  {s:'S40',titre:'Verdicts J+30 — fermer la boucle automatiquement',cat:'systeme',impact:'🟡 Moyen',effort:'Faible',statut:'cours'},
+  {s:'S40',titre:'Nourrir piliers Corps / Culture / Projet de vie',cat:'systeme',impact:'🟢 Long terme',effort:'Continu',statut:'cours'},
+  {s:'S40',titre:'Bénéficiaires Questrade — 5 minutes',cat:'systeme',impact:'🔴 Critique',effort:'Immédiat',statut:'cours'},
+  {s:'S40',titre:'EQ Bank HISA — ouvrir compte',cat:'systeme',impact:'🔴 Critique',effort:'Immédiat',statut:'cours'},
+  {s:'S40',titre:'Analyse rétroactivité FHSA $12K',cat:'systeme',impact:'🔴 Critique',effort:'Faible',statut:'cours'},
+];
+let _rmf='all';
+function rRoadmap(){
+  const sc={fait:'var(--green)',cours:'var(--amber)',idee:'var(--blue)'};
+  const sl={fait:'✅ Fait',cours:'🔄 En cours',idee:'💡 Idée'};
+  const f=_rmf==='all'?RM_DATA:['dashboard','systeme','ia'].includes(_rmf)?RM_DATA.filter(r=>r.cat===_rmf):RM_DATA.filter(r=>r.statut===_rmf);
+  const total=RM_DATA.length,done=RM_DATA.filter(r=>r.statut==='fait').length,prog=RM_DATA.filter(r=>r.statut==='cours').length;
+  se('rm-total',total);se('rm-done',done);se('rm-progress',prog);
+  const el=document.getElementById('rm-body');
+  if(!el)return;
+  el.innerHTML=f.map(r=>`<tr>
+    <td style="color:var(--text3);font-size:10px">${r.s}</td>
+    <td style="font-family:var(--body);font-size:12px;max-width:300px;white-space:normal;line-height:1.4">${r.titre}</td>
+    <td style="font-family:var(--body);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em">${r.cat}</td>
+    <td style="font-size:11px">${r.impact}</td>
+    <td style="font-family:var(--body);font-size:11px;color:var(--text3)">${r.effort}</td>
+    <td style="font-family:var(--body);font-size:11px;color:${sc[r.statut]};font-weight:600">${sl[r.statut]}</td>
+  </tr>`).join('');
+}
+function rmFilter(f,el){_rmf=f;document.querySelectorAll('#rm-filters .fb').forEach(b=>b.classList.remove('on'));if(el)el.classList.add('on');rRoadmap();}
+function init(){compute();rAll();rPRs();rNut();rVerdicts();rWatchlist();rRoadmap();fetchData();setInterval(fetchData,300000);}
 if(sessionStorage.getItem('h')==='1')init();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
