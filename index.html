@@ -651,11 +651,11 @@ const se=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
 const sh=(id,v)=>{const e=document.getElementById(id);if(e)e.innerHTML=v;};
 function compute(){POS.forEach(p=>{p.cout=p.cout||(p.fx==='CAD'?p.q*p.avg:p.q*p.avg*FX);p.live=p.live||p.avg;p.val=p.val||(p.fx==='CAD'?p.q*p.live:p.q*p.live*FX);p.gain=p.gain||(p.val-p.cout);p.pct=p.pct||(p.gain/p.cout*100);if(!p.dayPL)p.dayPL=0;});}
 // ── YAHOO FINANCE LIVE PRICES via Apps Script proxy ──
-const GAS_URL='https://script.google.com/macros/s/AKfycbz9YcHLHVYd2IpesGBj-rI1ALzfGXuAydLIufVfxDYo3KdbAdNkUZ9VA-OQEcka4iUI/exec';
+const GAS_URL='https://script.google.com/macros/s/AKfycbxB64LhhwvwjLmVhCuiPoFJ1IV-el43sAoCR1tORcDATfIhxwrIUaA7kDmI4qvl3C1T/exec';
 async function yahooFetch(tickers){
   const sym=tickers.join(',');
   try{
-    const r=await fetch(GAS_URL+'?symbols='+encodeURIComponent(sym),{signal:AbortSignal.timeout(12000)});
+    const r=await fetch(GAS_URL+'?symbols='+encodeURIComponent(sym),{signal:AbortSignal.timeout(12000),redirect:'follow'});
     if(!r.ok)return null;
     const raw=await r.json();
     const sp=raw?.spark?.result||[];
