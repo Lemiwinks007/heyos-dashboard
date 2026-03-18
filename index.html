@@ -865,7 +865,95 @@ function nav(pg,el){document.querySelectorAll('.page').forEach(p=>p.classList.re
 function updateClock(){se('clk',new Date().toLocaleString('fr-CA',{timeZone:'America/Toronto',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})+' HNE');}
 setInterval(updateClock,1000);updateClock();
 function loadJSON(input){const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(d.positions)POS=d.positions.map(p=>({t:p.ticker,n:p.nom||p.ticker,tier:p.tier,c:p.compte,q:parseFloat(p.qty),avg:parseFloat(p.prixMoy)||0,fx:p.dev||'CAD'}));if(d.usdcad)FX=d.usdcad;if(d.total_cad)TOT=d.total_cad;if(d.totalCAD)TOT=d.totalCAD;if(d.costBase)CST=d.costBase;compute();rAll();se('ttxt','JSON local · '+POS.length+' positions');}catch{alert('Erreur JSON');}};r.readAsText(f);}
-function init(){compute();rAll();rPRs();rNut();rVerdicts();fetchData();setInterval(fetchData,300000);}
+// ── WATCHLIST S39 ──
+const WL=[
+  // ① Actions LT (20)
+  {n:1,t:'NVDA',nom:'NVIDIA',liste:'lt_actions',secteur:'Semi-conducteurs',these:'Leader IA absolu · Data center · CUDA lock-in',consensus:'Acheter',upside:'+18%',statut:'owned'},
+  {n:2,t:'AVGO',nom:'Broadcom',liste:'lt_actions',secteur:'Semi-conducteurs',these:'AI networking + custom chips · Apple deal · FCF monstre',consensus:'Acheter',upside:'+22%',statut:'owned'},
+  {n:3,t:'MSFT',nom:'Microsoft',liste:'lt_actions',secteur:'Cloud / IA',these:'Azure #2 mondial · Copilot embedded · OpenAI moat',consensus:'Acheter',upside:'+15%',statut:'owned'},
+  {n:4,t:'GOOG',nom:'Alphabet',liste:'lt_actions',secteur:'Cloud / IA',these:'Search + Gemini + YouTube + Cloud · valorisation raisonnable',consensus:'Acheter',upside:'+20%',statut:'owned'},
+  {n:5,t:'AMZN',nom:'Amazon',liste:'lt_actions',secteur:'Cloud / Commerce',these:'AWS #1 · Ads croissance · Logistique vertical',consensus:'Acheter',upside:'+25%',statut:'owned'},
+  {n:6,t:'META',nom:'Meta Platforms',liste:'lt_actions',secteur:'Réseaux sociaux',these:'Llama open source · Ads duopole · Reality Labs optionalité',consensus:'Acheter',upside:'+12%',statut:'owned'},
+  {n:7,t:'GEV',nom:'GE Vernova',liste:'lt_actions',secteur:'Énergie / IA',these:'Infrastructure électrique IA · Grid modernisation · Secular tailwind',consensus:'Acheter',upside:'+30%',statut:'owned'},
+  {n:8,t:'SPGI',nom:'S&P Global',liste:'lt_actions',secteur:'Données financières',these:'Duopole ratings · Moat réglementaire · FCF croissant',consensus:'Acheter',upside:'+14%',statut:'owned'},
+  {n:9,t:'V',nom:'Visa',liste:'lt_actions',secteur:'Paiements',these:'Network effect absolu · Actif léger · Dividende croissant',consensus:'Acheter',upside:'+16%',statut:'surveiller'},
+  {n:10,t:'MA',nom:'Mastercard',liste:'lt_actions',secteur:'Paiements',these:'Clone Visa · Exposition internationale supérieure',consensus:'Acheter',upside:'+17%',statut:'surveiller'},
+  {n:11,t:'COST',nom:'Costco',liste:'lt_actions',secteur:'Commerce de détail',these:'Membership moat · Fidélité extrême · Expansion internationale',consensus:'Neutre',upside:'+5%',statut:'surveiller'},
+  {n:12,t:'TSLA',nom:'Tesla',liste:'lt_actions',secteur:'Auto / IA',these:'FSD + Robotaxi optionalité · Énergie segment montant',consensus:'Neutre',upside:'+8%',statut:'owned'},
+  {n:13,t:'LLY',nom:'Eli Lilly',liste:'lt_actions',secteur:'Pharma / GLP-1',these:'Mounjaro + Zepbound · Pipeline obesity · Pricing power',consensus:'Acheter',upside:'+28%',statut:'à considérer'},
+  {n:14,t:'VRTX',nom:'Vertex Pharma',liste:'lt_actions',secteur:'Biotech',these:'Monopole CF · Pipeline douleur chronique · FCF élevé',consensus:'Acheter',upside:'+20%',statut:'surveiller'},
+  {n:15,t:'TD.TO',nom:'TD Bank',liste:'lt_actions',secteur:'Banque CA',these:'Pénalité US derrière · Dividende 5%+ · Valorisation déprimée',consensus:'Acheter',upside:'+25%',statut:'owned'},
+  {n:16,t:'ENB.TO',nom:'Enbridge',liste:'lt_actions',secteur:'Pipeline',these:'Dividende 6.8% · Cash flows contractuels · Infrastructure essentielle',consensus:'Acheter',upside:'+10%',statut:'owned'},
+  {n:17,t:'H.TO',nom:'Hydro One',liste:'lt_actions',secteur:'Électricité CA',these:'Monopole régulé Ontario · Dividende stable · IA electricity demand',consensus:'Acheter',upside:'+12%',statut:'owned'},
+  {n:18,t:'BN',nom:'Brookfield Corp',liste:'lt_actions',secteur:'Actifs alternatifs',these:'Compounding machine · Infrastructure + RE + Credit',consensus:'Acheter',upside:'+35%',statut:'à considérer'},
+  {n:19,t:'CNR.TO',nom:'CN Rail',liste:'lt_actions',secteur:'Transport',these:'Duopole rail CA · Moat géographique · FCF converti en dividende',consensus:'Acheter',upside:'+14%',statut:'surveiller'},
+  {n:20,t:'ATD.TO',nom:'Alimentation Couche-Tard',liste:'lt_actions',secteur:'Commerce détail',these:'M&A machine · Stations-service + convenience · International expansion',consensus:'Acheter',upside:'+20%',statut:'surveiller'},
+  // ② ETF LT (20)
+  {n:21,t:'VFV.TO',nom:'Vanguard S&P 500',liste:'lt_etf',secteur:'Actions CA hédgé',these:'S&P 500 en CAD · Frais 0.09% · Core position FI',consensus:'Acheter',upside:'Marché',statut:'owned'},
+  {n:22,t:'XEQT.TO',nom:'iShares Core Equity',liste:'lt_etf',secteur:'Actions Monde',these:'100% actions mondial · Auto-rebalancement · FHSA parfait',consensus:'Acheter',upside:'Marché',statut:'owned'},
+  {n:23,t:'QQQM',nom:'Invesco Nasdaq 100',liste:'lt_etf',secteur:'Tech US',these:'Nasdaq top 100 · Frais réduits vs QQQ · Concentration tech',consensus:'Acheter',upside:'Marché+',statut:'owned'},
+  {n:24,t:'SMH',nom:'VanEck Semiconductors',liste:'lt_etf',secteur:'Semi-conducteurs',these:'Exposition pure semi · NVDA+AVGO+TSM · Cyclique mais secular',consensus:'Acheter',upside:'Marché+',statut:'owned'},
+  {n:25,t:'SCHD',nom:'Schwab US Dividend',liste:'lt_etf',secteur:'Dividendes US',these:'Dividende croissant 3.5% · Qualité factor · REER parfait',consensus:'Acheter',upside:'Marché',statut:'owned'},
+  {n:26,t:'JEPI',nom:'JPMorgan Equity Premium',liste:'lt_etf',secteur:'Income',these:'Income mensuel 7%+ · Covered calls · Volatilité réduite',consensus:'Neutre',upside:'Income',statut:'owned'},
+  {n:27,t:'XEI.TO',nom:'iShares High Dividend CA',liste:'lt_etf',secteur:'Dividendes CA',these:'Dividende CA 4.9% · Mensuel · Exposition secteurs défensifs',consensus:'Neutre',upside:'Income',statut:'owned'},
+  {n:28,t:'ZLB.TO',nom:'BMO Low Volatility CA',liste:'lt_etf',secteur:'Faible volatilité',these:'Facteur qualité · Moins de drawdown · Diversification TFSA',consensus:'Neutre',upside:'Marché-',statut:'owned'},
+  {n:29,t:'HURA.TO',nom:'Global X Uranium',liste:'lt_etf',secteur:'Uranium / Nucléaire',these:'Nuclear renaissance · Data centers + IA · Supply crunch',consensus:'Acheter',upside:'+40%',statut:'owned'},
+  {n:30,t:'QTUM',nom:'Defiance Quantum ETF',liste:'lt_etf',secteur:'Quantique / Tech',these:'Thématique quantique · 10-15 ans horizon · Spéculatif T3',consensus:'Neutre',upside:'+50%?',statut:'owned'},
+  {n:31,t:'ARKG',nom:'ARK Genomic Revolution',liste:'lt_etf',secteur:'Génomique',these:'CRISPR + Biotech disruption · Cathie Wood · Haute volatilité',consensus:'Neutre',upside:'+60%?',statut:'surveiller'},
+  {n:32,t:'BOTZ',nom:'Global X Robotics & AI',liste:'lt_etf',secteur:'Robotique / IA',these:'Automation trend · Industrie 4.0 · Exposition Japon+US',consensus:'Acheter',upside:'+25%',statut:'surveiller'},
+  {n:33,t:'CIBR',nom:'First Trust Cybersecurity',liste:'lt_etf',secteur:'Cybersécurité',these:'Dépenses cyber en hausse · CRWD+PANW+ZS · Secular growth',consensus:'Acheter',upside:'+20%',statut:'surveiller'},
+  {n:34,t:'VDU.TO',nom:'Vanguard Dev ex-US',liste:'lt_etf',secteur:'Actions Monde ex-US',these:'Diversification géo · Europe+Japon · Valorisation attractive',consensus:'Neutre',upside:'+10%',statut:'owned'},
+  {n:35,t:'XIC.TO',nom:'iShares TSX Composite',liste:'lt_etf',secteur:'Actions CA',these:'Canada broad market · Énergie+Banques+Mines · CAD hedge naturel',consensus:'Neutre',upside:'+8%',statut:'owned'},
+  {n:36,t:'FID',nom:'iShares India ETF',liste:'lt_etf',secteur:'Inde',these:'Démographie favorable · Croissance PIB 7%+ · Middle class explosion',consensus:'Acheter',upside:'+30%',statut:'à considérer'},
+  {n:37,t:'INDY',nom:'iShares India 50',liste:'lt_etf',secteur:'Inde large cap',these:'Top 50 actions indiennes · Nifty 50 · Moindre volatilité que FID',consensus:'Acheter',upside:'+25%',statut:'surveiller'},
+  {n:38,t:'SCHG',nom:'Schwab US Large Cap Growth',liste:'lt_etf',secteur:'Growth US',these:'Mag7 heavy · Frais 0.04% · Croissance vs value tilt',consensus:'Acheter',upside:'Marché+',statut:'surveiller'},
+  {n:39,t:'VIG',nom:'Vanguard Dividend Appreciation',liste:'lt_etf',secteur:'Dividendes croissants',these:'Croissance dividende 10+ ans · Qualité factor · Moins volatile',consensus:'Acheter',upside:'Marché',statut:'surveiller'},
+  {n:40,t:'ZRE.TO',nom:'BMO Equal Weight REITs',liste:'lt_etf',secteur:'REITs CA',these:'Immobilier CA diversifié · Distribution mensuelle · Taux sensible',consensus:'Neutre',upside:'+8%',statut:'owned'},
+  // ③ Momentum (20)
+  {n:41,t:'CRWD',nom:'CrowdStrike',liste:'momentum',secteur:'Cybersécurité',these:'Falcon platform · NDR leader · ARR croissance 30%+',consensus:'Acheter',upside:'+25%',statut:'surveiller'},
+  {n:42,t:'PLTR',nom:'Palantir',liste:'momentum',secteur:'IA / Défense',these:'AIP momentum · Gouvernement + Enterprise · Valorisation tendue',consensus:'Neutre',upside:'+10%',statut:'surveiller'},
+  {n:43,t:'APP',nom:'AppLovin',liste:'momentum',secteur:'AdTech / IA',these:'AXON engine · Mobile gaming ads · Momentum exceptionnel',consensus:'Acheter',upside:'+20%',statut:'à considérer'},
+  {n:44,t:'ANET',nom:'Arista Networks',liste:'momentum',secteur:'Réseau IA',these:'Data center networking · Cloud titans client · 400G/800G',consensus:'Acheter',upside:'+18%',statut:'surveiller'},
+  {n:45,t:'ARM',nom:'ARM Holdings',liste:'momentum',secteur:'Semi / Conception',these:'Royalties CPU mobile+serveur · IA edge · Nouveau modèle revenus',consensus:'Acheter',upside:'+22%',statut:'surveiller'},
+  {n:46,t:'PANW',nom:'Palo Alto Networks',liste:'momentum',secteur:'Cybersécurité',these:'Platformization · SASE leader · ARR acceleration',consensus:'Acheter',upside:'+15%',statut:'surveiller'},
+  {n:47,t:'SNOW',nom:'Snowflake',liste:'momentum',secteur:'Data Cloud',these:'Data platform · Iceberg momentum · Nouveau CEO exécution',consensus:'Neutre',upside:'+20%',statut:'surveiller'},
+  {n:48,t:'DDOG',nom:'Datadog',liste:'momentum',secteur:'Observabilité',these:'AI observability · Platform expansion · NRR élevé',consensus:'Acheter',upside:'+22%',statut:'surveiller'},
+  {n:49,t:'ZS',nom:'Zscaler',liste:'momentum',secteur:'Cybersécurité',these:'Zero trust pioneer · SASE architecture · FCF positif',consensus:'Acheter',upside:'+20%',statut:'surveiller'},
+  {n:50,t:'MDB',nom:'MongoDB',liste:'momentum',secteur:'Base de données',these:'Atlas cloud · Developer-first · AI workloads',consensus:'Acheter',upside:'+18%',statut:'surveiller'},
+  {n:51,t:'UBER',nom:'Uber',liste:'momentum',secteur:'Mobilité / Livraison',these:'Profitabilité atteinte · Robotaxi partenariats · Ads revenue nouveau',consensus:'Acheter',upside:'+20%',statut:'surveiller'},
+  {n:52,t:'SHOP',nom:'Shopify',liste:'momentum',secteur:'Commerce',these:'Merchant solutions · Offline expansion · Fintech intégré',consensus:'Acheter',upside:'+18%',statut:'surveiller'},
+  {n:53,t:'COIN',nom:'Coinbase',liste:'momentum',secteur:'Crypto / Fintech',these:'Crypto régulation favorable US · Institutional custody · ETF fees',consensus:'Neutre',upside:'+30%?',statut:'surveiller'},
+  {n:54,t:'RKLB',nom:'Rocket Lab',liste:'momentum',secteur:'New Space',these:'Neutron rocket · Petits satellites · Défense contrats',consensus:'Neutre',upside:'+50%?',statut:'surveiller'},
+  {n:55,t:'IONQ',nom:'IonQ',liste:'momentum',secteur:'Informatique quantique',these:'Leader quantique coté · Gouvernement + cloud partnerships',consensus:'Neutre',upside:'+100%?',statut:'surveiller'},
+  {n:56,t:'TEM',nom:'Tempus AI',liste:'momentum',secteur:'IA Santé',these:'Genomics + IA · Oncologie · Data moat médical',consensus:'Neutre',upside:'+40%?',statut:'surveiller'},
+  {n:57,t:'HOOD',nom:'Robinhood',liste:'momentum',secteur:'Fintech',these:'Crypto + Options boom · Gold card · International expansion',consensus:'Neutre',upside:'+25%',statut:'surveiller'},
+  {n:58,t:'SMCI',nom:'Super Micro Computer',liste:'momentum',secteur:'Serveurs IA',these:'GPU servers · NVDA partner · Audit résolu · Rebond potentiel',consensus:'Neutre',upside:'+35%?',statut:'surveiller'},
+  {n:59,t:'TSM',nom:'TSMC',liste:'momentum',secteur:'Foundry',these:'Seul capable 2nm · Apple+NVDA+AMD client · Arizona expansion',consensus:'Acheter',upside:'+20%',statut:'surveiller'},
+  {n:60,t:'MELI',nom:'MercadoLibre',liste:'momentum',secteur:'Latin America eComm',these:'Amazon d\'Amérique Latine · Fintech+Commerce · Penetration faible',consensus:'Acheter',upside:'+25%',statut:'surveiller'},
+];
+
+let _wf='all';
+function rWatchlist(){
+  const owned=POS.map(p=>p.t);
+  const f=_wf==='all'?WL:_wf==='owned'?WL.filter(w=>owned.includes(w.t)):_wf==='buy'?WL.filter(w=>w.statut==='à considérer'):WL.filter(w=>w.liste===_wf);
+  const sm={owned:'● En portefeuille','à considérer':'★ À considérer',surveiller:'○ Surveiller'};
+  const sc={owned:'var(--green)','à considérer':'var(--blue)',surveiller:'var(--text3)'};
+  const el=document.getElementById('wl-body');
+  if(!el)return;
+  el.innerHTML=f.map(w=>`<tr>
+    <td style="color:var(--text3)">${w.n}</td>
+    <td><strong>${w.t}</strong></td>
+    <td style="font-family:var(--body);color:var(--text2)">${w.nom}</td>
+    <td style="font-family:var(--body);font-size:10px;color:var(--text3)">${w.liste==='lt_actions'?'① Actions LT':w.liste==='lt_etf'?'② ETF LT':'③ Momentum'}</td>
+    <td style="font-family:var(--body);font-size:11px">${w.secteur}</td>
+    <td style="font-family:var(--body);font-size:10px;color:var(--text2);max-width:220px;white-space:normal;line-height:1.4">${w.these}</td>
+    <td style="font-family:var(--body);font-size:11px;color:${w.consensus==='Acheter'?'var(--green)':'var(--text2)'}">${w.consensus}</td>
+    <td style="color:${w.consensus==='Acheter'?'var(--green)':'var(--text3)'}">${w.upside}</td>
+    <td style="font-family:var(--body);font-size:10px;color:${sc[w.statut]||'var(--text3)'}">${sm[w.statut]||w.statut}</td>
+  </tr>`).join('');
+}
+function wFilter(f,el){_wf=f;document.querySelectorAll('#page-watchlist .filters .fb').forEach(b=>b.classList.remove('on'));if(el)el.classList.add('on');rWatchlist();}
+function init(){compute();rAll();rPRs();rNut();rVerdicts();rWatchlist();fetchData();setInterval(fetchData,300000);}
 if(sessionStorage.getItem('h')==='1')init();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
