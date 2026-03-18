@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HeyOS v17 · S39</title>
+<title>HeyOS v18 · S40</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -191,7 +191,7 @@ tbody tr:hover td{background:var(--bg)}
 </div>
 <div id="app">
   <nav class="sidebar">
-    <div class="slogo"><div class="sm">HEY<span>OS</span></div><div class="ss">v16 · Mind and Body OS</div></div>
+    <div class="slogo"><div class="sm">HEY<span>OS</span></div><div class="ss">v18 · Mind and Body OS</div></div>
     <div class="ns">Vie</div>
     <div class="ni on" onclick="nav('today',this)"><span class="nd g"></span>Aujourd'hui</div>
     <div class="ns">Finances</div>
@@ -642,8 +642,7 @@ async function sha256(s){const b=new TextEncoder().encode(s);const h=await crypt
 async function tryLogin(){const pw=document.getElementById('pw').value;if(await sha256(pw)===H){sessionStorage.setItem('h','1');document.getElementById('login-screen').style.display='none';document.getElementById('app').classList.add('on');init();}else{document.getElementById('lerr').textContent='Code incorrect';document.getElementById('pw').value='';}}
 if(sessionStorage.getItem('h')==='1'){document.getElementById('login-screen').style.display='none';document.getElementById('app').classList.add('on');}
 const S={g:(k,d)=>{try{const v=localStorage.getItem('h13_'+k);return v?JSON.parse(v):d;}catch{return d;}},s:(k,v)=>{try{localStorage.setItem('h13_'+k,JSON.stringify(v));}catch{}}};
-const URL='https://raw.githubusercontent.com/Lemiwinks007/heyos-dashboard/main/data.json';
-let FX=1.3559,TOT=85680.94,CST=71776.46,LC={},PF='ALL';
+let FX=1.3559,TOT=91396.07,CST=69500.00,LC={},PF='ALL';
 let POS=[{t:'VFV.TO',n:'Vanguard S&P 500',tier:'T1',c:'TFSA',q:84,avg:119.9246,live:161.58,fx:'CAD',val:13572.72,cout:10073.67,gain:3499.05,pct:34.7347},{t:'GOOG',n:'Alphabet',tier:'T1',c:'TFSA',q:6,avg:90.6059,live:303.21,fx:'USD',val:2466.73,cout:737.12,gain:1729.62,pct:234.6471},{t:'AVGO',n:'Broadcom',tier:'T1',c:'TFSA',q:16.5743,avg:342.1593,live:335.97,fx:'USD',val:7550.29,cout:7689.38,gain:-139.09,pct:-1.8089},{t:'AMZN',n:'Amazon',tier:'T1',c:'TFSA',q:7.4817,avg:113.7377,live:209.53,fx:'USD',val:2125.56,cout:1153.80,gain:971.76,pct:84.2221},{t:'SMH',n:'VanEck Semis',tier:'T1',c:'TFSA',q:19.2266,avg:393.5653,live:388.13,fx:'USD',val:10118.30,cout:10259.99,gain:-141.69,pct:-1.3810},{t:'META',n:'Meta Platforms',tier:'T1',c:'TFSA',q:1,avg:637.7698,live:638.18,fx:'USD',val:865.31,cout:864.75,gain:0.56,pct:0.0643},{t:'ENB.TO',n:'Enbridge',tier:'T1',c:'TFSA',q:9,avg:49.62,live:73.12,fx:'CAD',val:658.08,cout:446.58,gain:211.50,pct:47.3599},{t:'GEV',n:'GE Vernova',tier:'T1',c:'TFSA',q:2.4431,avg:831.9907,live:832.11,fx:'USD',val:2756.45,cout:2756.05,gain:0.40,pct:0.0143},{t:'MSFT',n:'Microsoft',tier:'T2',c:'TFSA',q:2,avg:312.5938,live:401.86,fx:'USD',val:1089.76,cout:847.69,gain:242.07,pct:28.5566},{t:'NVDA',n:'NVIDIA',tier:'T2',c:'TFSA',q:4,avg:128.59,live:183.14,fx:'USD',val:993.28,cout:697.42,gain:295.86,pct:42.4217},{t:'TSLA',n:'Tesla',tier:'T2',c:'TFSA',q:1.8645,avg:303.5644,live:395.01,fx:'USD',val:998.62,cout:767.43,gain:231.18,pct:30.1240},{t:'QQQM',n:'Invesco Nasdaq100',tier:'T2',c:'TFSA',q:4.4515,avg:247.1068,live:245.94,fx:'USD',val:1484.44,cout:1491.48,gain:-7.04,pct:-0.4722},{t:'XEQT.TO',n:'iShares Core Eq',tier:'T2',c:'TFSA',q:25,avg:39.97,live:39.97,fx:'CAD',val:999.25,cout:999.25,gain:0.00,pct:0.0000},{t:'SPGI',n:'S&P Global',tier:'T2',c:'TFSA',q:0.9996,avg:443.2458,live:419.7,fx:'USD',val:568.84,cout:600.76,gain:-31.91,pct:-5.3121},{t:'TD.TO',n:'TD Bank',tier:'T3',c:'TFSA',q:87,avg:79.8348,live:128.24,fx:'CAD',val:11156.88,cout:6945.63,gain:4211.25,pct:60.6317},{t:'ZLB.TO',n:'BMO Low Vol',tier:'T3',c:'TFSA',q:37,avg:58.1416,live:58.77,fx:'CAD',val:2174.49,cout:2151.24,gain:23.25,pct:1.0808},{t:'H.TO',n:'Hydro One',tier:'T3',c:'TFSA',q:22,avg:52.8663,live:59.29,fx:'CAD',val:1304.38,cout:1163.06,gain:141.32,pct:12.1508},{t:'T.TO',n:'TELUS',tier:'T3',c:'TFSA',q:32,avg:22.04,live:18,fx:'CAD',val:576.00,cout:705.28,gain:-129.28,pct:-18.3303},{t:'QTUM',n:'Defiance Quantum',tier:'T3',c:'TFSA',q:5,avg:120.81,live:109.46,fx:'USD',val:742.08,cout:819.03,gain:-76.95,pct:-9.3949},{t:'HURA.TO',n:'Global X Uranium',tier:'T3',c:'TFSA',q:6,avg:55.25,live:59.34,fx:'CAD',val:356.04,cout:331.50,gain:24.54,pct:7.4027},{t:'XEI.TO',n:'iShares High Div',tier:'T4',c:'TFSA',q:51,avg:30.6811,live:35.78,fx:'CAD',val:1824.78,cout:1564.74,gain:260.04,pct:16.6190},{t:'SRU.UN.TO',n:'SmartCentres',tier:'T4',c:'TFSA',q:57,avg:25.2543,live:26.84,fx:'CAD',val:1529.88,cout:1439.50,gain:90.38,pct:6.2789},{t:'XIC.TO',n:'iShares TSX',tier:'T4',c:'TFSA',q:21,avg:40.4066,live:52.56,fx:'CAD',val:1103.76,cout:848.54,gain:255.22,pct:30.0778},{t:'ZRE.TO',n:'BMO Equal REITs',tier:'T4',c:'TFSA',q:19,avg:20.83,live:22.31,fx:'CAD',val:423.89,cout:395.77,gain:28.12,pct:7.1051},{t:'MFC.TO',n:'Manulife',tier:'T4',c:'TFSA',q:8,avg:51.7,live:45.69,fx:'CAD',val:365.52,cout:413.60,gain:-48.08,pct:-11.6248},{t:'VDU.TO',n:'Vanguard Dev',tier:'T4',c:'TFSA',q:6,avg:43.75,live:55.33,fx:'CAD',val:331.98,cout:262.50,gain:69.48,pct:26.4686},{t:'VFV.TO',n:'Vanguard S&P 500',tier:'T1',c:'FHSA',q:16,avg:157.3812,live:161.58,fx:'CAD',val:2585.28,cout:2518.10,gain:67.18,pct:2.6679},{t:'AMZN',n:'Amazon',tier:'T1',c:'FHSA',q:7,avg:154.9418,live:209.53,fx:'USD',val:1988.71,cout:1470.60,gain:518.11,pct:35.2314},{t:'QQQM',n:'Invesco Nasdaq100',tier:'T2',c:'FHSA',q:5.311,avg:247.4064,live:245.94,fx:'USD',val:1771.06,cout:1781.62,gain:-10.56,pct:-0.5927},{t:'XEQT.TO',n:'iShares Core Eq',tier:'T2',c:'FHSA',q:15,avg:40.06,live:39.97,fx:'CAD',val:599.55,cout:600.90,gain:-1.35,pct:-0.2247},{t:'TD.TO',n:'TD Bank',tier:'T3',c:'FHSA',q:15,avg:82.29,live:128.24,fx:'CAD',val:1923.60,cout:1234.35,gain:689.25,pct:55.8391},{t:'H.TO',n:'Hydro One',tier:'T3',c:'FHSA',q:10,avg:51.78,live:59.29,fx:'CAD',val:592.90,cout:517.80,gain:75.10,pct:14.5037},{t:'ZLB.TO',n:'BMO Low Vol',tier:'T3',c:'FHSA',q:3,avg:59.0666,live:58.77,fx:'CAD',val:176.31,cout:177.20,gain:-0.89,pct:-0.5021},{t:'SRU.UN.TO',n:'SmartCentres',tier:'T4',c:'FHSA',q:63,avg:23.61,live:26.84,fx:'CAD',val:1690.92,cout:1487.43,gain:203.49,pct:13.6806},{t:'REI.UN.TO',n:'RioCan REIT',tier:'T4',c:'FHSA',q:80,avg:18.73,live:19.02,fx:'CAD',val:1521.60,cout:1498.40,gain:23.20,pct:1.5483},{t:'XIC.TO',n:'iShares TSX',tier:'T4',c:'FHSA',q:19,avg:48.3705,live:52.56,fx:'CAD',val:998.64,cout:919.04,gain:79.60,pct:8.6613},{t:'XEI.TO',n:'iShares High Div',tier:'T4',c:'FHSA',q:26,avg:32.6111,live:35.78,fx:'CAD',val:930.28,cout:847.89,gain:82.39,pct:9.7172},{t:'SCHD',n:'Schwab US Div',tier:'T1',c:'REER',q:64.3053,avg:25.5008,live:30.82,fx:'USD',val:2687.24,cout:2223.45,gain:463.79,pct:20.8590},{t:'JEPI',n:'JPMorgan Income',tier:'T2',c:'REER',q:1,avg:54.52,live:57.18,fx:'USD',val:77.53,cout:73.92,gain:3.61,pct:4.8789}];
 const fc=v=>'$'+Math.abs(v).toLocaleString('fr-CA',{maximumFractionDigits:0});
 const fp=v=>(v>=0?'+':'')+v.toFixed(2)+'%';
@@ -651,15 +650,65 @@ const gr=v=>v>=0?'g':'r';
 const se=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
 const sh=(id,v)=>{const e=document.getElementById(id);if(e)e.innerHTML=v;};
 function compute(){POS.forEach(p=>{p.cout=p.cout||(p.fx==='CAD'?p.q*p.avg:p.q*p.avg*FX);p.live=p.live||p.avg;p.val=p.val||(p.fx==='CAD'?p.q*p.live:p.q*p.live*FX);p.gain=p.gain||(p.val-p.cout);p.pct=p.pct||(p.gain/p.cout*100);if(!p.dayPL)p.dayPL=0;});}
+// ── YAHOO FINANCE LIVE PRICES ──
+const PROXIES=[
+  t=>`https://corsproxy.io/?${encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/spark?symbols='+t+'&range=1d&interval=1d')}`,
+  t=>`https://api.allorigins.win/get?url=${encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/spark?symbols='+t+'&range=1d&interval=1d')}`,
+  t=>`https://corsproxy.io/?${encodeURIComponent('https://query2.finance.yahoo.com/v8/finance/spark?symbols='+t+'&range=1d&interval=1d')}`
+];
+async function yahooFetch(tickers){
+  const sym=tickers.map(t=>t.endsWith('.TO')?t:t).join(',');
+  for(const proxy of PROXIES){
+    try{
+      const r=await fetch(proxy(sym),{signal:AbortSignal.timeout(8000)});
+      if(!r.ok)continue;
+      let raw=await r.json();
+      if(raw.contents)raw=JSON.parse(raw.contents);
+      const sp=raw?.spark?.result||[];
+      const out={};
+      sp.forEach(s=>{
+        const sym=s.symbol;
+        const resp=s.response?.[0];
+        const meta=resp?.meta;
+        if(meta){out[sym]={price:meta.regularMarketPrice||meta.previousClose,prev:meta.previousClose||meta.regularMarketPrice,name:meta.shortName||sym};}
+      });
+      if(Object.keys(out).length>0)return out;
+    }catch(e){}
+  }
+  return null;
+}
+async function fetchFX(){
+  try{
+    const d=await yahooFetch(['USDCAD=X']);
+    if(d&&d['USDCAD=X'])return d['USDCAD=X'].price;
+  }catch{}
+  return FX;
+}
 async function fetchData(){
-  try{const r=await fetch(URL+'?t='+Date.now());if(!r.ok)throw 0;const d=await r.json();
-  if(d.positions&&Array.isArray(d.positions)){POS=d.positions.filter(p=>p.ticker&&['T1','T2','T3','T4'].includes(String(p.tier||'').trim())&&parseFloat(p.qty)>0).map(p=>({t:p.ticker,n:p.nom||p.ticker,tier:p.tier,c:p.compte||p.account,q:parseFloat(p.qty),avg:parseFloat(p.prixMoy)||0,fx:p.dev||'CAD'}));}
-  if(d.usdcad)FX=d.usdcad;if(d.total_cad&&d.total_cad>0)TOT=d.total_cad;if(d.totalCAD&&d.totalCAD>0)TOT=d.totalCAD;if(d.costBase)CST=d.costBase;
-  if(d.positions)d.positions.forEach(dp=>POS.forEach(p=>{if(p.t===dp.ticker&&p.c===dp.compte&&dp.prixLive)LC[p.t+'_'+p.c]={price:dp.prixLive,prev:dp.prixPrev||dp.prixLive};}));
-  let dh='';try{const dd=new Date(d.date||'');dh=dd.toLocaleString('fr-CA',{timeZone:'America/Toronto',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false})+' HNE';}catch{}
-  se('ttxt','Live · '+POS.length+' positions · '+fc(TOT)+' · '+dh);}
-  catch{se('ttxt','Live · 39 positions · $85,681 CAD · 13 mars 07:15 HNE');}
-  applyLive();compute();rAll();
+  se('ttxt','⟳ Chargement prix live…');
+  try{
+    // Get all unique tickers
+    const tickers=[...new Set(POS.map(p=>p.t))];
+    // Add FX
+    const allTickers=[...tickers,'USDCAD=X'];
+    // Yahoo Finance returns .TO tickers as-is
+    const prices=await yahooFetch(allTickers);
+    if(prices){
+      if(prices['USDCAD=X'])FX=prices['USDCAD=X'].price;
+      POS.forEach(p=>{
+        const q=prices[p.t];
+        if(q){LC[p.t+'_'+p.c]={price:q.price,prev:q.prev};}
+      });
+      applyLive();
+      const now=new Date().toLocaleString('fr-CA',{timeZone:'America/Toronto',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false});
+      se('ttxt','Live Yahoo · '+POS.length+' positions · '+fc(TOT)+' · '+now+' HNE');
+    }else{
+      se('ttxt','⚠ Prix live indisponibles · données locales');
+    }
+  }catch(e){
+    se('ttxt','⚠ Erreur fetch · données locales');
+  }
+  compute();rAll();
 }
 function applyLive(){POS.forEach(p=>{const l=LC[p.t+'_'+p.c]||LC[p.t];if(l){p.live=l.price;p.val=p.fx==='CAD'?p.q*l.price:p.q*l.price*FX;p.cout=p.fx==='CAD'?p.q*p.avg:p.q*p.avg*FX;p.gain=p.val-p.cout;p.pct=p.gain/p.cout*100;const pv=p.fx==='CAD'?p.q*l.prev:p.q*l.prev*FX;p.dayPL=p.val-pv;}});const lt=POS.reduce((s,p)=>s+(p.val||0),0);if(lt>0)TOT=lt;}
 function rAll(){se('fx-lbl','USD/CAD '+FX.toFixed(4));rToday();rPortfolio();rPositions();rAnalyse();rFI();rMaison();uMort();uCrash();}
@@ -808,7 +857,7 @@ function nav(pg,el){document.querySelectorAll('.page').forEach(p=>p.classList.re
 function updateClock(){se('clk',new Date().toLocaleString('fr-CA',{timeZone:'America/Toronto',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})+' HNE');}
 setInterval(updateClock,1000);updateClock();
 function loadJSON(input){const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(d.positions)POS=d.positions.map(p=>({t:p.ticker,n:p.nom||p.ticker,tier:p.tier,c:p.compte,q:parseFloat(p.qty),avg:parseFloat(p.prixMoy)||0,fx:p.dev||'CAD'}));if(d.usdcad)FX=d.usdcad;if(d.total_cad)TOT=d.total_cad;if(d.totalCAD)TOT=d.totalCAD;if(d.costBase)CST=d.costBase;compute();rAll();se('ttxt','JSON local · '+POS.length+' positions');}catch{alert('Erreur JSON');}};r.readAsText(f);}
-function init(){compute();rAll();rPRs();rNut();rVerdicts();fetchData();setInterval(fetchData,60000);}
+function init(){compute();rAll();rPRs();rNut();rVerdicts();fetchData();setInterval(fetchData,300000);}
 if(sessionStorage.getItem('h')==='1')init();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
