@@ -1,14 +1,18 @@
 {
-  "date": "2026-03-18T11:50:58.688Z",
-  "usdcad": 1.3694,
+  "date": "2026-03-18T12:20:58.632Z",
+  "usdcad": 1.3697,
   "prices": {
+    "H.TO": {
+      "price": 59.85,
+      "prev": 60.17
+    },
     "VFV.TO": {
       "price": 163.51,
       "prev": 162.91
     },
-    "H.TO": {
-      "price": 59.85,
-      "prev": 60.17
+    "GOOG": {
+      "price": 309.41,
+      "prev": 304.42
     },
     "NVDA": {
       "price": 181.93,
@@ -17,10 +21,6 @@
     "META": {
       "price": 622.66,
       "prev": 627.45
-    },
-    "GOOG": {
-      "price": 309.41,
-      "prev": 304.42
     },
     "AVGO": {
       "price": 321.31,
@@ -42,13 +42,13 @@
       "price": 399.41,
       "prev": 399.95
     },
-    "TSLA": {
-      "price": 399.27,
-      "prev": 395.56
-    },
     "T.TO": {
       "price": 18.38,
       "prev": 18.29
+    },
+    "TSLA": {
+      "price": 399.27,
+      "prev": 395.56
     },
     "ENB.TO": {
       "price": 73.98,
@@ -58,20 +58,20 @@
       "price": 59.61,
       "prev": 59.67
     },
-    "SPGI": {
-      "price": 432.94,
-      "prev": 426.59
-    },
     "GEV": {
       "price": 844.05,
       "prev": 826.87
+    },
+    "SPGI": {
+      "price": 432.94,
+      "prev": 426.59
     },
     "QQQM": {
       "price": 248.45,
       "prev": 247.17
     },
     "USDCAD=X": {
-      "price": 1.3694,
+      "price": 1.3697,
       "prev": 1.3689
     },
     "QTUM": {
