@@ -1,6 +1,6 @@
 {
-  "date": "2026-03-20T08:20:58.708Z",
-  "usdcad": 1.3715,
+  "date": "2026-03-20T08:50:58.804Z",
+  "usdcad": 1.3717,
   "prices": {
     "H.TO": {
       "price": 58.96,
@@ -14,25 +14,25 @@
       "price": 305.73,
       "prev": 306.3
     },
-    "META": {
-      "price": 606.7,
-      "prev": 615.68
-    },
     "NVDA": {
       "price": 178.56,
       "prev": 180.4
+    },
+    "META": {
+      "price": 606.7,
+      "prev": 615.68
     },
     "AVGO": {
       "price": 319.84,
       "prev": 315.93
     },
-    "XEQT.TO": {
-      "price": 39.68,
-      "prev": 39.84
-    },
     "TD.TO": {
       "price": 128.64,
       "prev": 129.51
+    },
+    "XEQT.TO": {
+      "price": 39.68,
+      "prev": 39.84
     },
     "SMH": {
       "price": 394.92,
@@ -42,13 +42,13 @@
       "price": 389.02,
       "prev": 391.79
     },
-    "T.TO": {
-      "price": 18.08,
-      "prev": 18.27
-    },
     "TSLA": {
       "price": 380.3,
       "prev": 392.78
+    },
+    "T.TO": {
+      "price": 18.08,
+      "prev": 18.27
     },
     "ENB.TO": {
       "price": 74.18,
@@ -71,7 +71,7 @@
       "prev": 244.96
     },
     "USDCAD=X": {
-      "price": 1.3715,
+      "price": 1.3717,
       "prev": 1.3731
     },
     "QTUM": {
