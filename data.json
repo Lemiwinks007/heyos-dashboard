@@ -1,6 +1,6 @@
 {
-  "date": "2026-03-20T09:50:58.752Z",
-  "usdcad": 1.3715,
+  "date": "2026-03-20T10:20:58.681Z",
+  "usdcad": 1.3727,
   "prices": {
     "H.TO": {
       "price": 58.96,
@@ -58,21 +58,21 @@
       "price": 74.18,
       "prev": 73.08
     },
-    "SPGI": {
-      "price": 426.14,
-      "prev": 426.64
-    },
     "GEV": {
       "price": 877.39,
       "prev": 858.47
     },
-    "USDCAD=X": {
-      "price": 1.3715,
-      "prev": 1.3731
+    "SPGI": {
+      "price": 426.14,
+      "prev": 426.64
     },
     "QQQM": {
       "price": 244.2,
       "prev": 244.96
+    },
+    "USDCAD=X": {
+      "price": 1.3727,
+      "prev": 1.3731
     },
     "QTUM": {
       "price": 111.25,
