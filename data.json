@@ -1,26 +1,26 @@
 {
-  "date": "2026-03-23T03:20:59.566Z",
-  "usdcad": 1.3711,
+  "date": "2026-03-23T03:50:58.804Z",
+  "usdcad": 1.3713,
   "prices": {
-    "VFV.TO": {
-      "price": 158.73,
-      "prev": 161.4
-    },
     "H.TO": {
       "price": 56.83,
       "prev": 58.96
     },
-    "GOOG": {
-      "price": 298.79,
-      "prev": 305.73
+    "VFV.TO": {
+      "price": 158.73,
+      "prev": 161.4
+    },
+    "NVDA": {
+      "price": 172.93,
+      "prev": 178.33
     },
     "META": {
       "price": 593.66,
       "prev": 606.69995
     },
-    "NVDA": {
-      "price": 172.93,
-      "prev": 178.33
+    "GOOG": {
+      "price": 298.79,
+      "prev": 305.73
     },
     "AVGO": {
       "price": 310.51,
@@ -71,7 +71,7 @@
       "prev": 244.2
     },
     "USDCAD=X": {
-      "price": 1.3711,
+      "price": 1.3713,
       "prev": 1.3723
     },
     "QTUM": {
