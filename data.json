@@ -1,22 +1,22 @@
 {
-  "date": "2026-03-25T03:20:59.416Z",
-  "usdcad": 1.3772,
+  "date": "2026-03-25T03:50:58.821Z",
+  "usdcad": 1.3769,
   "prices": {
-    "VFV.TO": {
-      "price": 160.43,
-      "prev": 160.68
-    },
     "H.TO": {
       "price": 57.09,
       "prev": 56.54
     },
-    "META": {
-      "price": 592.92,
-      "prev": 604.38
+    "VFV.TO": {
+      "price": 160.43,
+      "prev": 160.68
     },
     "GOOG": {
       "price": 289.2,
       "prev": 299.02
+    },
+    "META": {
+      "price": 592.92,
+      "prev": 604.38
     },
     "NVDA": {
       "price": 175.2,
@@ -26,13 +26,13 @@
       "price": 318.29,
       "prev": 322.51
     },
-    "TD.TO": {
-      "price": 128.7,
-      "prev": 128.37
-    },
     "XEQT.TO": {
       "price": 39.45,
       "prev": 39.51
+    },
+    "TD.TO": {
+      "price": 128.7,
+      "prev": 128.37
     },
     "SMH": {
       "price": 394.59,
@@ -66,13 +66,13 @@
       "price": 909.41,
       "prev": 882.64
     },
+    "USDCAD=X": {
+      "price": 1.3769,
+      "prev": 1.3755
+    },
     "QQQM": {
       "price": 240.42,
       "prev": 242.07
-    },
-    "USDCAD=X": {
-      "price": 1.3772,
-      "prev": 1.3755
     },
     "QTUM": {
       "price": 110.67,
