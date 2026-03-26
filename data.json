@@ -1,6 +1,6 @@
 {
-  "date": "2026-03-26T02:50:59.197Z",
-  "usdcad": 1.3827,
+  "date": "2026-03-26T03:20:59.374Z",
+  "usdcad": 1.3821,
   "prices": {
     "H.TO": {
       "price": 57.4,
@@ -50,29 +50,29 @@
       "price": 17.88,
       "prev": 18.11
     },
-    "ENB.TO": {
-      "price": 75.29,
-      "prev": 74.91
-    },
     "ZLB.TO": {
       "price": 58.22,
       "prev": 57.9
     },
-    "GEV": {
-      "price": 923.69,
-      "prev": 909.41
+    "ENB.TO": {
+      "price": 75.29,
+      "prev": 74.91
     },
     "SPGI": {
       "price": 408.48,
       "prev": 411.2
     },
+    "GEV": {
+      "price": 923.69,
+      "prev": 909.41
+    },
+    "USDCAD=X": {
+      "price": 1.3821,
+      "prev": 1.3805
+    },
     "QQQM": {
       "price": 241.98,
       "prev": 240.42
-    },
-    "USDCAD=X": {
-      "price": 1.3827,
-      "prev": 1.3805
     },
     "QTUM": {
       "price": 111.62,
