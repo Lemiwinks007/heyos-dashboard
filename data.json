@@ -1,113 +1,113 @@
 {
-  "date": "2026-03-27T15:21:01.086Z",
-  "usdcad": 1.3874,
+  "date": "2026-03-27T15:51:02.562Z",
+  "usdcad": 1.3873,
   "prices": {
     "H.TO": {
-      "price": 56.88,
+      "price": 56.78,
       "prev": 57.17
     },
     "VFV.TO": {
-      "price": 157.78,
+      "price": 158.33,
       "prev": 159.1461
     },
-    "NVDA": {
-      "price": 168.39,
-      "prev": 171.24
-    },
     "GOOG": {
-      "price": 277.44,
+      "price": 277.45,
       "prev": 280.74
     },
     "META": {
-      "price": 526.81,
+      "price": 530.13,
       "prev": 547.75
     },
+    "NVDA": {
+      "price": 169.605,
+      "prev": 171.24
+    },
     "AVGO": {
-      "price": 303.51,
+      "price": 304.27,
       "prev": 309.415
     },
-    "XEQT.TO": {
-      "price": 39.14,
-      "prev": 39.27
-    },
     "TD.TO": {
-      "price": 127.65,
+      "price": 127.95,
       "prev": 128.66
     },
+    "XEQT.TO": {
+      "price": 39.27,
+      "prev": 39.27
+    },
     "SMH": {
-      "price": 375.52,
+      "price": 379.29,
       "prev": 380.615
     },
     "MSFT": {
-      "price": 359.425,
+      "price": 360.27,
       "prev": 365.97
     },
     "TSLA": {
-      "price": 364.879,
+      "price": 367.81,
       "prev": 372.11
     },
     "T.TO": {
-      "price": 17.615,
+      "price": 17.65,
       "prev": 17.85
     },
     "ENB.TO": {
-      "price": 76.15,
+      "price": 76.16,
       "prev": 75.49
     },
     "ZLB.TO": {
-      "price": 57.9,
+      "price": 57.89,
       "prev": 57.87
     },
     "GEV": {
-      "price": 860.485,
+      "price": 868.265,
       "prev": 873.12
     },
     "SPGI": {
-      "price": 408.17,
+      "price": 409.74,
       "prev": 412.45
     },
     "QQQM": {
-      "price": 233.12,
+      "price": 234.16,
       "prev": 236.21
     },
     "USDCAD=X": {
-      "price": 1.3874,
+      "price": 1.3873,
       "prev": 1.3858
     },
     "QTUM": {
-      "price": 105.6,
+      "price": 106.43,
       "prev": 107.78
     },
     "AMZN": {
-      "price": 200.375,
+      "price": 201.39,
       "prev": 207.68
     },
     "MFC.TO": {
-      "price": 47.33,
+      "price": 47.32,
       "prev": 47.73
     },
     "HURA.TO": {
-      "price": 55.36,
+      "price": 55.5,
       "prev": 54.94
     },
     "VDU.TO": {
-      "price": 54.36,
+      "price": 54.53,
       "prev": 54.47
     },
     "XEI.TO": {
-      "price": 36.22,
+      "price": 36.27,
       "prev": 36.12
     },
     "JEPI": {
-      "price": 55.895,
+      "price": 56.037,
       "prev": 56.19
     },
     "XIC.TO": {
-      "price": 51.05,
+      "price": 51.14,
       "prev": 50.82
     },
     "SCHD": {
-      "price": 30.61,
+      "price": 30.655,
       "prev": 30.62
     },
     "ZRE.TO": {
